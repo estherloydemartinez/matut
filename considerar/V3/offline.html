@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="es" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sin Conexión - BibliaApp Pro</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+            background: linear-gradient(135deg, #2f3136, #36393f);
+            color: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+        
+        .container {
+            text-align: center;
+            max-width: 500px;
+            width: 100%;
+            background: rgba(54, 57, 63, 0.8);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 3rem 2rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+        
+        .icon {
+            font-size: 4rem;
+            margin-bottom: 1.5rem;
+            opacity: 0.8;
+        }
+        
+        h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: #ffffff;
+        }
+        
+        p {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 2rem;
+            color: #b9bbbe;
+        }
+        
+        .features {
+            text-align: left;
+            margin: 2rem 0;
+            background: rgba(47, 49, 54, 0.5);
+            border-radius: 12px;
+            padding: 1.5rem;
+        }
+        
+        .features h3 {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            color: #5865f2;
+        }
+        
+        .feature-list {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .feature-list li {
+            padding: 0.5rem 0;
+            color: #dcddde;
+            position: relative;
+            padding-left: 1.5rem;
+        }
+        
+        .feature-list li:before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: #43b581;
+            font-weight: bold;
+        }
+        
+        .buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #5865f2, #4752c4);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #4752c4, #3c45a5);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(88, 101, 242, 0.4);
+        }
+        
+        .btn-secondary {
+            background: rgba(79, 84, 92, 0.8);
+            color: #dcddde;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .btn-secondary:hover {
+            background: rgba(93, 98, 105, 0.8);
+            color: #ffffff;
+        }
+        
+        .status {
+            margin-top: 2rem;
+            padding: 1rem;
+            background: rgba(250, 166, 26, 0.1);
+            border: 1px solid rgba(250, 166, 26, 0.3);
+            border-radius: 8px;
+            color: #faa61a;
+            font-size: 0.9rem;
+        }
+        
+        .loading {
+            display: inline-block;
+            width: 1rem;
+            height: 1rem;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top: 2px solid #5865f2;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        @media (max-width: 640px) {
+            .container {
+                padding: 2rem 1.5rem;
+            }
+            
+            h1 {
+                font-size: 1.5rem;
+            }
+            
+            .buttons {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="icon">📱</div>
+        
+        <h1>Sin Conexión a Internet</h1>
+        
+        <p>
+            No hay conexión disponible, pero BibliaApp Pro sigue funcionando offline con las características guardadas localmente.
+        </p>
+        
+        <div class="features">
+            <h3>Disponible sin conexión:</h3>
+            <ul class="feature-list">
+                <li>Versículos y capítulos guardados</li>
+                <li>Notas de estudio personales</li>
+                <li>Versículos marcados y destacados</li>
+                <li>Progreso de memorización</li>
+                <li>Historial de lecturas</li>
+                <li>Sesiones de oración guardadas</li>
+            </ul>
+        </div>
+        
+        <div class="buttons">
+            <button class="btn btn-primary" onclick="tryReconnect()">
+                <span class="loading hidden" id="reconnect-loader"></span>
+                <span id="reconnect-text">🔄 Intentar reconectar</span>
+            </button>
+            
+            <a href="/" class="btn btn-secondary">
+                🏠 Ir a inicio
+            </a>
+        </div>
+        
+        <div class="status" id="connection-status">
+            <span id="status-text">⚠️ Trabajando offline - Los datos se sincronizarán cuando se restaure la conexión</span>
+        </div>
+    </div>
+
+    <script>
+        // Check online status
+        function updateConnectionStatus() {
+            const statusElement = document.getElementById('status-text');
+            const statusContainer = document.getElementById('connection-status');
+            
+            if (navigator.onLine) {
+                statusElement.textContent = '✅ Conexión restaurada - Redirigiendo...';
+                statusContainer.style.background = 'rgba(67, 181, 129, 0.1)';
+                statusContainer.style.borderColor = 'rgba(67, 181, 129, 0.3)';
+                statusContainer.style.color = '#43b581';
+                
+                // Redirect to main app after a short delay
+                setTimeout(() => {
+                    window.location.href = '/';
+                }, 2000);
+            } else {
+                statusElement.textContent = '⚠️ Trabajando offline - Los datos se sincronizarán cuando se restaure la conexión';
+                statusContainer.style.background = 'rgba(250, 166, 26, 0.1)';
+                statusContainer.style.borderColor = 'rgba(250, 166, 26, 0.3)';
+                statusContainer.style.color = '#faa61a';
+            }
+        }
+        
+        // Try to reconnect
+        function tryReconnect() {
+            const loader = document.getElementById('reconnect-loader');
+            const text = document.getElementById('reconnect-text');
+            
+            loader.classList.remove('hidden');
+            text.textContent = 'Conectando...';
+            
+            // Simulate connection attempt
+            fetch('/', { 
+                method: 'HEAD',
+                cache: 'no-cache'
+            })
+            .then(response => {
+                if (response.ok) {
+                    text.textContent = '✅ ¡Conectado!';
+                    setTimeout(() => {
+                        window.location.href = '/';
+                    }, 1000);
+                } else {
+                    throw new Error('No connection');
+                }
+            })
+            .catch(() => {
+                text.textContent = '❌ Sin conexión';
+                setTimeout(() => {
+                    text.textContent = '🔄 Intentar reconectar';
+                    loader.classList.add('hidden');
+                }, 2000);
+            });
+        }
+        
+        // Listen for online/offline events
+        window.addEventListener('online', updateConnectionStatus);
+        window.addEventListener('offline', updateConnectionStatus);
+        
+        // Initial status check
+        updateConnectionStatus();
+        
+        // Periodic connection check
+        setInterval(() => {
+            if (!navigator.onLine) {
+                // Try a simple fetch to check real connectivity
+                fetch('/', { 
+                    method: 'HEAD',
+                    cache: 'no-cache',
+                    timeout: 5000
+                })
+                .then(response => {
+                    if (response.ok && !navigator.onLine) {
+                        // Browser thinks we're offline but we can actually fetch
+                        // This handles cases where navigator.onLine is unreliable
+                        window.location.href = '/';
+                    }
+                })
+                .catch(() => {
+                    // Still offline, that's fine
+                });
+            }
+        }, 10000); // Check every 10 seconds
+        
+        // Auto-refresh when connection is restored
+        let wasOffline = !navigator.onLine;
+        
+        setInterval(() => {
+            if (wasOffline && navigator.onLine) {
+                window.location.href = '/';
+            }
+            wasOffline = !navigator.onLine;
+        }, 2000);
+        
+        // Service Worker registration check
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.ready.then((registration) => {
+                console.log('Service Worker is ready and managing this page');
+                
+                // Listen for updates
+                registration.addEventListener('updatefound', () => {
+                    const newWorker = registration.installing;
+                    newWorker.addEventListener('statechange', () => {
+                        if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                            // New version available
+                            const statusElement = document.getElementById('status-text');
+                            statusElement.innerHTML = '🆕 Nueva versión disponible - <a href="/" style="color: inherit; text-decoration: underline;">Recargar para actualizar</a>';
+                        }
+                    });
+                });
+            });
+        }
+        
+        // Analytics (offline-friendly)
+        try {
+            if (localStorage.getItem('bibliaapp_analytics')) {
+                const analytics = JSON.parse(localStorage.getItem('bibliaapp_analytics') || '{}');
+                analytics.offline_visits = (analytics.offline_visits || 0) + 1;
+                analytics.last_offline_visit = new Date().toISOString();
+                localStorage.setItem('bibliaapp_analytics', JSON.stringify(analytics));
+            }
+        } catch (error) {
+            // Ignore analytics errors
+        }
+    </script>
+</body>
+</html>
