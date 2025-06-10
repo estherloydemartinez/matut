@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BibliaApp</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- ADD THIS LINE -->
+    <link href="css/main.css" rel="stylesheet">
+    <style>
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f0e8f9; /* Light pastel track */
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #c5b0e0; /* Medium pastel thumb */
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #a88bc7; /* Darker pastel thumb on hover */
+        }
+
+        /* Base theme colors (soft pastels) */
+        :root {
+            --color-primary: #7b61ff; /* Soft Purple */
+            --color-secondary: #ab8eff; /* Lighter Purple */
+            --color-accent: #ffb6c1; /* Light Pink */
+            --color-background: #fdfaff; /* Very Light Lavender/Off-white */
+            --color-surface: #faf7ff; /* Light Lavender */
+            --color-text-primary: #333333;
+            --color-text-secondary: #555555;
+            --color-border: #e0d8ef;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif; /* Assuming Inter is preferred, fallback to sans-serif */
+            background-color: var(--color-background);
+            color: var(--color-text-primary);
+        }
+
+        .main-tab-button {
+            @apply px-4 py-3 text-base font-medium rounded-t-lg transition-colors duration-200 ease-in-out;
+        }
+        .main-tab-button.active {
+            background-color: var(--color-primary);
+            color: white;
+        }
+        .main-tab-button:not(.active) {
+            background-color: var(--color-surface);
+            color: var(--color-text-secondary);
+            border-bottom: 2px solid var(--color-border);
+        }
+        .main-tab-button:not(.active):hover {
+            background-color: var(--color-secondary);
+            color: white;
+        }
+
+        .content-section {
+            @apply p-6 bg-white rounded-b-lg shadow-md; /* Keep content distinct */
+        }
+
+        /* Sidebar styles */
+        #sidebar {
+            transition: transform 0.3s ease-in-out;
+            transform: translateX(-100%);
+            z-index: 40; /* Ensure sidebar is above content but below overlay */
+        }
+        #sidebar.open {
+            transform: translateX(0);
+        }
+        #sidebar-overlay {
+            transition: opacity 0.3s ease-in-out;
+            z-index: 30; /* Ensure overlay is above content but below sidebar */
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="flex h-screen overflow-hidden">
+
+    <!-- Hidden Sidebar -->
+    <div id="sidebar-overlay" class="fixed inset-0 bg-black bg-opacity-50 hidden md:hidden" onclick="toggleSidebar()"></div>
+    <aside id="sidebar" class="fixed top-0 left-0 w-64 h-full bg-purple-100 text-purple-800 p-4 space-y-4 shadow-lg">
+        <h2 class="text-2xl font-bold text-purple-700">BibliaApp</h2>
+        <nav>
+            <a href="#" id="nav-inicio" class="block py-2.5 px-4 rounded transition duration-200 hover:bg-purple-200 hover:text-purple-900">Inicio</a>
+            <a href="#" id="nav-ajustes" class="block py-2.5 px-4 rounded transition duration-200 hover:bg-purple-200 hover:text-purple-900">Ajustes</a>
+        </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <div class="flex-1 flex flex-col overflow-hidden">
+        <!-- Header / Top Bar -->
+        <header class="bg-[var(--color-surface)] shadow-md">
+            <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+                <button id="sidebar-toggle-button" class="text-purple-600 p-2 rounded-md hover:bg-purple-100">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+                    </svg>
+                </button>
+                <div class="flex">
+                    <!-- Main Tabs -->
+                    <button id="tab-teoria" class="main-tab-button active" onclick="showTab('teoria')">Teoría</button>
+                    <button id="tab-practica" class="main-tab-button" onclick="showTab('practica')">Práctica</button>
+                </div>
+                <!-- Social Button Placeholder (Top Right) -->
+                <button id="social-main-button" class="p-2 rounded-full hover:bg-purple-100 text-purple-600">
+                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M18 18.72a9.094 9.094 0 0 0 3.75-5.418c0-2.613-2.103-4.726-4.726-4.726H14.25M18 18.72A9.094 9.094 0 0 1 14.25 21v-5.418c0-2.613-2.103-4.726-4.726-4.726H5.25M5.25 15.75A9.094 9.094 0 0 0 1.5 10.332c0-2.613 2.103-4.726 4.726-4.726H9.75M5.25 15.75A9.094 9.094 0 0 1 9.75 18v-5.418c0-2.613 2.103-4.726 4.726-4.726h3.524" />
+                    </svg>
+                </button>
+            </div>
+        </header>
+
+        <!-- Content Area -->
+        <main class="flex-1 overflow-x-hidden overflow-y-auto bg-[var(--color-background)]">
+            <div id="content-teoria" class="content-section">
+                <h2 class="text-2xl font-semibold text-[var(--color-text-primary)] mb-4">Teoría</h2>
+                <!-- Sub-navigation for Teoría -->
+                <div class="mb-4 border-b border-[var(--color-border)]">
+                    <nav class="flex space-x-1" aria-label="Tabs">
+                        <button onclick="showTeoriaSubTab('lectura')" id="subtab-lectura" class="px-3 py-2 font-medium text-sm rounded-t-md text-[var(--color-primary)] border-b-2 border-[var(--color-primary)]">Lectura</button>
+                        <button onclick="showTeoriaSubTab('memorizacion')" id="subtab-memorizacion" class="px-3 py-2 font-medium text-sm rounded-t-md text-gray-500 hover:text-gray-700 hover:border-gray-300">Memorización</button>
+                    </nav>
+                </div>
+                <div id="teoria-content-lectura">
+                    <h3 class="text-xl font-semibold text-[var(--color-text-secondary)] mb-3">Lectura</h3>
+                    <!-- Lectura Mode Selection -->
+                    <div class="mb-4">
+                        <button onclick="showLecturaMode('simple')" id="lectura-mode-simple" class="px-3 py-1.5 text-sm font-medium rounded-md bg-[var(--color-secondary)] text-white">Modo Simple</button>
+                        <button onclick="showLecturaMode('profundo')" id="lectura-mode-profundo" class="px-3 py-1.5 text-sm font-medium rounded-md bg-gray-200 text-gray-700 hover:bg-gray-300">Modo Profundo</button>
+                    </div>
+                    <div id="lectura-content-simple">
+                        <h4 class="text-lg font-medium text-[var(--color-text-secondary)] mb-3">Modo Simple</h4>
+
+                        <!-- Passage Selection UI -->
+                        <div class="bg-purple-50 p-4 rounded-lg shadow-sm mb-4 flex flex-wrap items-end space-x-0 md:space-x-3 space-y-3 md:space-y-0">
+                            <div class="w-full md:w-auto md:flex-1">
+                                <label for="bible-book-select" class="block text-sm font-medium text-purple-700 mb-1">Libro:</label>
+                                <select id="bible-book-select" class="w-full px-3 py-2 border border-purple-300 rounded-md shadow-sm focus:outline-none focus:ring-purple-500 focus:border-purple-500 text-sm">
+                                    <option value="">Cargando libros...</option>
+                                </select>
+                            </div>
+                            <div class="w-full sm:w-1/2 md:w-auto">
+                                <label for="bible-chapter-input" class="block text-sm font-medium text-purple-700 mb-1">Capítulo:</label>
+                                <input type="number" id="bible-chapter-input" value="1" min="1" class="w-full px-3 py-2 border border-purple-300 rounded-md shadow-sm focus:outline-none focus:ring-purple-500 focus:border-purple-500 text-sm" placeholder="Cap.">
+                            </div>
+                            <div class="w-full sm:w-1/2 md:w-auto">
+                                <label for="bible-verses-input" class="block text-sm font-medium text-purple-700 mb-1">Versículos (opc.):</label>
+                                <input type="text" id="bible-verses-input" class="w-full px-3 py-2 border border-purple-300 rounded-md shadow-sm focus:outline-none focus:ring-purple-500 focus:border-purple-500 text-sm" placeholder="Ej: 1-3 o 5,7">
+                            </div>
+                            <div class="w-full md:w-auto pt-1 md:pt-0">
+                                <button id="load-passage-button" class="w-full px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 text-sm">
+                                    Cargar Pasaje
+                                </button>
+                            </div>
+                        </div>
+
+                        <div id="bible-display-simple" class="p-4 border border-[var(--color-border)] rounded-md min-h-[300px] bg-white">
+                            <p class="text-gray-500">Seleccione un libro, capítulo y (opcionalmente) versículos, luego presione "Cargar Pasaje".</p>
+                        </div>
+                    </div>
+                    <div id="lectura-content-profundo" class="hidden">
+                        <!-- In index.html, inside <div id="lectura-content-profundo" class="hidden"> -->
+                        <h4 class="text-lg font-medium text-[var(--color-text-secondary)] mb-2">Modo Profundo</h4>
+                        <div class="flex">
+                            <!-- Sidebar for Tool Categories -->
+                            <div id="analytical-tools-sidebar" class="w-1/4 bg-purple-50 p-3 rounded-lg shadow mr-4 max-h-[60vh] overflow-y-auto">
+                                <h5 class="text-md font-semibold text-purple-700 mb-3">Categorías de Análisis</h5>
+                                <ul id="analytical-categories-list" class="space-y-2">
+                                    <!-- Categories will be populated by analytical_engine.js -->
+                                    <li class="p-2 hover:bg-purple-100 rounded-md cursor-pointer">Cargando categorías...</li>
+                                </ul>
+                            </div>
+                            <!-- Main Area for Tool UI and Results -->
+                            <div id="analytical-tool-content" class="w-3/4 p-3 bg-white rounded-lg shadow">
+                                <p class="text-gray-500">Seleccione una categoría y luego una herramienta de análisis. El texto seleccionado en Modo Simple se usará para el análisis.</p>
+                                <!-- Specific tool UI and results will be loaded here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="teoria-content-memorizacion" class="hidden">
+                    <h3 class="text-xl font-semibold text-[var(--color-text-secondary)] mb-4">Memorización de Versículos</h3>
+
+                    <div class="bg-purple-50 p-4 rounded-lg shadow-sm mb-4">
+                        <div class="flex flex-wrap items-end space-x-0 md:space-x-3 space-y-3 md:space-y-0">
+                            <div class="flex-grow">
+                                <label for="memorization-verse-input" class="block text-sm font-medium text-purple-700 mb-1">Referencia del Versículo (Ej: Juan 3:16):</label>
+                                <input type="text" id="memorization-verse-input" class="w-full px-3 py-2 border border-purple-300 rounded-md shadow-sm focus:outline-none focus:ring-purple-500 focus:border-purple-500 text-sm" placeholder="Libro Capítulo:Versículo(s)">
+                            </div>
+                            <div class="w-full sm:w-auto">
+                                 <button id="memorization-fetch-verse-btn" class="w-full px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 text-sm">Cargar Versículo</button>
+                            </div>
+                        </div>
+                         <p class="text-xs text-gray-500 mt-2">Nota: También puede copiar y pegar el texto del versículo directamente abajo si lo prefiere.</p>
+                    </div>
+
+                    <div class="bg-white p-4 rounded-lg shadow mb-4">
+                        <label for="memorization-text-area" class="block text-sm font-medium text-gray-700 mb-1">Texto a Memorizar:</label>
+                        <textarea id="memorization-text-area" rows="4" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-purple-500 focus:border-purple-500 sm:text-sm" placeholder="Escriba o cargue el texto del versículo aquí."></textarea>
+                    </div>
+
+                    <div class="flex items-center space-x-3 mb-4">
+                        <button id="memorization-start-btn" class="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 text-sm">Iniciar Práctica</button>
+                        <select id="memorization-difficulty" class="px-3 py-2 border border-gray-300 rounded-md text-sm">
+                            <option value="easy">Fácil (ocultar ~25%)</option>
+                            <option value="medium">Medio (ocultar ~50%)</option>
+                            <option value="hard">Difícil (ocultar ~75%)</option>
+                        </select>
+                    </div>
+
+                    <div id="memorization-practice-area" class="p-4 border border-gray-300 rounded-md min-h-[150px] bg-gray-50 text-lg leading-relaxed">
+                        <p class="text-gray-400 text-base">El texto para practicar aparecerá aquí.</p>
+                    </div>
+
+                    <div class="mt-4">
+                        <button id="memorization-reveal-btn" class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 text-sm hidden">Revelar Todo</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="content-practica" class="content-section hidden">
+                <h2 class="text-2xl font-semibold text-[var(--color-text-primary)] mb-4">Práctica</h2>
+                 <!-- Sub-navigation for Práctica -->
+                <div class="mb-4 border-b border-[var(--color-border)]">
+                    <nav class="flex space-x-1" aria-label="Tabs">
+                        <button onclick="showPracticaSubTab('recibir')" id="subtab-recibir" class="px-3 py-2 font-medium text-sm rounded-t-md text-[var(--color-primary)] border-b-2 border-[var(--color-primary)]">Recibir/Orar</button>
+                        <button onclick="showPracticaSubTab('dar')" id="subtab-dar" class="px-3 py-2 font-medium text-sm rounded-t-md text-gray-500 hover:text-gray-700 hover:border-gray-300">Dar/Accionar</button>
+                    </nav>
+                </div>
+                <div id="practica-content-recibir"> <!-- Ensure this div is correctly shown by showPracticaSubTab('recibir') -->
+                    <h3 class="text-xl font-semibold text-[var(--color-text-secondary)] mb-4">Recibir / Orar - Diario de Oración</h3>
+
+                    <div class="bg-white p-4 rounded-lg shadow mb-6">
+                        <label for="prayer-journal-entry" class="block text-sm font-medium text-gray-700 mb-1">Nueva Entrada de Oración:</label>
+                        <textarea id="prayer-journal-entry" rows="5" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-purple-500 focus:border-purple-500 sm:text-sm" placeholder="Escribe tu oración, petición o agradecimiento aquí..."></textarea>
+                        <div class="mt-3 text-right">
+                            <button id="save-prayer-entry-btn" class="px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 text-sm">
+                                Guardar Entrada
+                            </button>
+                        </div>
+                    </div>
+
+                    <div>
+                        <h4 class="text-lg font-semibold text-gray-700 mb-3">Entradas Guardadas:</h4>
+                        <div id="prayer-journal-entries-list" class="space-y-3">
+                            <p class="text-gray-500">No hay entradas guardadas todavía.</p>
+                            <!-- Entries will be populated here -->
+                        </div>
+                    </div>
+                </div>
+                <div id="practica-content-dar" class="hidden"> <!-- This div is created by showPracticaSubTab if not present, or should be in main HTML -->
+                    <h3 class="text-xl font-semibold text-[var(--color-text-secondary)] mb-4">Dar / Accionar - Competencias Prácticas</h3>
+                    <div id="practica-competencies-list" class="space-y-4">
+                        <p class="text-gray-500">Cargando competencias prácticas...</p>
+                        <!-- Competencies will be populated here -->
+                    </div>
+
+                    <!-- Modal for Competency Details -->
+                    <div id="competency-detail-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center p-4 z-50">
+                        <div class="bg-white p-6 rounded-lg shadow-xl max-w-lg w-full max-h-[90vh] overflow-y-auto">
+                            <div id="competency-modal-content" class="prose prose-sm max-w-none">
+                                <!-- Details will be injected here -->
+                            </div>
+                            <div class="mt-6 text-right space-x-2">
+                                <button id="track-competency-progress-btn" class="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 text-sm">Comenzar / Registrar Progreso</button>
+                                <button id="close-competency-modal-btn" class="px-4 py-2 bg-gray-300 text-gray-800 rounded-md hover:bg-gray-400 text-sm">Cerrar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="content-inicio" class="content-section hidden">
+                <h2 class="text-2xl font-semibold text-[var(--color-text-primary)] mb-4">Inicio</h2>
+                <p class="text-gray-500">El dashboard de Inicio personalizable se mostrará aquí...</p>
+            </div>
+
+            <div id="content-ajustes" class="content-section hidden">
+                <h2 class="text-2xl font-semibold text-[var(--color-text-primary)] mb-4">Ajustes</h2>
+                <p class="text-gray-500">Las opciones de configuración se mostrarán aquí...</p>
+            </div>
+        </main>
+    </div>
+
+    <script src="js/app.js" defer></script>
+    <script src="js/bible_display.js" defer></script>
+    <script src="js/analytical_engine.js" defer></script>
+    <!-- ADD THIS LINE -->
+    <script src="js/social_engine.js" defer></script>
+</body>
+</html>
