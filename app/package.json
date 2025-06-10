@@ -2,16 +2,19 @@
   "name": "bibliaapp-pro-enhanced",
   "version": "3.0.0",
   "description": "Plataforma avanzada de estudio bíblico con herramientas analíticas de clase mundial, sistema SRS inteligente y funciones sociales",
-  "main": "assets/js/app-enhanced.js",
+  "main": "app-enhanced.js",
   "scripts": {
     "start": "python -m http.server 8000",
     "serve": "npx serve .",
-    "build": "node deploy.js",
+                "build": "npm run build:css && node deploy.js",
+                "build:css": "tailwindcss -i ./assets/css/input.css -o ./assets/css/output.css --minify",
     "deploy": "npm run build && echo 'Build completed. Check dist/ directory'",
     "dev": "npx live-server --port=3000 --no-browser",
     "test": "echo 'Test suite not implemented yet'",
     "lint": "echo 'Linting not configured yet'",
     "validate": "node -e \"console.log('Validating project structure...'); require('./deploy.js');\"",
+                "lint": "eslint .",
+                "format": "prettier --write .",
     "stats": "node -e \"const fs=require('fs'); const path=require('path'); function getSize(dir){let size=0; try{const files=fs.readdirSync(dir); files.forEach(file=>{const filePath=path.join(dir,file); const stat=fs.statSync(filePath); if(stat.isDirectory()){size+=getSize(filePath);}else{size+=stat.size;}})}catch(e){}return size;} console.log('Project size:', (getSize('.')/1024/1024).toFixed(2), 'MB');\""
   },
   "keywords": [
@@ -104,6 +107,15 @@
   },
   "dependencies": {},
   "devDependencies": {
+      "tailwindcss": "^3.0.0",
+      "lucide-static": "^0.200.0",
+      "chart.js": "^4.0.0",
+      "workbox-cli": "^7.0.0",
+      "eslint": "^8.0.0",
+      "prettier": "^3.0.0",
+      "autoprefixer": "^10.0.0",
+      "postcss": "^8.0.0",
+      "postcss-cli": "^10.0.0",
     "live-server": "^1.2.2",
     "serve": "^14.2.0"
   },
@@ -125,23 +137,23 @@
   "directories": {
     "assets": "./assets",
     "css": "./assets/css",
-    "js": "./assets/js",
+    "js": "./",
     "images": "./assets/images"
   },
   "architecture": {
     "pattern": "modular",
     "modules": [
-      "core/constants.js",
-      "core/utils.js", 
-      "core/storage.js",
-      "core/state-manager.js",
-      "core/ui-manager.js",
-      "modules/srs-system.js",
-      "modules/agua-system.js",
-      "modules/filters-system.js",
-      "modules/bible-data-enhanced.js",
-      "modules/social-system-enhanced.js",
-      "modules/analytical-tools-enhanced.js"
+      "constants.js",
+      "utils.js",
+      "storage.js",
+      "state-manager.js",
+      "ui-manager.js",
+      "srs-system.js",
+      "agua-system.js",
+      "filters-system.js",
+      "bible-data-enhanced.js",
+      "social-system-enhanced.js",
+      "analytical-tools-enhanced.js"
     ],
     "entry_point": "app-enhanced.js"
   },

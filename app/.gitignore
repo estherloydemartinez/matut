@@ -1,0 +1,9 @@
+# Ignore Node.js dependency directory
+node_modules/
+
+# Ignore build output for CSS if not already handled by top-level .gitignore
+# assets/css/output.css
+
+# Ignore other common files if necessary
+# .env
+# *.log

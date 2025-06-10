@@ -3,10 +3,10 @@
    Advanced Spaced Repetition System for verse memorization
    ========================================================================== */
 
-import { $, $$, createElement, debounce, formatRelativeTime, stringSimilarity } from '../core/utils.js';
-import { SRS_CONFIG, GAMIFICATION_CONFIG } from '../core/constants.js';
-import stateManager, { getState, setState, updateState, subscribe } from '../core/state-manager.js';
-import uiManager from '../core/ui-manager.js';
+import { $, $$, createElement, debounce, formatRelativeTime, stringSimilarity } from './utils.js';
+import { SRS_CONFIG, GAMIFICATION_CONFIG } from './constants.js';
+import stateManager, { getState, setState, updateState, subscribe } from './state-manager.js';
+import uiManager from './ui-manager.js';
 
 // ==========================================
 // SRS SYSTEM CLASS

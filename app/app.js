@@ -3,19 +3,19 @@
    Entry point - coordinates all systems and modules
    ========================================================================== */
 
-import { APP_CONFIG } from './core/constants.js';
-import { supportsFeature, isValidUrl } from './core/utils.js';
-import storage from './core/storage.js';
-import stateManager, { getState, setState, subscribe } from './core/state-manager.js';
-import uiManager from './core/ui-manager.js';
+import { APP_CONFIG } from './constants.js';
+import { supportsFeature, isValidUrl } from './utils.js';
+import storage from './storage.js';
+import stateManager, { getState, setState, subscribe } from './state-manager.js';
+import uiManager from './ui-manager.js';
 
 // Import modules
-import srsSystem from './modules/srs-system.js';
-import aguaSystem from './modules/agua-system.js';
-import filtersSystem from './modules/filters-system.js';
-import bibleDataEnhanced from './modules/bible-data-enhanced.js';
-import socialSystemEnhanced from './modules/social-system-enhanced.js';
-import analyticalToolsEnhanced from './modules/analytical-tools-enhanced.js';
+import srsSystem from './srs-system.js';
+import aguaSystem from './agua-system.js';
+import filtersSystem from './filters-system.js';
+import bibleDataEnhanced from './bible-data-enhanced.js';
+import socialSystemEnhanced from './social-system-enhanced.js';
+import analyticalToolsEnhanced from './analytical-tools-enhanced.js';
 
 // ==========================================
 // MAIN APPLICATION CLASS

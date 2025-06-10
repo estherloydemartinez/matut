@@ -3,10 +3,10 @@
    Advanced analytical tools with interactive filtering (50+ tools)
    ========================================================================== */
 
-import { $, $$, createElement, debounce, deepClone } from '../core/utils.js';
-import { ANALYTICAL_TOOLS } from '../core/constants.js';
-import stateManager, { getState, setState, updateState, subscribe } from '../core/state-manager.js';
-import uiManager from '../core/ui-manager.js';
+import { $, $$, createElement, debounce, deepClone } from './utils.js';
+import { ANALYTICAL_TOOLS } from './constants.js';
+import stateManager, { getState, setState, updateState, subscribe } from './state-manager.js';
+import uiManager from './ui-manager.js';
 
 // ==========================================
 // FILTERS SYSTEM CLASS

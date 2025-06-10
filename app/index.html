@@ -18,13 +18,12 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     
     <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
     
     <!-- Iconos Lucide -->
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
     
     <!-- Framework CSS Base -->
-    <link rel="stylesheet" href="assets/css/core.css">
+    <link rel="stylesheet" href="assets/css/output.css">
     <link rel="stylesheet" href="assets/css/components.css">
     <link rel="stylesheet" href="assets/css/animations.css">
 </head>
@@ -875,19 +874,22 @@
     <div id="modalContainer" class="fixed inset-0 z-50 hidden"></div>
 
     <!-- Scripts -->
-    <script src="assets/js/core/constants.js"></script>
-    <script src="assets/js/core/utils.js"></script>
-    <script src="assets/js/core/storage.js"></script>
-    <script src="assets/js/core/state-manager.js"></script>
-    <script src="assets/js/core/ui-manager.js"></script>
-    <script src="assets/js/modules/srs-system.js"></script>
-    <script src="assets/js/modules/agua-system.js"></script>
-    <script src="assets/js/modules/filters-system.js"></script>
-    <script src="assets/js/modules/analysis-system.js"></script>
-    <script src="assets/js/modules/practice-system.js"></script>
-    <script src="assets/js/modules/social-system.js"></script>
-    <script src="assets/js/modules/dashboard-system.js"></script>
-    <script src="assets/js/modules/settings-system.js"></script>
-    <script type="module" src="assets/js/app-enhanced.js"></script>
+
+    <script type="module" src="./constants.js"></script>
+    <script type="module" src="./utils.js"></script>
+    <script type="module" src="./storage.js"></script>
+    <script type="module" src="./state-manager.js"></script>
+    <script type="module" src="./ui-manager.js"></script>
+    <script type="module" src="./srs-system.js"></script>
+    <script type="module" src="./agua-system.js"></script>
+    <script type="module" src="./filters-system.js"></script>
+    <script type="module" src="./analytical-tools-enhanced.js"></script>
+    <!-- Warning: practice-system.js not found in app/, script tag not added for this file -->
+    <script type="module" src="./social-system-enhanced.js"></script>
+    <!-- Warning: dashboard-system.js not found in app/, script tag not added for this file -->
+    <!-- Warning: settings-system.js not found in app/, script tag not added for this file -->
+    <script type="module" src="./app.js"></script>
+    <script type="module" src="./app-enhanced.js"></script>
+</body>
 </body>
 </html>

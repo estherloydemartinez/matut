@@ -3,10 +3,10 @@
    Advanced element categorization: Valor / Añadir / No Añadir
    ========================================================================== */
 
-import { $, $$, createElement, debounce, deepClone } from '../core/utils.js';
-import { AGUA_CONFIG } from '../core/constants.js';
-import stateManager, { getState, setState, updateState, subscribe } from '../core/state-manager.js';
-import uiManager from '../core/ui-manager.js';
+import { $, $$, createElement, debounce, deepClone } from './utils.js';
+import { AGUA_CONFIG } from './constants.js';
+import stateManager, { getState, setState, updateState, subscribe } from './state-manager.js';
+import uiManager from './ui-manager.js';
 
 // ==========================================
 // AGUA SYSTEM CLASS
