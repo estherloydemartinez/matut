@@ -1,0 +1,2568 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Formación Bíblica Avanzada - Versión Completa Android</title>
+    
+    <!-- PWA Meta Tags optimizados para Android -->
+    <meta name="theme-color" content="#5865F2" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="Formación Bíblica" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="application-name" content="Formación Bíblica" />
+    
+    <!-- Android Chrome specific -->
+    <meta name="theme-color" content="#5865F2" />
+    <meta name="msapplication-navbutton-color" content="#5865F2" />
+    <meta name="msapplication-TileColor" content="#5865F2" />
+    
+    <!-- Optimized CSS (no external dependencies for offline use) -->
+    <style>
+        /* CSS Variables optimizadas para Android */
+        :root {
+            --bg-primary: #5865F2;
+            --bg-secondary: #2F3136;
+            --bg-tertiary: #202225;
+            --bg-input: #40444B;
+            --text-primary: #FFFFFF;
+            --text-secondary: #DCDDDE;
+            --text-muted: #72767D;
+            --interactive-normal: #B9BBBE;
+            --interactive-hover: #DCDDDE;
+            --interactive-active: #FFFFFF;
+            --success: #3BA55C;
+            --warning: #FAA61A;
+            --danger: #F04747;
+            --accent: #00D4AA;
+            
+            /* Android-specific optimizations */
+            --touch-target-size: 44px;
+            --safe-area-top: env(safe-area-inset-top, 0px);
+            --safe-area-bottom: env(safe-area-inset-bottom, 0px);
+        }
+        
+        /* Base styles optimized for mobile */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: rgba(88, 101, 242, 0.1);
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+        
+        /* Allow text selection in content areas */
+        .selectable {
+            -webkit-user-select: text;
+            -moz-user-select: text;
+            -ms-user-select: text;
+            user-select: text;
+        }
+        
+        html {
+            scroll-behavior: smooth;
+            height: 100%;
+            font-size: 16px; /* Base font size for mobile */
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: var(--bg-tertiary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+            height: 100%;
+            padding-top: var(--safe-area-top);
+            padding-bottom: var(--safe-area-bottom);
+        }
+        
+        /* Mobile-optimized navigation */
+        .nav-container {
+            background-color: var(--bg-secondary);
+            border-bottom: 1px solid var(--bg-input);
+            padding: 8px 16px;
+            min-height: var(--touch-target-size);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        .nav-brand {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .nav-brand .icon {
+            width: 24px;
+            height: 24px;
+            background: var(--bg-primary);
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+        }
+        
+        /* Mobile tab navigation */
+        .nav-tabs {
+            display: flex;
+            gap: 2px;
+            overflow-x: auto;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+        
+        .nav-tabs::-webkit-scrollbar {
+            display: none;
+        }
+        
+        .nav-tab {
+            min-width: var(--touch-target-size);
+            height: var(--touch-target-size);
+            padding: 8px 12px;
+            background: none;
+            border: none;
+            color: var(--interactive-normal);
+            cursor: pointer;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+            font-size: 12px;
+            font-weight: 500;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            white-space: nowrap;
+            position: relative;
+        }
+        
+        .nav-tab:active {
+            transform: scale(0.95);
+        }
+        
+        .nav-tab:hover {
+            color: var(--interactive-hover);
+            background-color: rgba(64, 68, 75, 0.3);
+        }
+        
+        .nav-tab.active {
+            color: var(--text-primary);
+            background-color: var(--bg-primary);
+            box-shadow: 0 2px 4px rgba(88, 101, 242, 0.3);
+        }
+        
+        .nav-tab .tab-icon {
+            font-size: 16px;
+            margin-bottom: 2px;
+        }
+        
+        .nav-tab .tab-text {
+            font-size: 10px;
+            line-height: 1;
+        }
+        
+        /* Action buttons */
+        .nav-actions {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .action-btn {
+            width: var(--touch-target-size);
+            height: var(--touch-target-size);
+            background: var(--bg-input);
+            border: none;
+            border-radius: 50%;
+            color: var(--interactive-normal);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+        }
+        
+        .action-btn:active {
+            transform: scale(0.9);
+        }
+        
+        .action-btn:hover {
+            background: var(--bg-primary);
+            color: var(--text-primary);
+        }
+        
+        /* Main content optimized for mobile */
+        .main-container {
+            max-width: 100%;
+            margin: 0;
+            padding: 16px;
+            min-height: calc(100vh - var(--touch-target-size) - var(--safe-area-top) - var(--safe-area-bottom));
+            padding-bottom: calc(16px + var(--safe-area-bottom));
+        }
+        
+        .content-section {
+            display: none;
+            animation: slideIn 0.3s ease-out;
+        }
+        
+        .content-section.active {
+            display: block;
+        }
+        
+        @keyframes slideIn {
+            from { 
+                opacity: 0; 
+                transform: translateX(20px); 
+            }
+            to { 
+                opacity: 1; 
+                transform: translateX(0); 
+            }
+        }
+        
+        /* Card system optimized for mobile */
+        .card {
+            background-color: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid var(--bg-input);
+            transition: all 0.2s ease;
+            margin-bottom: 16px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .card:active {
+            transform: scale(0.98);
+        }
+        
+        .card.interactive:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+        }
+        
+        .card h3 {
+            color: var(--text-primary);
+            margin-bottom: 12px;
+            font-size: 18px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .card p {
+            color: var(--text-secondary);
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        
+        /* Mobile-optimized buttons */
+        .btn {
+            min-height: var(--touch-target-size);
+            padding: 12px 20px;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 14px;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            text-decoration: none;
+            white-space: nowrap;
+        }
+        
+        .btn:active {
+            transform: scale(0.95);
+        }
+        
+        .btn:hover {
+            background-color: #4752C4;
+            box-shadow: 0 4px 12px rgba(88, 101, 242, 0.3);
+        }
+        
+        .btn.secondary {
+            background-color: var(--bg-input);
+            color: var(--interactive-normal);
+        }
+        
+        .btn.secondary:hover {
+            background-color: var(--interactive-hover);
+            color: var(--text-primary);
+        }
+        
+        /* Mobile-optimized form controls */
+        .form-group {
+            margin-bottom: 16px;
+        }
+        
+        .form-label {
+            display: block;
+            color: var(--text-secondary);
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 6px;
+        }
+        
+        .form-input {
+            width: 100%;
+            min-height: var(--touch-target-size);
+            padding: 12px 16px;
+            background-color: var(--bg-input);
+            border: 2px solid transparent;
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-size: 16px; /* Prevents zoom on iOS */
+            transition: all 0.2s ease;
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: var(--bg-primary);
+            box-shadow: 0 0 0 3px rgba(88, 101, 242, 0.1);
+        }
+        
+        .form-select {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23B9BBBE' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+            background-position: right 12px center;
+            background-repeat: no-repeat;
+            background-size: 16px;
+            padding-right: 40px;
+        }
+        
+        /* Mobile grid system */
+        .grid {
+            display: grid;
+            gap: 16px;
+        }
+        
+        .grid-1 { grid-template-columns: 1fr; }
+        .grid-2 { grid-template-columns: repeat(2, 1fr); }
+        .grid-3 { grid-template-columns: repeat(3, 1fr); }
+        
+        @media (max-width: 768px) {
+            .grid-2, .grid-3 {
+                grid-template-columns: 1fr;
+            }
+            
+            .main-container {
+                padding: 12px;
+            }
+            
+            .card {
+                padding: 16px;
+            }
+        }
+        
+        /* Bible content styling */
+        .bible-container {
+            background-color: var(--bg-tertiary);
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid var(--bg-input);
+        }
+        
+        .verse-container {
+            background-color: var(--bg-secondary);
+            padding: 16px;
+            border-radius: 8px;
+            border-left: 4px solid var(--bg-primary);
+            margin: 12px 0;
+            transition: all 0.2s ease;
+        }
+        
+        .verse-container:active {
+            background-color: var(--bg-input);
+        }
+        
+        .verse-number {
+            display: inline-block;
+            min-width: 24px;
+            height: 24px;
+            margin-right: 12px;
+            color: var(--bg-primary);
+            font-weight: 700;
+            font-size: 12px;
+            background-color: rgba(88, 101, 242, 0.1);
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            vertical-align: top;
+            margin-top: 2px;
+        }
+        
+        .verse-text {
+            color: var(--text-primary);
+            line-height: 1.7;
+            font-size: 15px;
+        }
+        
+        .verse-reference {
+            color: var(--text-muted);
+            font-size: 12px;
+            font-weight: 500;
+            margin-bottom: 6px;
+        }
+        
+        /* Search and filter components */
+        .search-container {
+            background-color: var(--bg-secondary);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            border: 1px solid var(--bg-input);
+        }
+        
+        .search-bar {
+            position: relative;
+        }
+        
+        .search-input {
+            width: 100%;
+            padding: 12px 16px 12px 48px;
+            font-size: 16px;
+        }
+        
+        .search-icon {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 16px;
+        }
+        
+        .filter-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 16px;
+        }
+        
+        .filter-tag {
+            background-color: var(--bg-input);
+            color: var(--text-secondary);
+            padding: 8px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 2px solid transparent;
+            min-height: 36px;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        .filter-tag:active {
+            transform: scale(0.95);
+        }
+        
+        .filter-tag:hover, .filter-tag.active {
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            border-color: var(--bg-primary);
+            box-shadow: 0 2px 8px rgba(88, 101, 242, 0.3);
+        }
+        
+        /* Loading and status states */
+        .loading {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+            color: var(--text-muted);
+            text-align: center;
+        }
+        
+        .spinner {
+            width: 32px;
+            height: 32px;
+            border: 3px solid var(--bg-input);
+            border-top: 3px solid var(--bg-primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 16px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .error-state {
+            background-color: rgba(240, 71, 71, 0.1);
+            border: 1px solid var(--danger);
+            color: var(--danger);
+            padding: 16px;
+            border-radius: 8px;
+            text-align: center;
+            margin: 16px 0;
+        }
+        
+        .success-state {
+            background-color: rgba(59, 165, 92, 0.1);
+            border: 1px solid var(--success);
+            color: var(--success);
+            padding: 16px;
+            border-radius: 8px;
+            text-align: center;
+            margin: 16px 0;
+        }
+        
+        /* Chart containers for mobile */
+        .chart-container {
+            position: relative;
+            height: 250px;
+            background-color: var(--bg-tertiary);
+            border-radius: 8px;
+            padding: 16px;
+            margin: 16px 0;
+        }
+        
+        /* Social components */
+        .social-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            border-radius: 8px;
+            background-color: var(--bg-tertiary);
+            margin-bottom: 8px;
+            transition: all 0.2s ease;
+        }
+        
+        .social-item:active {
+            background-color: var(--bg-input);
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--bg-primary), var(--accent));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 16px;
+            color: white;
+            flex-shrink: 0;
+        }
+        
+        .social-content {
+            flex: 1;
+            min-width: 0;
+        }
+        
+        .social-name {
+            font-weight: 600;
+            color: var(--text-primary);
+            font-size: 14px;
+        }
+        
+        .social-meta {
+            color: var(--text-muted);
+            font-size: 12px;
+            margin-top: 2px;
+        }
+        
+        /* Notification badge */
+        .notification-badge {
+            background-color: var(--danger);
+            color: white;
+            border-radius: 50%;
+            min-width: 18px;
+            height: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            font-weight: 600;
+            position: absolute;
+            top: -6px;
+            right: -6px;
+            border: 2px solid var(--bg-secondary);
+        }
+        
+        /* Accessibility improvements */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+        
+        /* Focus states for accessibility */
+        button:focus, 
+        input:focus, 
+        select:focus,
+        .nav-tab:focus,
+        .filter-tag:focus {
+            outline: 2px solid var(--bg-primary);
+            outline-offset: 2px;
+        }
+        
+        /* Android specific fixes */
+        input[type="search"]::-webkit-search-decoration,
+        input[type="search"]::-webkit-search-cancel-button,
+        input[type="search"]::-webkit-search-results-button,
+        input[type="search"]::-webkit-search-results-decoration {
+            -webkit-appearance: none;
+        }
+        
+        /* Prevent text size adjustment on orientation change */
+        html {
+            -webkit-text-size-adjust: 100%;
+            -ms-text-size-adjust: 100%;
+        }
+        
+        /* Better scrollbar for Android */
+        * {
+            scrollbar-width: thin;
+            scrollbar-color: var(--bg-input) transparent;
+        }
+        
+        *::-webkit-scrollbar {
+            width: 4px;
+            height: 4px;
+        }
+        
+        *::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        
+        *::-webkit-scrollbar-thumb {
+            background-color: var(--bg-input);
+            border-radius: 2px;
+        }
+        
+        /* Theme toggle animation */
+        .theme-transition {
+            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+        }
+        
+        /* High contrast mode support */
+        @media (prefers-contrast: high) {
+            :root {
+                --bg-primary: #0066FF;
+                --text-primary: #FFFFFF;
+                --text-secondary: #E0E0E0;
+                --bg-secondary: #1A1A1A;
+                --bg-tertiary: #000000;
+            }
+        }
+        
+        /* Reduced motion support */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
+</head>
+<body class="theme-transition">
+    <!-- Navigation optimizada para Android -->
+    <nav class="nav-container">
+        <div class="nav-brand">
+            <div class="icon">📖</div>
+            <span>Biblia</span>
+        </div>
+        
+        <div class="nav-tabs">
+            <button class="nav-tab active" onclick="showSection('biblia')" aria-label="Sección Biblia">
+                <div class="tab-icon">📖</div>
+                <div class="tab-text">Biblia</div>
+            </button>
+            <button class="nav-tab" onclick="showSection('estudio')" aria-label="Sección Estudio">
+                <div class="tab-icon">🎓</div>
+                <div class="tab-text">Estudio</div>
+            </button>
+            <button class="nav-tab" onclick="showSection('filtros')" aria-label="Sección Filtros">
+                <div class="tab-icon">🔍</div>
+                <div class="tab-text">Filtros</div>
+            </button>
+            <button class="nav-tab" onclick="showSection('social')" aria-label="Sección Social">
+                <div class="tab-icon">👥</div>
+                <div class="tab-text">Social</div>
+            </button>
+            <button class="nav-tab" onclick="showSection('recursos')" aria-label="Sección Recursos">
+                <div class="tab-icon">🛠️</div>
+                <div class="tab-text">Recursos</div>
+            </button>
+        </div>
+        
+        <div class="nav-actions">
+            <button class="action-btn" onclick="toggleTheme()" aria-label="Cambiar tema">
+                🌓
+            </button>
+            <button class="action-btn" onclick="openSettings()" aria-label="Configuración">
+                ⚙️
+            </button>
+        </div>
+    </nav>
+
+    <!-- Contenido principal -->
+    <main class="main-container">
+        
+        <!-- Sección Biblia -->
+        <section id="biblia" class="content-section active">
+            <div class="search-container">
+                <h2 style="font-size: 20px; font-weight: 700; margin-bottom: 16px; color: var(--text-primary);">
+                    🔍 Navegación Bíblica
+                </h2>
+                
+                <div class="search-bar">
+                    <div class="search-icon">🔍</div>
+                    <input type="search" 
+                           id="busqueda-global" 
+                           class="form-input search-input" 
+                           placeholder="Buscar versículos, palabras o temas..." 
+                           oninput="debounceSearch(this.value)"
+                           autocomplete="off">
+                </div>
+                
+                <div class="grid grid-3" style="margin-top: 16px;">
+                    <div class="form-group">
+                        <label class="form-label">📚 Libro</label>
+                        <select id="libro-select" class="form-input form-select" onchange="loadCapitulos()">
+                            <option value="">Selecciona libro...</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">📄 Capítulo</label>
+                        <select id="capitulo-select" class="form-input form-select" onchange="loadVersiculos()">
+                            <option value="">Selecciona capítulo...</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">⚡ Acceso Rápido</label>
+                        <button class="btn" onclick="goToRandomVerse()" style="width: 100%;">
+                            Versículo Aleatorio
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="contenido-biblico" class="bible-container">
+                <div class="loading">
+                    <div class="spinner"></div>
+                    <p>Cargando contenido bíblico...</p>
+                    <small style="margin-top: 8px; opacity: 0.7;">Preparando versículos para tu estudio</small>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sección Estudio -->
+        <section id="estudio" class="content-section">
+            <h2 style="font-size: 20px; font-weight: 700; margin-bottom: 20px; color: var(--text-primary);">
+                🎓 Herramientas de Estudio
+            </h2>
+            
+            <div class="grid grid-1">
+                <div class="card interactive">
+                    <h3>📋 Planes de Lectura Personalizados</h3>
+                    <p>Crea planes adaptativos que se ajusten a tu ritmo de vida. Desde lecturas devocionales diarias hasta estudios temáticos profundos.</p>
+                    <div style="margin-top: 16px; display: flex; gap: 8px; flex-wrap: wrap;">
+                        <button class="btn" onclick="openPlanLectura('devocional')">📅 Plan Devocional</button>
+                        <button class="btn secondary" onclick="openPlanLectura('tematico')">🎯 Plan Temático</button>
+                        <button class="btn secondary" onclick="openPlanLectura('cronologico')">⏰ Cronológico</button>
+                    </div>
+                </div>
+                
+                <div class="card interactive">
+                    <h3>📝 Notas y Reflexiones Inteligentes</h3>
+                    <p>Sistema avanzado de notas con categorización automática, búsqueda por contenido y sincronización de reflexiones personales.</p>
+                    <div style="margin-top: 16px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                            <span style="color: var(--text-muted); font-size: 12px;">Notas guardadas: <strong>0</strong></span>
+                            <span style="color: var(--text-muted); font-size: 12px;">Última: Nunca</span>
+                        </div>
+                        <button class="btn" onclick="openNotas()" style="width: 100%;">✏️ Abrir Mis Notas</button>
+                    </div>
+                </div>
+                
+                <div class="card interactive">
+                    <h3>🎨 Resaltados por Categorías</h3>
+                    <p>Sistema de colores para organizar versículos por temas: promesas, mandamientos, profecías, enseñanzas y más.</p>
+                    <div class="filter-group" style="margin-top: 12px;">
+                        <span class="filter-tag" style="background-color: #F59E0B;">💛 Promesas</span>
+                        <span class="filter-tag" style="background-color: #EF4444;">❤️ Amor</span>
+                        <span class="filter-tag" style="background-color: #10B981;">💚 Sabiduría</span>
+                        <span class="filter-tag" style="background-color: #8B5CF6;">💜 Profecías</span>
+                    </div>
+                    <button class="btn" onclick="openResaltados()" style="width: 100%; margin-top: 12px;">🖍️ Gestionar Resaltados</button>
+                </div>
+                
+                <div class="card interactive">
+                    <h3>🔗 Referencias Cruzadas Inteligentes</h3>
+                    <p>Descubre conexiones automáticas entre pasajes usando análisis semántico avanzado y correlaciones temáticas.</p>
+                    <div style="margin-top: 16px;">
+                        <div style="background-color: var(--bg-tertiary); padding: 12px; border-radius: 6px; margin-bottom: 12px;">
+                            <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 4px;">Ejemplo de conexión:</div>
+                            <div style="font-size: 13px;">Juan 3:16 ↔️ Romanos 5:8 ↔️ 1 Juan 4:9</div>
+                            <div style="font-size: 11px; color: var(--text-muted); margin-top: 4px;">Tema: Amor de Dios</div>
+                        </div>
+                        <button class="btn" onclick="openReferencias()" style="width: 100%;">🧭 Explorar Conexiones</button>
+                    </div>
+                </div>
+                
+                <div class="card interactive">
+                    <h3>📊 Progreso de Estudio</h3>
+                    <p>Métricas detalladas de tu crecimiento espiritual con gráficos de progreso y estadísticas de lectura.</p>
+                    <div style="margin-top: 16px;">
+                        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; text-align: center;">
+                            <div>
+                                <div style="font-size: 18px; font-weight: 600; color: var(--bg-primary);">0</div>
+                                <div style="font-size: 11px; color: var(--text-muted);">Días activo</div>
+                            </div>
+                            <div>
+                                <div style="font-size: 18px; font-weight: 600; color: var(--success);">0</div>
+                                <div style="font-size: 11px; color: var(--text-muted);">Capítulos</div>
+                            </div>
+                            <div>
+                                <div style="font-size: 18px; font-weight: 600; color: var(--accent);">0</div>
+                                <div style="font-size: 11px; color: var(--text-muted);">Versículos</div>
+                            </div>
+                        </div>
+                        <button class="btn secondary" onclick="openProgreso()" style="width: 100%; margin-top: 12px;">📈 Ver Estadísticas</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sección Filtros -->
+        <section id="filtros" class="content-section">
+            <h2 style="font-size: 20px; font-weight: 700; margin-bottom: 20px; color: var(--text-primary);">
+                🔍 Análisis Temático Avanzado
+            </h2>
+            
+            <div class="search-container">
+                <h3 style="font-size: 16px; font-weight: 600; margin-bottom: 16px;">🎯 Filtros Inteligentes</h3>
+                <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 16px;">
+                    Utiliza análisis semántico para encontrar patrones y temas profundos en las Escrituras.
+                </p>
+                
+                <div class="filter-group">
+                    <span class="filter-tag active" onclick="toggleFilter('sangre')" data-filter="sangre">
+                        🩸 Sangre & Sacrificio
+                    </span>
+                    <span class="filter-tag active" onclick="toggleFilter('agua')" data-filter="agua">
+                        💧 Agua & Purificación
+                    </span>
+                    <span class="filter-tag" onclick="toggleFilter('amor')" data-filter="amor">
+                        ❤️ Amor & Misericordia
+                    </span>
+                    <span class="filter-tag" onclick="toggleFilter('fe')" data-filter="fe">
+                        🙏 Fe & Confianza
+                    </span>
+                    <span class="filter-tag" onclick="toggleFilter('esperanza')" data-filter="esperanza">
+                        ⭐ Esperanza & Promesas
+                    </span>
+                    <span class="filter-tag" onclick="toggleFilter('sabiduria')" data-filter="sabiduria">
+                        🧠 Sabiduría & Entendimiento
+                    </span>
+                    <span class="filter-tag" onclick="toggleFilter('justicia')" data-filter="justicia">
+                        ⚖️ Justicia & Rectitud
+                    </span>
+                    <span class="filter-tag" onclick="toggleFilter('paz')" data-filter="paz">
+                        🕊️ Paz & Descanso
+                    </span>
+                </div>
+                
+                <div style="margin-top: 16px; display: flex; gap: 8px;">
+                    <button class="btn secondary" onclick="clearAllFilters()">🗑️ Limpiar</button>
+                    <button class="btn" onclick="applyFilters()">🔍 Aplicar Filtros</button>
+                    <button class="btn secondary" onclick="saveFilterPreset()">💾 Guardar</button>
+                </div>
+            </div>
+            
+            <div id="filtros-resultados">
+                <div class="grid grid-1">
+                    <div class="card">
+                        <h3>📊 Análisis de Sangre & Sacrificio</h3>
+                        <div class="chart-container">
+                            <canvas id="chart-sangre"></canvas>
+                        </div>
+                        <div style="margin-top: 12px;">
+                            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; font-size: 12px;">
+                                <div>
+                                    <div style="color: var(--text-muted);">Referencias encontradas:</div>
+                                    <div style="font-weight: 600; color: var(--bg-primary);">142 versículos</div>
+                                </div>
+                                <div>
+                                    <div style="color: var(--text-muted);">Libros relacionados:</div>
+                                    <div style="font-weight: 600; color: var(--success);">31 libros</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <h3>💧 Análisis de Agua & Purificación</h3>
+                        <div class="chart-container">
+                            <canvas id="chart-agua"></canvas>
+                        </div>
+                        <div style="margin-top: 12px;">
+                            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; font-size: 12px;">
+                                <div>
+                                    <div style="color: var(--text-muted);">Referencias encontradas:</div>
+                                    <div style="font-weight: 600; color: var(--bg-primary);">89 versículos</div>
+                                </div>
+                                <div>
+                                    <div style="color: var(--text-muted);">Contextos diferentes:</div>
+                                    <div style="font-weight: 600; color: var(--accent);">7 temas</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="versiculos-filtrados" style="margin-top: 20px;">
+                <!-- Los versículos filtrados aparecerán aquí -->
+            </div>
+        </section>
+
+        <!-- Sección Social -->
+        <section id="social" class="content-section">
+            <h2 style="font-size: 20px; font-weight: 700; margin-bottom: 20px; color: var(--text-primary);">
+                👥 Comunidad de Fe
+            </h2>
+            
+            <div class="grid grid-1">
+                <div class="card interactive">
+                    <h3>💬 Grupos de Estudio Activos</h3>
+                    <p style="margin-bottom: 16px;">Únete a comunidades de estudio o crea tu propio grupo para explorar las Escrituras juntos.</p>
+                    
+                    <div class="social-item">
+                        <div class="user-avatar">ES</div>
+                        <div class="social-content">
+                            <div class="social-name">Estudio de Salmos</div>
+                            <div class="social-meta">15 miembros • Última actividad: hace 2h</div>
+                        </div>
+                        <div style="position: relative;">
+                            <div class="notification-badge">3</div>
+                        </div>
+                    </div>
+                    
+                    <div class="social-item">
+                        <div class="user-avatar">NT</div>
+                        <div class="social-content">
+                            <div class="social-name">Nuevo Testamento</div>
+                            <div class="social-meta">28 miembros • Última actividad: hace 1h</div>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-top: 16px; display: flex; gap: 8px;">
+                        <button class="btn" onclick="openGrupos()">👀 Ver Todos</button>
+                        <button class="btn secondary" onclick="createGroup()">➕ Crear Grupo</button>
+                    </div>
+                </div>
+                
+                <div class="card interactive">
+                    <h3>🏆 Sistema de Logros</h3>
+                    <p style="margin-bottom: 16px;">Completa desafíos de lectura y estudio para obtener insignias y reconocimientos.</p>
+                    
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 16px;">
+                        <div style="text-align: center; padding: 12px; background-color: var(--bg-tertiary); border-radius: 8px;">
+                            <div style="font-size: 24px; margin-bottom: 4px;">🥉</div>
+                            <div style="font-size: 11px; color: var(--text-muted);">Primer Capítulo</div>
+                        </div>
+                        <div style="text-align: center; padding: 12px; background-color: var(--bg-input); border-radius: 8px; opacity: 0.5;">
+                            <div style="font-size: 24px; margin-bottom: 4px;">🥈</div>
+                            <div style="font-size: 11px; color: var(--text-muted);">Lector Dedicado</div>
+                        </div>
+                        <div style="text-align: center; padding: 12px; background-color: var(--bg-input); border-radius: 8px; opacity: 0.5;">
+                            <div style="font-size: 24px; margin-bottom: 4px;">🥇</div>
+                            <div style="font-size: 11px; color: var(--text-muted);">Maestro</div>
+                        </div>
+                    </div>
+                    
+                    <div style="background-color: var(--bg-tertiary); padding: 12px; border-radius: 6px; margin-bottom: 12px;">
+                        <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 4px;">Progreso actual:</div>
+                        <div style="background-color: var(--bg-input); height: 6px; border-radius: 3px; overflow: hidden;">
+                            <div style="background-color: var(--bg-primary); height: 100%; width: 15%; border-radius: 3px;"></div>
+                        </div>
+                        <div style="font-size: 11px; color: var(--text-muted); margin-top: 4px;">3 de 20 logros desbloqueados</div>
+                    </div>
+                    
+                    <button class="btn" onclick="openLogros()" style="width: 100%;">🎯 Ver Todos los Logros</button>
+                </div>
+                
+                <div class="card interactive">
+                    <h3>📅 Eventos y Estudios en Vivo</h3>
+                    <p style="margin-bottom: 16px;">Participa en sesiones de estudio programadas y eventos especiales de la comunidad.</p>
+                    
+                    <div style="background-color: var(--bg-tertiary); padding: 16px; border-radius: 8px; border-left: 4px solid var(--accent); margin-bottom: 12px;">
+                        <div style="font-weight: 600; color: var(--text-primary); margin-bottom: 4px;">Próximo Evento</div>
+                        <div style="color: var(--text-secondary); font-size: 14px; margin-bottom: 8px;">Estudio de Romanos - Capítulo 8</div>
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <div style="color: var(--text-muted); font-size: 12px;">Hoy a las 8:00 PM</div>
+                            <button class="btn secondary" style="padding: 4px 12px; font-size: 12px;">🔔 Recordar</button>
+                        </div>
+                    </div>
+                    
+                    <button class="btn" onclick="openEventos()" style="width: 100%;">📋 Ver Calendario</button>
+                </div>
+                
+                <div class="card interactive">
+                    <h3>💭 Reflexiones Compartidas</h3>
+                    <p style="margin-bottom: 16px;">Comparte tus insights y lee las reflexiones de otros miembros de la comunidad.</p>
+                    
+                    <div style="background-color: var(--bg-tertiary); padding: 12px; border-radius: 6px; margin-bottom: 12px;">
+                        <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 6px;">Reflexión reciente sobre Juan 3:16</div>
+                        <div style="font-size: 13px; color: var(--text-secondary); line-height: 1.4;">
+                            "Este versículo me recuerda constantemente que el amor de Dios no tiene límites..."
+                        </div>
+                        <div style="margin-top: 8px; display: flex; justify-content: space-between; align-items: center;">
+                            <div style="color: var(--text-muted); font-size: 11px;">por Usuario123 • hace 2h</div>
+                            <div style="color: var(--text-muted); font-size: 11px;">❤️ 12 • 💬 5</div>
+                        </div>
+                    </div>
+                    
+                    <div style="display: flex; gap: 8px;">
+                        <button class="btn" onclick="openReflexiones()">👁️ Explorar</button>
+                        <button class="btn secondary" onclick="writeReflection()">✍️ Escribir</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sección Recursos -->
+        <section id="recursos" class="content-section">
+            <h2 style="font-size: 20px; font-weight: 700; margin-bottom: 20px; color: var(--text-primary);">
+                🛠️ Recursos y Herramientas
+            </h2>
+            
+            <div class="grid grid-1">
+                <div class="card interactive">
+                    <h3>🗺️ Atlas Bíblico Interactivo</h3>
+                    <p>Explora mapas detallados de Tierra Santa con ubicaciones bíblicas, rutas de viajes apostólicos y contexto histórico.</p>
+                    <div style="margin-top: 16px;">
+                        <div style="background-color: var(--bg-tertiary); height: 120px; border-radius: 6px; display: flex; align-items: center; justify-content: center; margin-bottom: 12px;">
+                            <div style="text-align: center; color: var(--text-muted);">
+                                <div style="font-size: 32px; margin-bottom: 8px;">🗺️</div>
+                                <div style="font-size: 12px;">Vista previa del mapa</div>
+                            </div>
+                        </div>
+                        <button class="btn" onclick="openMapas()" style="width: 100%;">🧭 Explorar Mapas</button>
+                    </div>
+                </div>
+                
+                <div class="card interactive">
+                    <h3>⏳ Cronología Bíblica Interactiva</h3>
+                    <p>Navega por la línea temporal desde la creación hasta el Apocalipsis con eventos clave y contexto histórico.</p>
+                    <div style="margin-top: 16px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; font-size: 12px;">
+                            <span style="color: var(--text-muted);">Creación</span>
+                            <span style="color: var(--bg-primary);">• • • • •</span>
+                            <span style="color: var(--text-muted);">Apocalipsis</span>
+                        </div>
+                        <div style="background-color: var(--bg-tertiary); padding: 12px; border-radius: 6px; text-align: center; margin-bottom: 12px;">
+                            <div style="font-size: 14px; font-weight: 600; color: var(--text-primary);">Período Actual</div>
+                            <div style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">Reino Dividido (930-586 a.C.)</div>
+                        </div>
+                        <button class="btn" onclick="openCronologia()" style="width: 100%;">⏰ Ver Cronología</button>
+                    </div>
+                </div>
+                
+                <div class="card interactive">
+                    <h3>📖 Concordancia Bíblica Avanzada</h3>
+                    <p>Búsqueda exhaustiva de palabras con análisis de frecuencia, contexto y referencias cruzadas automáticas.</p>
+                    <div style="margin-top: 16px;">
+                        <div style="background-color: var(--bg-tertiary); padding: 12px; border-radius: 6px; margin-bottom: 12px;">
+                            <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 6px;">Ejemplo de búsqueda: "amor"</div>
+                            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; font-size: 11px; text-align: center;">
+                                <div>
+                                    <div style="font-weight: 600; color: var(--bg-primary);">551</div>
+                                    <div style="color: var(--text-muted);">apariciones</div>
+                                </div>
+                                <div>
+                                    <div style="font-weight: 600; color: var(--success);">45</div>
+                                    <div style="color: var(--text-muted);">libros</div>
+                                </div>
+                                <div>
+                                    <div style="font-weight: 600; color: var(--accent);">12</div>
+                                    <div style="color: var(--text-muted);">conceptos</div>
+                                </div>
+                            </div>
+                        </div>
+                        <button class="btn" onclick="openConcordancia()" style="width: 100%;">🔍 Abrir Concordancia</button>
+                    </div>
+                </div>
+                
+                <div class="card interactive">
+                    <h3>🎵 Recursos Multimedia</h3>
+                    <p>Accede a audio bíblico, música cristiana, documentales y recursos visuales para enriquecer tu estudio.</p>
+                    <div style="margin-top: 16px;">
+                        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-bottom: 12px;">
+                            <div style="background-color: var(--bg-tertiary); padding: 8px; border-radius: 4px; text-align: center;">
+                                <div style="font-size: 16px; margin-bottom: 4px;">🎧</div>
+                                <div style="font-size: 11px; color: var(--text-muted);">Audio Biblia</div>
+                            </div>
+                            <div style="background-color: var(--bg-tertiary); padding: 8px; border-radius: 4px; text-align: center;">
+                                <div style="font-size: 16px; margin-bottom: 4px;">🎬</div>
+                                <div style="font-size: 11px; color: var(--text-muted);">Videos</div>
+                            </div>
+                        </div>
+                        <button class="btn secondary" onclick="openMultimedia()" style="width: 100%;">🎪 Explorar Multimedia</button>
+                    </div>
+                </div>
+                
+                <div class="card interactive">
+                    <h3>📤 Exportar y Compartir</h3>
+                    <p>Descarga tus estudios, notas y versículos favoritos en múltiples formatos para compartir o imprimir.</p>
+                    <div style="margin-top: 16px;">
+                        <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px;">
+                            <span style="background-color: var(--bg-tertiary); padding: 4px 8px; border-radius: 12px; font-size: 10px; color: var(--text-muted);">📄 PDF</span>
+                            <span style="background-color: var(--bg-tertiary); padding: 4px 8px; border-radius: 12px; font-size: 10px; color: var(--text-muted);">📝 Word</span>
+                            <span style="background-color: var(--bg-tertiary); padding: 4px 8px; border-radius: 12px; font-size: 10px; color: var(--text-muted);">📊 Excel</span>
+                            <span style="background-color: var(--bg-tertiary); padding: 4px 8px; border-radius: 12px; font-size: 10px; color: var(--text-muted);">📱 Compartir</span>
+                        </div>
+                        <div style="display: flex; gap: 8px;">
+                            <button class="btn" onclick="exportData()">📥 Exportar</button>
+                            <button class="btn secondary" onclick="shareStudy()">📱 Compartir</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card interactive">
+                    <h3>⚙️ Configuración y Personalización</h3>
+                    <p>Personaliza tu experiencia con temas, tamaños de fuente, configuraciones de estudio y preferencias de notificación.</p>
+                    <div style="margin-top: 16px;">
+                        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 12px; font-size: 12px;">
+                            <div>
+                                <div style="color: var(--text-muted);">Tema actual:</div>
+                                <div style="font-weight: 600; color: var(--text-primary);">🌙 Oscuro</div>
+                            </div>
+                            <div>
+                                <div style="color: var(--text-muted);">Tamaño fuente:</div>
+                                <div style="font-weight: 600; color: var(--text-primary);">📏 Mediano</div>
+                            </div>
+                        </div>
+                        <button class="btn" onclick="openSettings()" style="width: 100%;">⚙️ Configuración</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- JavaScript integrado y optimizado para Android -->
+    <script>
+        'use strict';
+        
+        // =====================================================================
+        // CONFIGURACIÓN GLOBAL OPTIMIZADA PARA ANDROID
+        // =====================================================================
+        
+        const AppConfig = {
+            version: '2.0.0-android',
+            debug: false,
+            maxCacheSize: 25, // Reducido para dispositivos móviles
+            searchDebounceDelay: 400, // Más lento para Android
+            animationDuration: 250,
+            touchFeedbackDelay: 100,
+            offlineMode: true,
+            autoSave: true
+        };
+        
+        // Estado global de la aplicación
+        const AppState = {
+            currentSection: 'biblia',
+            darkMode: true,
+            searchTimeout: null,
+            touchStartTime: 0,
+            filtrosActivos: ['sangre', 'agua'],
+            cache: new Map(),
+            userProgress: {
+                chaptersRead: 0,
+                versesHighlighted: 0,
+                notesCreated: 0,
+                daysActive: 0
+            },
+            settings: {
+                fontSize: 'medium',
+                theme: 'dark',
+                notifications: true,
+                autoScroll: true
+            }
+        };
+        
+        // =====================================================================
+        // DATOS BÍBLICOS EXPANDIDOS PARA FUNCIONAMIENTO OFFLINE
+        // =====================================================================
+        
+        const BibliaData = {
+            libros: [
+                // Antiguo Testamento
+                { id: 'genesis', nombre: 'Génesis', abreviatura: 'Gn', capitulos: 50, testamento: 'AT' },
+                { id: 'exodo', nombre: 'Éxodo', abreviatura: 'Ex', capitulos: 40, testamento: 'AT' },
+                { id: 'levitico', nombre: 'Levítico', abreviatura: 'Lv', capitulos: 27, testamento: 'AT' },
+                { id: 'numeros', nombre: 'Números', abreviatura: 'Nm', capitulos: 36, testamento: 'AT' },
+                { id: 'deuteronomio', nombre: 'Deuteronomio', abreviatura: 'Dt', capitulos: 34, testamento: 'AT' },
+                { id: 'josue', nombre: 'Josué', abreviatura: 'Jos', capitulos: 24, testamento: 'AT' },
+                { id: 'jueces', nombre: 'Jueces', abreviatura: 'Jue', capitulos: 21, testamento: 'AT' },
+                { id: 'rut', nombre: 'Rut', abreviatura: 'Rt', capitulos: 4, testamento: 'AT' },
+                { id: '1samuel', nombre: '1 Samuel', abreviatura: '1 S', capitulos: 31, testamento: 'AT' },
+                { id: '2samuel', nombre: '2 Samuel', abreviatura: '2 S', capitulos: 24, testamento: 'AT' },
+                { id: '1reyes', nombre: '1 Reyes', abreviatura: '1 R', capitulos: 22, testamento: 'AT' },
+                { id: '2reyes', nombre: '2 Reyes', abreviatura: '2 R', capitulos: 25, testamento: 'AT' },
+                { id: '1cronicas', nombre: '1 Crónicas', abreviatura: '1 Cr', capitulos: 29, testamento: 'AT' },
+                { id: '2cronicas', nombre: '2 Crónicas', abreviatura: '2 Cr', capitulos: 36, testamento: 'AT' },
+                { id: 'esdras', nombre: 'Esdras', abreviatura: 'Esd', capitulos: 10, testamento: 'AT' },
+                { id: 'nehemias', nombre: 'Nehemías', abreviatura: 'Neh', capitulos: 13, testamento: 'AT' },
+                { id: 'ester', nombre: 'Ester', abreviatura: 'Est', capitulos: 10, testamento: 'AT' },
+                { id: 'job', nombre: 'Job', abreviatura: 'Job', capitulos: 42, testamento: 'AT' },
+                { id: 'salmos', nombre: 'Salmos', abreviatura: 'Sal', capitulos: 150, testamento: 'AT' },
+                { id: 'proverbios', nombre: 'Proverbios', abreviatura: 'Pr', capitulos: 31, testamento: 'AT' },
+                { id: 'eclesiastes', nombre: 'Eclesiastés', abreviatura: 'Ec', capitulos: 12, testamento: 'AT' },
+                { id: 'cantares', nombre: 'Cantares', abreviatura: 'Cnt', capitulos: 8, testamento: 'AT' },
+                { id: 'isaias', nombre: 'Isaías', abreviatura: 'Is', capitulos: 66, testamento: 'AT' },
+                { id: 'jeremias', nombre: 'Jeremías', abreviatura: 'Jer', capitulos: 52, testamento: 'AT' },
+                { id: 'lamentaciones', nombre: 'Lamentaciones', abreviatura: 'Lm', capitulos: 5, testamento: 'AT' },
+                { id: 'ezequiel', nombre: 'Ezequiel', abreviatura: 'Ez', capitulos: 48, testamento: 'AT' },
+                { id: 'daniel', nombre: 'Daniel', abreviatura: 'Dn', capitulos: 12, testamento: 'AT' },
+                
+                // Nuevo Testamento
+                { id: 'mateo', nombre: 'Mateo', abreviatura: 'Mt', capitulos: 28, testamento: 'NT' },
+                { id: 'marcos', nombre: 'Marcos', abreviatura: 'Mr', capitulos: 16, testamento: 'NT' },
+                { id: 'lucas', nombre: 'Lucas', abreviatura: 'Lc', capitulos: 24, testamento: 'NT' },
+                { id: 'juan', nombre: 'Juan', abreviatura: 'Jn', capitulos: 21, testamento: 'NT' },
+                { id: 'hechos', nombre: 'Hechos', abreviatura: 'Hch', capitulos: 28, testamento: 'NT' },
+                { id: 'romanos', nombre: 'Romanos', abreviatura: 'Ro', capitulos: 16, testamento: 'NT' },
+                { id: '1corintios', nombre: '1 Corintios', abreviatura: '1 Co', capitulos: 16, testamento: 'NT' },
+                { id: '2corintios', nombre: '2 Corintios', abreviatura: '2 Co', capitulos: 13, testamento: 'NT' },
+                { id: 'galatas', nombre: 'Gálatas', abreviatura: 'Gá', capitulos: 6, testamento: 'NT' },
+                { id: 'efesios', nombre: 'Efesios', abreviatura: 'Ef', capitulos: 6, testamento: 'NT' },
+                { id: 'filipenses', nombre: 'Filipenses', abreviatura: 'Fil', capitulos: 4, testamento: 'NT' },
+                { id: 'colosenses', nombre: 'Colosenses', abreviatura: 'Col', capitulos: 4, testamento: 'NT' },
+                { id: '1tesalonicenses', nombre: '1 Tesalonicenses', abreviatura: '1 Ts', capitulos: 5, testamento: 'NT' },
+                { id: '2tesalonicenses', nombre: '2 Tesalonicenses', abreviatura: '2 Ts', capitulos: 3, testamento: 'NT' },
+                { id: '1timoteo', nombre: '1 Timoteo', abreviatura: '1 Ti', capitulos: 6, testamento: 'NT' },
+                { id: '2timoteo', nombre: '2 Timoteo', abreviatura: '2 Ti', capitulos: 4, testamento: 'NT' },
+                { id: 'tito', nombre: 'Tito', abreviatura: 'Tit', capitulos: 3, testamento: 'NT' },
+                { id: 'filemon', nombre: 'Filemón', abreviatura: 'Flm', capitulos: 1, testamento: 'NT' },
+                { id: 'hebreos', nombre: 'Hebreos', abreviatura: 'He', capitulos: 13, testamento: 'NT' },
+                { id: 'santiago', nombre: 'Santiago', abreviatura: 'Stg', capitulos: 5, testamento: 'NT' },
+                { id: '1pedro', nombre: '1 Pedro', abreviatura: '1 P', capitulos: 5, testamento: 'NT' },
+                { id: '2pedro', nombre: '2 Pedro', abreviatura: '2 P', capitulos: 3, testamento: 'NT' },
+                { id: '1juan', nombre: '1 Juan', abreviatura: '1 Jn', capitulos: 5, testamento: 'NT' },
+                { id: '2juan', nombre: '2 Juan', abreviatura: '2 Jn', capitulos: 1, testamento: 'NT' },
+                { id: '3juan', nombre: '3 Juan', abreviatura: '3 Jn', capitulos: 1, testamento: 'NT' },
+                { id: 'judas', nombre: 'Judas', abreviatura: 'Jud', capitulos: 1, testamento: 'NT' },
+                { id: 'apocalipsis', nombre: 'Apocalipsis', abreviatura: 'Ap', capitulos: 22, testamento: 'NT' }
+            ],
+            
+            // Contenido bíblico de muestra expandido
+            contenido: {
+                'genesis': {
+                    1: [
+                        { numero: 1, texto: "En el principio creó Dios los cielos y la tierra." },
+                        { numero: 2, texto: "Y la tierra estaba desordenada y vacía, y las tinieblas estaban sobre la faz del abismo, y el Espíritu de Dios se movía sobre la faz de las aguas." },
+                        { numero: 3, texto: "Y dijo Dios: Sea la luz; y fue la luz." },
+                        { numero: 4, texto: "Y vio Dios que la luz era buena; y separó Dios la luz de las tinieblas." },
+                        { numero: 5, texto: "Y llamó Dios a la luz Día, y a las tinieblas llamó Noche. Y fue la tarde y la mañana un día." }
+                    ],
+                    3: [
+                        { numero: 15, texto: "Y pondré enemistad entre ti y la mujer, y entre tu simiente y la simiente suya; ésta te herirá en la cabeza, y tú le herirás en el calcañar." }
+                    ]
+                },
+                'exodo': {
+                    3: [
+                        { numero: 14, texto: "Y respondió Dios a Moisés: YO SOY EL QUE SOY. Y dijo: Así dirás a los hijos de Israel: YO SOY me envió a vosotros." }
+                    ],
+                    20: [
+                        { numero: 3, texto: "No tendrás dioses ajenos delante de mí." },
+                        { numero: 13, texto: "No matarás." },
+                        { numero: 14, texto: "No cometerás adulterio." },
+                        { numero: 15, texto: "No hurtarás." },
+                        { numero: 16, texto: "No hablarás contra tu prójimo falso testimonio." }
+                    ]
+                },
+                'salmos': {
+                    23: [
+                        { numero: 1, texto: "Jehová es mi pastor; nada me faltará." },
+                        { numero: 2, texto: "En lugares de delicados pastos me hará descansar; junto a aguas de reposo me pastoreará." },
+                        { numero: 3, texto: "Confortará mi alma; me guiará por sendas de justicia por amor de su nombre." },
+                        { numero: 4, texto: "Aunque ande en valle de sombra de muerte, no temeré mal alguno, porque tú estarás conmigo; tu vara y tu cayado me infundirán aliento." }
+                    ],
+                    91: [
+                        { numero: 1, texto: "El que habita al abrigo del Altísimo morará bajo la sombra del Omnipotente." },
+                        { numero: 2, texto: "Diré yo a Jehová: Esperanza mía, y castillo mío; mi Dios, en quien confiaré." }
+                    ]
+                },
+                'proverbios': {
+                    3: [
+                        { numero: 5, texto: "Fíate de Jehová de todo tu corazón, y no te apoyes en tu propia prudencia." },
+                        { numero: 6, texto: "Reconócelo en todos tus caminos, y él enderezará tus veredas." }
+                    ]
+                },
+                'isaias': {
+                    53: [
+                        { numero: 5, texto: "Mas él herido fue por nuestras rebeliones, molido por nuestros pecados; el castigo de nuestra paz fue sobre él, y por su llaga fuimos nosotros curados." }
+                    ],
+                    55: [
+                        { numero: 8, texto: "Porque mis pensamientos no son vuestros pensamientos, ni vuestros caminos mis caminos, dijo Jehová." },
+                        { numero: 9, texto: "Como son más altos los cielos que la tierra, así son mis caminos más altos que vuestros caminos, y mis pensamientos más que vuestros pensamientos." }
+                    ]
+                },
+                'mateo': {
+                    5: [
+                        { numero: 3, texto: "Bienaventurados los pobres en espíritu, porque de ellos es el reino de los cielos." },
+                        { numero: 4, texto: "Bienaventurados los que lloran, porque ellos recibirán consolación." },
+                        { numero: 5, texto: "Bienaventurados los mansos, porque ellos recibirán la tierra por heredad." },
+                        { numero: 6, texto: "Bienaventurados los que tienen hambre y sed de justicia, porque ellos serán saciados." }
+                    ],
+                    6: [
+                        { numero: 9, texto: "Vosotros, pues, oraréis así: Padre nuestro que estás en los cielos, santificado sea tu nombre." },
+                        { numero: 11, texto: "El pan nuestro de cada día, dánoslo hoy." },
+                        { numero: 33, texto: "Mas buscad primeramente el reino de Dios y su justicia, y todas estas cosas os serán añadidas." }
+                    ]
+                },
+                'juan': {
+                    1: [
+                        { numero: 1, texto: "En el principio era el Verbo, y el Verbo era con Dios, y el Verbo era Dios." },
+                        { numero: 14, texto: "Y aquel Verbo fue hecho carne, y habitó entre nosotros (y vimos su gloria, gloria como del unigénito del Padre), lleno de gracia y de verdad." }
+                    ],
+                    3: [
+                        { numero: 16, texto: "Porque de tal manera amó Dios al mundo, que ha dado a su Hijo unigénito, para que todo aquel que en él cree, no se pierda, mas tenga vida eterna." }
+                    ],
+                    14: [
+                        { numero: 6, texto: "Jesús le dijo: Yo soy el camino, y la verdad, y la vida; nadie viene al Padre, sino por mí." }
+                    ]
+                },
+                'romanos': {
+                    3: [
+                        { numero: 23, texto: "Por cuanto todos pecaron, y están destituidos de la gloria de Dios." }
+                    ],
+                    5: [
+                        { numero: 8, texto: "Mas Dios muestra su amor para con nosotros, en que siendo aún pecadores, Cristo murió por nosotros." }
+                    ],
+                    8: [
+                        { numero: 28, texto: "Y sabemos que a los que aman a Dios, todas las cosas les ayudan a bien, esto es, a los que conforme a su propósito son llamados." }
+                    ]
+                },
+                'efesios': {
+                    2: [
+                        { numero: 8, texto: "Porque por gracia sois salvos por medio de la fe; y esto no de vosotros, pues es don de Dios." },
+                        { numero: 9, texto: "No por obras, para que nadie se gloríe." }
+                    ]
+                },
+                'filipenses': {
+                    4: [
+                        { numero: 13, texto: "Todo lo puedo en Cristo que me fortalece." },
+                        { numero: 19, texto: "Mi Dios, pues, suplirá todo lo que os falta conforme a sus riquezas en gloria en Cristo Jesús." }
+                    ]
+                },
+                '1juan': {
+                    1: [
+                        { numero: 9, texto: "Si confesamos nuestros pecados, él es fiel y justo para perdonar nuestros pecados, y limpiarnos de toda maldad." }
+                    ],
+                    4: [
+                        { numero: 8, texto: "El que no ama, no ha conocido a Dios; porque Dios es amor." }
+                    ]
+                },
+                'apocalipsis': {
+                    3: [
+                        { numero: 20, texto: "He aquí, yo estoy a la puerta y llamo; si alguno oye mi voz y abre la puerta, entraré a él, y cenaré con él, y él conmigo." }
+                    ]
+                }
+            },
+            
+            // Versículos populares para acceso rápido
+            versiculosPopulares: [
+                { referencia: 'Juan 3:16', libro: 'juan', capitulo: 3, versiculo: 16 },
+                { referencia: 'Romanos 8:28', libro: 'romanos', capitulo: 8, versiculo: 28 },
+                { referencia: 'Filipenses 4:13', libro: 'filipenses', capitulo: 4, versiculo: 13 },
+                { referencia: 'Salmos 23:1', libro: 'salmos', capitulo: 23, versiculo: 1 },
+                { referencia: 'Proverbios 3:5', libro: 'proverbios', capitulo: 3, versiculo: 5 },
+                { referencia: 'Isaías 53:5', libro: 'isaias', capitulo: 53, versiculo: 5 }
+            ]
+        };
+        
+        // =====================================================================
+        // SISTEMA DE CACHE OPTIMIZADO PARA MÓVILES
+        // =====================================================================
+        
+        class MobileCache {
+            constructor() {
+                this.memory = new Map();
+                this.storage = localStorage;
+                this.maxMemorySize = AppConfig.maxCacheSize;
+                this.prefix = 'bible_app_';
+            }
+            
+            set(key, data, persistent = false) {
+                // Cache en memoria
+                if (this.memory.size >= this.maxMemorySize) {
+                    const firstKey = this.memory.keys().next().value;
+                    this.memory.delete(firstKey);
+                }
+                
+                this.memory.set(key, {
+                    data,
+                    timestamp: Date.now()
+                });
+                
+                // Cache persistente en localStorage si se solicita
+                if (persistent) {
+                    try {
+                        this.storage.setItem(this.prefix + key, JSON.stringify({
+                            data,
+                            timestamp: Date.now()
+                        }));
+                    } catch (e) {
+                        console.warn('Error saving to localStorage:', e);
+                    }
+                }
+            }
+            
+            get(key) {
+                // Intentar obtener de memoria primero
+                if (this.memory.has(key)) {
+                    return this.memory.get(key).data;
+                }
+                
+                // Intentar obtener de localStorage
+                try {
+                    const stored = this.storage.getItem(this.prefix + key);
+                    if (stored) {
+                        const parsed = JSON.parse(stored);
+                        // Verificar si no ha expirado (7 días)
+                        if (Date.now() - parsed.timestamp < 7 * 24 * 60 * 60 * 1000) {
+                            this.memory.set(key, parsed);
+                            return parsed.data;
+                        } else {
+                            this.storage.removeItem(this.prefix + key);
+                        }
+                    }
+                } catch (e) {
+                    console.warn('Error reading from localStorage:', e);
+                }
+                
+                return null;
+            }
+            
+            clear() {
+                this.memory.clear();
+                // Limpiar localStorage
+                Object.keys(this.storage).forEach(key => {
+                    if (key.startsWith(this.prefix)) {
+                        this.storage.removeItem(key);
+                    }
+                });
+            }
+        }
+        
+        const cache = new MobileCache();
+        
+        // =====================================================================
+        // FUNCIONES DE NAVEGACIÓN Y UI OPTIMIZADAS PARA ANDROID
+        // =====================================================================
+        
+        function showSection(sectionName) {
+            // Feedback táctil inmediato
+            if (event && event.target) {
+                event.target.style.transform = 'scale(0.95)';
+                setTimeout(() => {
+                    event.target.style.transform = '';
+                }, AppConfig.touchFeedbackDelay);
+            }
+            
+            // Ocultar todas las secciones
+            document.querySelectorAll('.content-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Mostrar la sección seleccionada
+            const targetSection = document.getElementById(sectionName);
+            if (targetSection) {
+                targetSection.classList.add('active');
+            }
+            
+            // Actualizar tabs de navegación
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Encontrar y activar el tab correcto
+            const activeTab = document.querySelector(`[onclick="showSection('${sectionName}')"]`);
+            if (activeTab) {
+                activeTab.classList.add('active');
+            }
+            
+            AppState.currentSection = sectionName;
+            
+            // Cargar contenido específico con delay para animación
+            setTimeout(() => {
+                loadSectionContent(sectionName);
+            }, 100);
+            
+            // Guardar estado
+            saveAppState();
+        }
+        
+        function loadSectionContent(sectionName) {
+            switch(sectionName) {
+                case 'biblia':
+                    initBibliaSection();
+                    break;
+                case 'filtros':
+                    initFiltrosSection();
+                    break;
+                case 'social':
+                    loadSocialContent();
+                    break;
+                case 'recursos':
+                    loadRecursosContent();
+                    break;
+            }
+        }
+        
+        // =====================================================================
+        // FUNCIONES DE LA SECCIÓN BIBLIA CON BÚSQUEDA AVANZADA
+        // =====================================================================
+        
+        function initBibliaSection() {
+            const libroSelect = document.getElementById('libro-select');
+            if (!libroSelect) return;
+            
+            libroSelect.innerHTML = '<option value="">Selecciona un libro...</option>';
+            
+            // Agrupar por testamento
+            const antiguoTestamento = BibliaData.libros.filter(l => l.testamento === 'AT');
+            const nuevoTestamento = BibliaData.libros.filter(l => l.testamento === 'NT');
+            
+            // Crear grupos
+            const atGroup = document.createElement('optgroup');
+            atGroup.label = 'Antiguo Testamento';
+            antiguoTestamento.forEach(libro => {
+                const option = document.createElement('option');
+                option.value = libro.id;
+                option.textContent = `${libro.nombre} (${libro.capitulos} cap.)`;
+                atGroup.appendChild(option);
+            });
+            
+            const ntGroup = document.createElement('optgroup');
+            ntGroup.label = 'Nuevo Testamento';
+            nuevoTestamento.forEach(libro => {
+                const option = document.createElement('option');
+                option.value = libro.id;
+                option.textContent = `${libro.nombre} (${libro.capitulos} cap.)`;
+                ntGroup.appendChild(option);
+            });
+            
+            libroSelect.appendChild(atGroup);
+            libroSelect.appendChild(ntGroup);
+            
+            // Mostrar versículos populares por defecto
+            showVersiculosPopulares();
+        }
+        
+        function showVersiculosPopulares() {
+            const contenidoBiblico = document.getElementById('contenido-biblico');
+            if (!contenidoBiblico) return;
+            
+            let html = `
+                <div style="margin-bottom: 20px;">
+                    <h3 style="font-size: 18px; font-weight: 600; margin-bottom: 16px; color: var(--text-primary);">
+                        ⭐ Versículos Populares
+                    </h3>
+                    <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 16px;">
+                        Algunos de los versículos más amados y citados de la Biblia:
+                    </p>
+            `;
+            
+            BibliaData.versiculosPopulares.forEach(popular => {
+                const versiculo = getVersiculoByReference(popular.libro, popular.capitulo, popular.versiculo);
+                if (versiculo) {
+                    html += `
+                        <div class="verse-container selectable" onclick="highlightVerse(this)" style="cursor: pointer;">
+                            <div class="verse-reference">${popular.referencia}</div>
+                            <span class="verse-number">${versiculo.numero}</span>
+                            <span class="verse-text">${versiculo.texto}</span>
+                        </div>
+                    `;
+                }
+            });
+            
+            html += `
+                    <div style="margin-top: 20px; text-align: center;">
+                        <button class="btn secondary" onclick="goToRandomVerse()">
+                            🎲 Versículo Aleatorio
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            contenidoBiblico.innerHTML = html;
+        }
+        
+        function getVersiculoByReference(libro, capitulo, numeroVersiculo) {
+            const contenidoLibro = BibliaData.contenido[libro];
+            if (contenidoLibro && contenidoLibro[capitulo]) {
+                return contenidoLibro[capitulo].find(v => v.numero === numeroVersiculo);
+            }
+            return null;
+        }
+        
+        function loadCapitulos() {
+            const libroSelect = document.getElementById('libro-select');
+            const capituloSelect = document.getElementById('capitulo-select');
+            if (!libroSelect || !capituloSelect) return;
+            
+            const libroId = libroSelect.value;
+            capituloSelect.innerHTML = '<option value="">Selecciona capítulo...</option>';
+            
+            if (libroId) {
+                const libro = BibliaData.libros.find(l => l.id === libroId);
+                if (libro) {
+                    for (let i = 1; i <= libro.capitulos; i++) {
+                        const option = document.createElement('option');
+                        option.value = i;
+                        option.textContent = `Capítulo ${i}`;
+                        capituloSelect.appendChild(option);
+                    }
+                }
+            }
+        }
+        
+        function loadVersiculos() {
+            const libroSelect = document.getElementById('libro-select');
+            const capituloSelect = document.getElementById('capitulo-select');
+            const contenidoBiblico = document.getElementById('contenido-biblico');
+            
+            if (!libroSelect || !capituloSelect || !contenidoBiblico) return;
+            
+            const libroId = libroSelect.value;
+            const capitulo = capituloSelect.value;
+            
+            if (libroId && capitulo) {
+                // Mostrar loading con animación mejorada
+                contenidoBiblico.innerHTML = `
+                    <div class="loading">
+                        <div class="spinner"></div>
+                        <p>Cargando ${libroSelect.options[libroSelect.selectedIndex].text} ${capitulo}...</p>
+                        <small style="margin-top: 8px; opacity: 0.7;">Preparando versículos para tu estudio</small>
+                    </div>
+                `;
+                
+                // Simular carga con promesa
+                const loadPromise = new Promise(resolve => {
+                    setTimeout(resolve, 800 + Math.random() * 400); // Entre 800-1200ms
+                });
+                
+                loadPromise.then(() => {
+                    const versiculos = BibliaData.contenido[libroId]?.[capitulo] || [];
+                    const libroNombre = libroSelect.options[libroSelect.selectedIndex].text;
+                    
+                    if (versiculos.length > 0) {
+                        let html = `
+                            <div style="margin-bottom: 16px; text-align: center;">
+                                <h3 style="font-size: 20px; font-weight: 700; color: var(--text-primary); margin-bottom: 8px;">
+                                    ${libroNombre} ${capitulo}
+                                </h3>
+                                <div style="display: flex; justify-content: center; gap: 16px; margin-bottom: 16px;">
+                                    <button class="btn secondary" onclick="previousChapter()" style="padding: 8px 12px; font-size: 12px;">
+                                        ← Anterior
+                                    </button>
+                                    <button class="btn secondary" onclick="shareChapter()" style="padding: 8px 12px; font-size: 12px;">
+                                        📱 Compartir
+                                    </button>
+                                    <button class="btn secondary" onclick="nextChapter()" style="padding: 8px 12px; font-size: 12px;">
+                                        Siguiente →
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div class="selectable">
+                        `;
+                        
+                        versiculos.forEach(versiculo => {
+                            html += `
+                                <div class="verse-container" onclick="highlightVerse(this)" style="cursor: pointer;">
+                                    <span class="verse-number">${versiculo.numero}</span>
+                                    <span class="verse-text">${versiculo.texto}</span>
+                                </div>
+                            `;
+                        });
+                        
+                        html += `</div>`;
+                        contenidoBiblico.innerHTML = html;
+                        
+                        // Actualizar progreso del usuario
+                        AppState.userProgress.chaptersRead++;
+                        saveAppState();
+                        
+                    } else {
+                        contenidoBiblico.innerHTML = `
+                            <div class="card">
+                                <h3>📖 ${libroNombre} ${capitulo}</h3>
+                                <div class="error-state">
+                                    <p>Este capítulo aún no está disponible en la versión offline.</p>
+                                    <p style="margin-top: 8px; font-size: 12px;">Conéctate a internet para acceder al contenido completo de la Biblia.</p>
+                                </div>
+                                <div style="margin-top: 16px; display: flex; gap: 8px;">
+                                    <button class="btn" onclick="loadOnlineContent('${libroId}', '${capitulo}')">
+                                        🌐 Cargar Online
+                                    </button>
+                                    <button class="btn secondary" onclick="goToRandomVerse()">
+                                        🎲 Versículo Aleatorio
+                                    </button>
+                                </div>
+                            </div>
+                        `;
+                    }
+                });
+            }
+        }
+        
+        // =====================================================================
+        // SISTEMA DE BÚSQUEDA INTELIGENTE
+        // =====================================================================
+        
+        function debounceSearch(query) {
+            clearTimeout(AppState.searchTimeout);
+            AppState.searchTimeout = setTimeout(() => {
+                performSearch(query);
+            }, AppConfig.searchDebounceDelay);
+        }
+        
+        function performSearch(query) {
+            if (query.length < 2) {
+                showVersiculosPopulares();
+                return;
+            }
+            
+            const contenidoBiblico = document.getElementById('contenido-biblico');
+            if (!contenidoBiblico) return;
+            
+            contenidoBiblico.innerHTML = `
+                <div class="loading">
+                    <div class="spinner"></div>
+                    <p>Buscando "${query}"...</p>
+                    <small style="margin-top: 8px; opacity: 0.7;">Analizando textos bíblicos</small>
+                </div>
+            `;
+            
+            // Búsqueda con delay realista
+            setTimeout(() => {
+                const resultados = searchInBiblia(query);
+                displaySearchResults(resultados, query);
+            }, 600 + Math.random() * 400);
+        }
+        
+        function searchInBiblia(query) {
+            const resultados = [];
+            const queryLower = query.toLowerCase();
+            
+            // Búsqueda en contenido disponible
+            Object.keys(BibliaData.contenido).forEach(libroId => {
+                const libro = BibliaData.libros.find(l => l.id === libroId);
+                Object.keys(BibliaData.contenido[libroId]).forEach(capitulo => {
+                    BibliaData.contenido[libroId][capitulo].forEach(versiculo => {
+                        if (versiculo.texto.toLowerCase().includes(queryLower)) {
+                            resultados.push({
+                                libro: libroId,
+                                libroNombre: libro?.nombre || libroId,
+                                capitulo: parseInt(capitulo),
+                                versiculo: versiculo.numero,
+                                texto: versiculo.texto,
+                                relevancia: calculateRelevance(versiculo.texto, query)
+                            });
+                        }
+                    });
+                });
+            });
+            
+            // Ordenar por relevancia
+            return resultados.sort((a, b) => b.relevancia - a.relevancia);
+        }
+        
+        function calculateRelevance(texto, query) {
+            const textoLower = texto.toLowerCase();
+            const queryLower = query.toLowerCase();
+            
+            let relevancia = 0;
+            
+            // Coincidencia exacta de la frase completa
+            if (textoLower.includes(queryLower)) {
+                relevancia += 100;
+            }
+            
+            // Coincidencias de palabras individuales
+            const palabrasQuery = queryLower.split(' ');
+            palabrasQuery.forEach(palabra => {
+                if (textoLower.includes(palabra)) {
+                    relevancia += 10;
+                }
+            });
+            
+            // Penalizar textos muy largos
+            relevancia -= Math.floor(texto.length / 100);
+            
+            return Math.max(0, relevancia);
+        }
+        
+        function displaySearchResults(resultados, query) {
+            const contenidoBiblico = document.getElementById('contenido-biblico');
+            if (!contenidoBiblico) return;
+            
+            if (resultados.length > 0) {
+                let html = `
+                    <div style="margin-bottom: 20px;">
+                        <h3 style="font-size: 18px; font-weight: 600; margin-bottom: 12px; color: var(--text-primary);">
+                            🔍 Resultados para "${query}"
+                        </h3>
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; padding: 12px; background-color: var(--bg-input); border-radius: 6px;">
+                            <span style="color: var(--text-muted); font-size: 13px;">
+                                ${resultados.length} versículo${resultados.length !== 1 ? 's' : ''} encontrado${resultados.length !== 1 ? 's' : ''}
+                            </span>
+                            <button class="btn secondary" onclick="exportSearchResults('${query}')" style="padding: 4px 8px; font-size: 11px;">
+                                📤 Exportar
+                            </button>
+                        </div>
+                    </div>
+                `;
+                
+                resultados.slice(0, 20).forEach((resultado, index) => {
+                    html += `
+                        <div class="verse-container selectable" onclick="highlightVerse(this)" style="cursor: pointer;">
+                            <div class="verse-reference">${resultado.libroNombre} ${resultado.capitulo}:${resultado.versiculo}</div>
+                            <span class="verse-number">${resultado.versiculo}</span>
+                            <span class="verse-text">${highlightQuery(resultado.texto, query)}</span>
+                            <div style="margin-top: 8px; display: flex; gap: 8px;">
+                                <button class="btn secondary" onclick="goToVerse('${resultado.libro}', ${resultado.capitulo})" style="padding: 4px 8px; font-size: 11px;">
+                                    📖 Ver Capítulo
+                                </button>
+                                <button class="btn secondary" onclick="shareVerse('${resultado.libro}', ${resultado.capitulo}, ${resultado.versiculo})" style="padding: 4px 8px; font-size: 11px;">
+                                    📱 Compartir
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                if (resultados.length > 20) {
+                    html += `
+                        <div style="text-align: center; margin-top: 16px;">
+                            <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 12px;">
+                                Mostrando los primeros 20 resultados de ${resultados.length}
+                            </p>
+                            <button class="btn secondary" onclick="showMoreResults('${query}')">
+                                Ver Más Resultados
+                            </button>
+                        </div>
+                    `;
+                }
+                
+                contenidoBiblico.innerHTML = html;
+            } else {
+                contenidoBiblico.innerHTML = `
+                    <div class="card">
+                        <h3>🔍 Sin resultados</h3>
+                        <div style="text-align: center; padding: 20px;">
+                            <p style="margin-bottom: 16px;">No se encontraron versículos que contengan "${query}" en el contenido offline disponible.</p>
+                            <div style="display: flex; flex-direction: column; gap: 8px; align-items: center;">
+                                <button class="btn" onclick="searchOnline('${query}')" style="width: 200px;">
+                                    🌐 Buscar Online
+                                </button>
+                                <button class="btn secondary" onclick="showSearchSuggestions('${query}')" style="width: 200px;">
+                                    💡 Ver Sugerencias
+                                </button>
+                                <button class="btn secondary" onclick="goToRandomVerse()" style="width: 200px;">
+                                    🎲 Versículo Aleatorio
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+        
+        function highlightQuery(text, query) {
+            const words = query.split(' ').filter(word => word.length > 1);
+            let highlightedText = text;
+            
+            words.forEach(word => {
+                const regex = new RegExp(`(${word})`, 'gi');
+                highlightedText = highlightedText.replace(regex, 
+                    '<mark style="background-color: var(--bg-primary); color: white; padding: 1px 3px; border-radius: 2px; font-weight: 600;">$1</mark>'
+                );
+            });
+            
+            return highlightedText;
+        }
+        
+        // =====================================================================
+        // FUNCIONES DE FILTROS TEMÁTICOS
+        // =====================================================================
+        
+        function initFiltrosSection() {
+            // Cargar gráficos de ejemplo
+            setTimeout(() => {
+                loadFilterCharts();
+            }, 500);
+            
+            // Mostrar resultados de filtros activos
+            updateFilterResults();
+        }
+        
+        function toggleFilter(filtro) {
+            if (!event || !event.target) return;
+            
+            const filterElement = event.target;
+            const isActive = filterElement.classList.contains('active');
+            
+            // Feedback táctil
+            filterElement.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                filterElement.style.transform = '';
+            }, AppConfig.touchFeedbackDelay);
+            
+            if (isActive) {
+                filterElement.classList.remove('active');
+                AppState.filtrosActivos = AppState.filtrosActivos.filter(f => f !== filtro);
+            } else {
+                filterElement.classList.add('active');
+                if (!AppState.filtrosActivos.includes(filtro)) {
+                    AppState.filtrosActivos.push(filtro);
+                }
+            }
+            
+            // Actualizar resultados con delay para animación
+            setTimeout(() => {
+                updateFilterResults();
+            }, 200);
+            
+            saveAppState();
+        }
+        
+        function loadFilterCharts() {
+            // Simular datos de análisis
+            const sangréData = {
+                sacrificio: 35,
+                redencion: 28,
+                pacto: 22,
+                expiacion: 15
+            };
+            
+            const aguaData = {
+                purificacion: 25,
+                vida: 30,
+                bendicion: 20,
+                bautismo: 25
+            };
+            
+            // Crear gráfico de sangre si Chart.js está disponible
+            const ctxSangre = document.getElementById('chart-sangre');
+            if (ctxSangre && typeof Chart !== 'undefined') {
+                new Chart(ctxSangre, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Sacrificio', 'Redención', 'Pacto', 'Expiación'],
+                        datasets: [{
+                            data: Object.values(sangréData),
+                            backgroundColor: [
+                                '#F04747',
+                                '#FAA61A', 
+                                '#5865F2',
+                                '#3BA55C'
+                            ],
+                            borderWidth: 2,
+                            borderColor: '#2F3136'
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'bottom',
+                                labels: { 
+                                    color: '#FFFFFF',
+                                    font: { size: 11 },
+                                    padding: 10
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+            
+            // Crear gráfico de agua
+            const ctxAgua = document.getElementById('chart-agua');
+            if (ctxAgua && typeof Chart !== 'undefined') {
+                new Chart(ctxAgua, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Purificación', 'Vida', 'Bendición', 'Bautismo'],
+                        datasets: [{
+                            data: Object.values(aguaData),
+                            backgroundColor: '#5865F2',
+                            borderRadius: 4
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { display: false }
+                        },
+                        scales: {
+                            y: {
+                                ticks: { 
+                                    color: '#FFFFFF',
+                                    font: { size: 10 }
+                                },
+                                grid: { color: '#40444B' }
+                            },
+                            x: {
+                                ticks: { 
+                                    color: '#FFFFFF',
+                                    font: { size: 10 }
+                                },
+                                grid: { color: '#40444B' }
+                            }
+                        }
+                    }
+                });
+            }
+        }
+        
+        function updateFilterResults() {
+            const resultadosDiv = document.getElementById('versiculos-filtrados');
+            if (!resultadosDiv) return;
+            
+            if (AppState.filtrosActivos.length === 0) {
+                resultadosDiv.innerHTML = `
+                    <div class="card">
+                        <h3>🎯 Selecciona Filtros</h3>
+                        <p>Elige uno o más filtros temáticos para analizar versículos relacionados.</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            // Simular análisis de filtros
+            const versiculosFiltrados = getVersiculosByFilters(AppState.filtrosActivos);
+            
+            let html = `
+                <div class="card">
+                    <h3>📊 Análisis de Filtros: ${AppState.filtrosActivos.join(', ')}</h3>
+                    <div style="margin: 16px 0;">
+                        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; font-size: 13px;">
+                            <div style="text-align: center; padding: 8px; background-color: var(--bg-tertiary); border-radius: 6px;">
+                                <div style="font-weight: 600; color: var(--bg-primary); font-size: 16px;">${versiculosFiltrados.length}</div>
+                                <div style="color: var(--text-muted);">Versículos</div>
+                            </div>
+                            <div style="text-align: center; padding: 8px; background-color: var(--bg-tertiary); border-radius: 6px;">
+                                <div style="font-weight: 600; color: var(--success); font-size: 16px;">${new Set(versiculosFiltrados.map(v => v.libro)).size}</div>
+                                <div style="color: var(--text-muted);">Libros</div>
+                            </div>
+                        </div>
+                    </div>
+            `;
+            
+            if (versiculosFiltrados.length > 0) {
+                html += '<div style="margin-top: 16px;">';
+                versiculosFiltrados.slice(0, 10).forEach(versiculo => {
+                    html += `
+                        <div class="verse-container selectable" onclick="highlightVerse(this)" style="cursor: pointer;">
+                            <div class="verse-reference">${versiculo.libroNombre} ${versiculo.capitulo}:${versiculo.versiculo}</div>
+                            <span class="verse-number">${versiculo.versiculo}</span>
+                            <span class="verse-text">${versiculo.texto}</span>
+                        </div>
+                    `;
+                });
+                
+                if (versiculosFiltrados.length > 10) {
+                    html += `
+                        <div style="text-align: center; margin-top: 16px;">
+                            <button class="btn secondary" onclick="showAllFilterResults()">
+                                Ver Todos los ${versiculosFiltrados.length} Versículos
+                            </button>
+                        </div>
+                    `;
+                }
+                html += '</div>';
+            } else {
+                html += `
+                    <p style="color: var(--text-muted); text-align: center; margin-top: 16px;">
+                        No se encontraron versículos para estos filtros en el contenido offline.
+                    </p>
+                `;
+            }
+            
+            html += '</div>';
+            resultadosDiv.innerHTML = html;
+        }
+        
+        function getVersiculosByFilters(filtros) {
+            const resultados = [];
+            
+            // Mapeo de filtros a palabras clave
+            const filtroKeywords = {
+                sangre: ['sangre', 'derramar', 'sacrificio', 'cordero', 'cruz'],
+                agua: ['agua', 'bautismo', 'lavar', 'purificar', 'río'],
+                amor: ['amor', 'amar', 'amado', 'caridad', 'misericordia'],
+                fe: ['fe', 'creer', 'confiar', 'fiel', 'confianza'],
+                esperanza: ['esperanza', 'esperar', 'promesa', 'esperar'],
+                sabiduria: ['sabiduría', 'sabio', 'entendimiento', 'prudencia'],
+                justicia: ['justicia', 'justo', 'rectitud', 'derecho'],
+                paz: ['paz', 'descanso', 'reposo', 'tranquilo']
+            };
+            
+            // Buscar versículos que contengan palabras clave de los filtros activos
+            Object.keys(BibliaData.contenido).forEach(libroId => {
+                const libro = BibliaData.libros.find(l => l.id === libroId);
+                Object.keys(BibliaData.contenido[libroId]).forEach(capitulo => {
+                    BibliaData.contenido[libroId][capitulo].forEach(versiculo => {
+                        const textoLower = versiculo.texto.toLowerCase();
+                        
+                        const coincide = filtros.some(filtro => {
+                            const keywords = filtroKeywords[filtro] || [];
+                            return keywords.some(keyword => textoLower.includes(keyword));
+                        });
+                        
+                        if (coincide) {
+                            resultados.push({
+                                libro: libroId,
+                                libroNombre: libro?.nombre || libroId,
+                                capitulo: parseInt(capitulo),
+                                versiculo: versiculo.numero,
+                                texto: versiculo.texto
+                            });
+                        }
+                    });
+                });
+            });
+            
+            return resultados;
+        }
+        
+        // =====================================================================
+        // FUNCIONES DE UTILIDAD Y HELPERS
+        // =====================================================================
+        
+        function goToRandomVerse() {
+            const librosDisponibles = Object.keys(BibliaData.contenido);
+            const libroRandom = librosDisponibles[Math.floor(Math.random() * librosDisponibles.length)];
+            const capitulosDisponibles = Object.keys(BibliaData.contenido[libroRandom]);
+            const capituloRandom = capitulosDisponibles[Math.floor(Math.random() * capitulosDisponibles.length)];
+            const versiculos = BibliaData.contenido[libroRandom][capituloRandom];
+            const versiculoRandom = versiculos[Math.floor(Math.random() * versiculos.length)];
+            
+            const libro = BibliaData.libros.find(l => l.id === libroRandom);
+            
+            const contenidoBiblico = document.getElementById('contenido-biblico');
+            if (contenidoBiblico) {
+                contenidoBiblico.innerHTML = `
+                    <div class="card">
+                        <h3>🎲 Versículo del Día</h3>
+                        <div class="verse-container selectable" style="margin: 16px 0; border-left-color: var(--accent);">
+                            <div class="verse-reference">${libro?.nombre || libroRandom} ${capituloRandom}:${versiculoRandom.numero}</div>
+                            <span class="verse-number">${versiculoRandom.numero}</span>
+                            <span class="verse-text">${versiculoRandom.texto}</span>
+                        </div>
+                        <div style="margin-top: 16px; display: flex; gap: 8px; justify-content: center;">
+                            <button class="btn secondary" onclick="goToVerse('${libroRandom}', ${capituloRandom})">
+                                📖 Ver Capítulo Completo
+                            </button>
+                            <button class="btn secondary" onclick="shareVerse('${libroRandom}', ${capituloRandom}, ${versiculoRandom.numero})">
+                                📱 Compartir
+                            </button>
+                            <button class="btn" onclick="goToRandomVerse()">
+                                🎲 Otro Aleatorio
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+        
+        function highlightVerse(element) {
+            // Feedback visual inmediato
+            element.style.transform = 'scale(1.02)';
+            element.style.backgroundColor = 'rgba(88, 101, 242, 0.1)';
+            
+            setTimeout(() => {
+                element.style.transform = '';
+                element.style.backgroundColor = '';
+            }, 200);
+            
+            // Incrementar contador de versículos resaltados
+            AppState.userProgress.versesHighlighted++;
+            saveAppState();
+        }
+        
+        function toggleTheme() {
+            AppState.darkMode = !AppState.darkMode;
+            const root = document.documentElement;
+            
+            if (AppState.darkMode) {
+                // Tema oscuro
+                root.style.setProperty('--bg-tertiary', '#202225');
+                root.style.setProperty('--bg-secondary', '#2F3136');
+                root.style.setProperty('--bg-input', '#40444B');
+                root.style.setProperty('--text-primary', '#FFFFFF');
+                root.style.setProperty('--text-secondary', '#DCDDDE');
+            } else {
+                // Tema claro
+                root.style.setProperty('--bg-tertiary', '#FFFFFF');
+                root.style.setProperty('--bg-secondary', '#F2F3F5');
+                root.style.setProperty('--bg-input', '#E3E5E8');
+                root.style.setProperty('--text-primary', '#2E3338');
+                root.style.setProperty('--text-secondary', '#4F545C');
+            }
+            
+            AppState.settings.theme = AppState.darkMode ? 'dark' : 'light';
+            saveAppState();
+            
+            // Mostrar feedback
+            showToast(AppState.darkMode ? '🌙 Tema oscuro activado' : '☀️ Tema claro activado');
+        }
+        
+        function showToast(message, duration = 3000) {
+            // Crear toast notification
+            const toast = document.createElement('div');
+            toast.style.cssText = `
+                position: fixed;
+                bottom: 100px;
+                left: 50%;
+                transform: translateX(-50%);
+                background-color: var(--bg-secondary);
+                color: var(--text-primary);
+                padding: 12px 20px;
+                border-radius: 25px;
+                border: 1px solid var(--bg-input);
+                font-size: 14px;
+                font-weight: 500;
+                z-index: 10000;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+                opacity: 0;
+                transition: all 0.3s ease;
+            `;
+            toast.textContent = message;
+            
+            document.body.appendChild(toast);
+            
+            // Animar entrada
+            setTimeout(() => {
+                toast.style.opacity = '1';
+                toast.style.transform = 'translateX(-50%) translateY(-10px)';
+            }, 100);
+            
+            // Animar salida
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transform = 'translateX(-50%) translateY(10px)';
+                setTimeout(() => {
+                    document.body.removeChild(toast);
+                }, 300);
+            }, duration);
+        }
+        
+        function saveAppState() {
+            try {
+                localStorage.setItem('bible_app_state', JSON.stringify({
+                    currentSection: AppState.currentSection,
+                    darkMode: AppState.darkMode,
+                    filtrosActivos: AppState.filtrosActivos,
+                    userProgress: AppState.userProgress,
+                    settings: AppState.settings,
+                    lastActive: Date.now()
+                }));
+            } catch (e) {
+                console.warn('No se pudo guardar el estado:', e);
+            }
+        }
+        
+        function loadAppState() {
+            try {
+                const saved = localStorage.getItem('bible_app_state');
+                if (saved) {
+                    const state = JSON.parse(saved);
+                    AppState.currentSection = state.currentSection || 'biblia';
+                    AppState.darkMode = state.darkMode !== undefined ? state.darkMode : true;
+                    AppState.filtrosActivos = state.filtrosActivos || ['sangre', 'agua'];
+                    AppState.userProgress = { ...AppState.userProgress, ...state.userProgress };
+                    AppState.settings = { ...AppState.settings, ...state.settings };
+                    
+                    // Aplicar tema guardado
+                    if (!AppState.darkMode) {
+                        toggleTheme();
+                    }
+                }
+            } catch (e) {
+                console.warn('No se pudo cargar el estado guardado:', e);
+            }
+        }
+        
+        // =====================================================================
+        // FUNCIONES PLACEHOLDER PARA FUTURAS IMPLEMENTACIONES
+        // =====================================================================
+        
+        function openSettings() {
+            showToast('⚙️ Panel de configuración - Próximamente');
+        }
+        
+        function loadSocialContent() {
+            console.log('Cargando contenido social...');
+        }
+        
+        function loadRecursosContent() {
+            console.log('Cargando recursos...');
+        }
+        
+        function openPlanLectura(tipo) {
+            showToast(`📅 Plan de lectura ${tipo} - En desarrollo`);
+        }
+        
+        function openNotas() {
+            showToast('📝 Sistema de notas - Próximamente');
+        }
+        
+        function openResaltados() {
+            showToast('🖍️ Gestor de resaltados - En desarrollo');
+        }
+        
+        function openReferencias() {
+            showToast('🔗 Referencias cruzadas - Próximamente');
+        }
+        
+        function openProgreso() {
+            showToast('📊 Estadísticas de progreso - En desarrollo');
+        }
+        
+        function clearAllFilters() {
+            document.querySelectorAll('.filter-tag.active').forEach(tag => {
+                tag.classList.remove('active');
+            });
+            AppState.filtrosActivos = [];
+            updateFilterResults();
+            saveAppState();
+            showToast('🗑️ Filtros limpiados');
+        }
+        
+        function applyFilters() {
+            updateFilterResults();
+            showToast(`🔍 Filtros aplicados: ${AppState.filtrosActivos.length}`);
+        }
+        
+        function saveFilterPreset() {
+            showToast('💾 Función de guardado - Próximamente');
+        }
+        
+        function loadOnlineContent(libro, capitulo) {
+            showToast(`🌐 Cargando ${libro} ${capitulo} online - Próximamente`);
+        }
+        
+        function searchOnline(query) {
+            showToast(`🌐 Búsqueda online de "${query}" - Próximamente`);
+        }
+        
+        function shareVerse(libro, capitulo, versiculo) {
+            const libro_obj = BibliaData.libros.find(l => l.id === libro);
+            const texto = `${libro_obj?.nombre || libro} ${capitulo}:${versiculo}`;
+            
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Versículo Bíblico',
+                    text: `${texto} - Compartido desde Formación Bíblica`,
+                    url: window.location.href
+                });
+            } else {
+                // Fallback: copiar al portapapeles
+                navigator.clipboard.writeText(texto).then(() => {
+                    showToast('📋 Versículo copiado al portapapeles');
+                });
+            }
+        }
+        
+        function shareChapter() {
+            showToast('📱 Función de compartir capítulo - Próximamente');
+        }
+        
+        function previousChapter() {
+            showToast('← Navegación de capítulos - Próximamente');
+        }
+        
+        function nextChapter() {
+            showToast('→ Navegación de capítulos - Próximamente');
+        }
+        
+        function goToVerse(libro, capitulo) {
+            // Seleccionar el libro y capítulo en los dropdowns
+            const libroSelect = document.getElementById('libro-select');
+            const capituloSelect = document.getElementById('capitulo-select');
+            
+            if (libroSelect && capituloSelect) {
+                libroSelect.value = libro;
+                loadCapitulos();
+                setTimeout(() => {
+                    capituloSelect.value = capitulo;
+                    loadVersiculos();
+                }, 100);
+            }
+        }
+        
+        // =====================================================================
+        // INICIALIZACIÓN DE LA APLICACIÓN
+        // =====================================================================
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('📱 Formación Bíblica Android - Iniciando...');
+            
+            // Cargar estado guardado
+            loadAppState();
+            
+            // Inicializar sección actual
+            if (AppState.currentSection !== 'biblia') {
+                showSection(AppState.currentSection);
+            } else {
+                initBibliaSection();
+            }
+            
+            // Configurar filtros activos
+            AppState.filtrosActivos.forEach(filtro => {
+                const filterElement = document.querySelector(`[data-filter="${filtro}"]`);
+                if (filterElement) {
+                    filterElement.classList.add('active');
+                }
+            });
+            
+            // Registrar Service Worker básico para PWA
+            if ('serviceWorker' in navigator) {
+                const swCode = `
+                    const CACHE_NAME = 'formacion-biblica-android-v2';
+                    const urlsToCache = [
+                        '${window.location.pathname}',
+                        'https://cdn.tailwindcss.com',
+                        'https://cdn.jsdelivr.net/npm/chart.js'
+                    ];
+
+                    self.addEventListener('install', function(event) {
+                        event.waitUntil(
+                            caches.open(CACHE_NAME)
+                                .then(function(cache) {
+                                    return cache.addAll(urlsToCache);
+                                })
+                                .catch(function(error) {
+                                    console.log('Cache failed:', error);
+                                })
+                        );
+                    });
+
+                    self.addEventListener('fetch', function(event) {
+                        event.respondWith(
+                            caches.match(event.request)
+                                .then(function(response) {
+                                    if (response) {
+                                        return response;
+                                    }
+                                    return fetch(event.request);
+                                })
+                        );
+                    });
+                `;
+
+                const blob = new Blob([swCode], { type: 'application/javascript' });
+                const swUrl = URL.createObjectURL(blob);
+
+                navigator.serviceWorker.register(swUrl)
+                    .then(function(registration) {
+                        console.log('✅ Service Worker registrado');
+                    })
+                    .catch(function(error) {
+                        console.log('❌ Error registrando Service Worker:', error);
+                    });
+            }
+            
+            // Mostrar mensaje de bienvenida
+            setTimeout(() => {
+                console.log('✅ Aplicación cargada exitosamente');
+                console.log('📊 Progreso del usuario:', AppState.userProgress);
+                
+                // Mostrar toast de bienvenida solo la primera vez
+                const isFirstTime = !localStorage.getItem('bible_app_welcomed');
+                if (isFirstTime) {
+                    setTimeout(() => {
+                        showToast('¡Bienvenido a Formación Bíblica! 📖✨', 5000);
+                        localStorage.setItem('bible_app_welcomed', 'true');
+                    }, 1000);
+                }
+            }, 500);
+            
+            // Configurar eventos táctiles para mejor experiencia móvil
+            document.addEventListener('touchstart', function(e) {
+                AppState.touchStartTime = Date.now();
+            }, { passive: true });
+            
+            // Prevenir zoom en doble tap en elementos de interfaz
+            let lastTouchEnd = 0;
+            document.addEventListener('touchend', function(event) {
+                const now = Date.now();
+                if (now - lastTouchEnd <= 300) {
+                    if (event.target.matches('button, .nav-tab, .filter-tag, .btn')) {
+                        event.preventDefault();
+                    }
+                }
+                lastTouchEnd = now;
+            }, false);
+        });
+        
+        // Manejar cambios de orientación
+        window.addEventListener('orientationchange', function() {
+            setTimeout(() => {
+                // Reajustar gráficos si están visibles
+                if (AppState.currentSection === 'filtros' && typeof Chart !== 'undefined') {
+                    Chart.instances.forEach(chart => {
+                        chart.resize();
+                    });
+                }
+            }, 500);
+        });
+        
+        // Manejar visibilidad de la página para ahorrar recursos
+        document.addEventListener('visibilitychange', function() {
+            if (document.hidden) {
+                // Pausar animaciones y operaciones pesadas
+                console.log('📱 App en segundo plano');
+            } else {
+                // Reanudar operaciones
+                console.log('📱 App en primer plano');
+            }
+        });
+    </script>
+</body>
+</html>
