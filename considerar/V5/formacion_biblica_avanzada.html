@@ -1,0 +1,1839 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formación Bíblica Avanzada</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Chart.js para visualizaciones -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Estilos personalizados -->
+    <style>
+        :root {
+            --bg-primary: #5865F2;
+            --bg-secondary: #2F3136;
+            --bg-tertiary: #202225;
+            --bg-input: #40444B;
+            --text-primary: #FFFFFF;
+            --text-secondary: #DCDDDE;
+            --text-muted: #72767D;
+            --interactive-normal: #B9BBBE;
+            --interactive-hover: #DCDDDE;
+            --interactive-active: #FFFFFF;
+            --scrollbar-thin-thumb: rgba(79, 84, 92, 0.3);
+            --scrollbar-thin-track: transparent;
+            --scrollbar-auto-thumb: #202225;
+            --scrollbar-auto-track: #2E3338;
+        }
+        
+        body {
+            font-family: 'Whitney', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            background-color: var(--bg-tertiary);
+            color: var(--text-primary);
+            line-height: 1.5;
+        }
+        
+        .discord-card {
+            background-color: var(--bg-secondary);
+            border-radius: 8px;
+        }
+        
+        .discord-text-secondary {
+            color: var(--text-secondary);
+        }
+        
+        .discord-text-muted {
+            color: var(--text-muted);
+        }
+        
+        .discord-input {
+            background-color: var(--bg-input);
+            color: var(--text-primary);
+            border: none;
+            outline: none;
+        }
+        
+        .discord-input:focus {
+            outline: 2px solid var(--bg-primary);
+        }
+        
+        .discord-button-primary {
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            transition: background-color 0.2s;
+        }
+        
+        .discord-button-primary:hover {
+            background-color: #4752c4;
+        }
+        
+        .discord-button-secondary {
+            background-color: var(--bg-input);
+            color: var(--text-primary);
+            transition: background-color 0.2s;
+        }
+        
+        .discord-button-secondary:hover {
+            background-color: #36393f;
+        }
+        
+        .discord-button-secondary.active {
+            background-color: var(--bg-primary);
+        }
+        
+        /* Scrollbar personalizado */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background-color: var(--scrollbar-thin-thumb);
+            border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background-color: var(--scrollbar-thin-track);
+        }
+        
+        /* Animaciones */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .animate-fadeIn {
+            animation: fadeIn 0.3s ease-in-out;
+        }
+        
+        /* Estilos específicos para filtros */
+        .filtro-card {
+            border: 1px solid var(--bg-input);
+            border-radius: 6px;
+            overflow: hidden;
+        }
+        
+        .filtro-header {
+            background-color: var(--bg-input);
+        }
+        
+        /* Estilos para la Biblia */
+        .biblia-versiculo-numero {
+            display: inline-block;
+            min-width: 1.5rem;
+            margin-right: 0.5rem;
+            color: var(--bg-primary);
+        }
+        
+        .biblia-versiculo.seleccionado {
+            background-color: rgba(88, 101, 242, 0.1);
+            border-radius: 4px;
+            padding: 0.25rem;
+        }
+        
+        /* Estilos para el modo de estudio */
+        .modo-estudio-container {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 1rem;
+        }
+        
+        @media (max-width: 768px) {
+            .modo-estudio-container {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        /* Loader */
+        .loader {
+            border-radius: 50%;
+            border: 2px solid var(--bg-secondary);
+            border-top: 2px solid var(--bg-primary);
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+    <div class="container mx-auto px-4 py-6">
+        <!-- Encabezado -->
+        <header class="mb-6">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <h1 class="text-2xl md:text-3xl font-bold mb-4 md:mb-0">Formación Bíblica Avanzada</h1>
+                
+                <div class="flex space-x-2">
+                    <button id="theme-toggle-btn" class="discord-button-secondary px-3 py-1 rounded-lg text-sm">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                        </svg>
+                        <span class="ml-1">Tema</span>
+                    </button>
+                    
+                    <button id="settings-btn" class="discord-button-secondary px-3 py-1 rounded-lg text-sm">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                        </svg>
+                        <span class="ml-1">Ajustes</span>
+                    </button>
+                </div>
+            </div>
+        </header>
+        
+        <!-- Navegación principal -->
+        <nav class="discord-card p-2 rounded-lg mb-6">
+            <div class="flex flex-wrap justify-center md:justify-start space-x-1 md:space-x-2">
+                <button id="nav-biblia-btn" class="discord-button-secondary px-3 py-2 rounded-lg text-sm active">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                    </svg>
+                    <span class="ml-1">Biblia</span>
+                </button>
+                
+                <button id="nav-estudio-btn" class="discord-button-secondary px-3 py-2 rounded-lg text-sm">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                    </svg>
+                    <span class="ml-1">Estudio</span>
+                </button>
+                
+                <button id="nav-filtros-btn" class="discord-button-secondary px-3 py-2 rounded-lg text-sm">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+                    </svg>
+                    <span class="ml-1">Filtros</span>
+                </button>
+                
+                <button id="nav-social-btn" class="discord-button-secondary px-3 py-2 rounded-lg text-sm">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                    </svg>
+                    <span class="ml-1">Social</span>
+                </button>
+                
+                <button id="nav-recursos-btn" class="discord-button-secondary px-3 py-2 rounded-lg text-sm">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                    </svg>
+                    <span class="ml-1">Recursos</span>
+                </button>
+                
+                <div class="flex-grow"></div>
+                
+                <button id="social-general-btn" class="discord-button-secondary px-3 py-2 rounded-lg text-sm hidden">
+                    <span>General</span>
+                </button>
+                
+                <button id="social-teoria-btn" class="discord-button-secondary px-3 py-2 rounded-lg text-sm hidden">
+                    <span>Teoría</span>
+                </button>
+                
+                <button id="social-practica-btn" class="discord-button-secondary px-3 py-2 rounded-lg text-sm hidden">
+                    <span>Práctica</span>
+                </button>
+                
+                <button id="filtro-sangre-btn" class="discord-button-secondary px-3 py-2 rounded-lg text-sm hidden">
+                    <span>Sangre</span>
+                </button>
+                
+                <button id="filtro-agua-btn" class="discord-button-secondary px-3 py-2 rounded-lg text-sm hidden">
+                    <span>Agua</span>
+                </button>
+            </div>
+        </nav>
+        
+        <!-- Contenido principal -->
+        <main>
+            <!-- Contenedor de Biblia -->
+            <div id="content-biblia" class="animate-fadeIn">
+                <div id="biblia-container" class="discord-card p-4 rounded-lg">
+                    <!-- El contenido de la Biblia se cargará dinámicamente -->
+                    <p class="text-center py-8">Cargando Biblia Reina Valera 1960...</p>
+                </div>
+            </div>
+            
+            <!-- Contenedor de Estudio -->
+            <div id="content-estudio" class="animate-fadeIn hidden">
+                <div class="discord-card p-4 rounded-lg">
+                    <h2 class="text-xl font-semibold mb-4">Modo de Estudio</h2>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <!-- Columna izquierda: Texto bíblico -->
+                        <div class="col-span-2">
+                            <div id="estudio-texto-container" class="discord-card p-4 rounded-lg">
+                                <p class="text-center py-4">Selecciona un pasaje para estudiar</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Columna derecha: Herramientas de estudio -->
+                        <div class="col-span-1">
+                            <div class="space-y-4">
+                                <!-- Filtros analíticos -->
+                                <div class="filtro-card">
+                                    <div class="filtro-header flex justify-between items-center p-2 cursor-pointer">
+                                        <span class="font-medium">Filtros Analíticos</span>
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                                        </svg>
+                                    </div>
+                                    <div class="p-3 hidden">
+                                        <div class="space-y-2">
+                                            <div>
+                                                <label class="text-sm discord-text-secondary">Filtro Sangre</label>
+                                                <select id="estudio-filtro-sangre" class="w-full discord-input text-sm rounded px-2 py-1 mt-1">
+                                                    <option value="">Seleccionar categoría...</option>
+                                                    <option value="pacto">Pacto</option>
+                                                    <option value="sacrificio">Sacrificio</option>
+                                                    <option value="redencion">Redención</option>
+                                                    <option value="expiacion">Expiación</option>
+                                                </select>
+                                            </div>
+                                            
+                                            <div>
+                                                <label class="text-sm discord-text-secondary">Filtro Agua</label>
+                                                <select id="estudio-filtro-agua" class="w-full discord-input text-sm rounded px-2 py-1 mt-1">
+                                                    <option value="">Seleccionar elemento...</option>
+                                                    <option value="purificacion">Purificación</option>
+                                                    <option value="bautismo">Bautismo</option>
+                                                    <option value="vida">Vida</option>
+                                                    <option value="juicio">Juicio</option>
+                                                </select>
+                                            </div>
+                                            
+                                            <button id="aplicar-filtros-estudio-btn" class="w-full text-sm discord-button-primary px-3 py-1 rounded mt-2">
+                                                Aplicar Filtros
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Notas de estudio -->
+                                <div class="filtro-card">
+                                    <div class="filtro-header flex justify-between items-center p-2 cursor-pointer">
+                                        <span class="font-medium">Notas de Estudio</span>
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                                        </svg>
+                                    </div>
+                                    <div class="p-3 hidden">
+                                        <textarea id="estudio-notas" class="w-full h-32 discord-input text-sm rounded px-2 py-1" placeholder="Escribe tus notas aquí..."></textarea>
+                                        <div class="flex justify-end mt-2">
+                                            <button id="guardar-notas-btn" class="text-sm discord-button-secondary px-3 py-1 rounded">
+                                                Guardar
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Estadísticas -->
+                                <div class="filtro-card">
+                                    <div class="filtro-header flex justify-between items-center p-2 cursor-pointer">
+                                        <span class="font-medium">Estadísticas</span>
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                                        </svg>
+                                    </div>
+                                    <div id="estudio-estadisticas" class="p-3 hidden">
+                                        <p class="text-sm discord-text-secondary">Selecciona un pasaje para ver estadísticas</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Contenedor de Filtros -->
+            <div id="content-filtros" class="animate-fadeIn hidden">
+                <div class="discord-card p-4 rounded-lg">
+                    <h2 class="text-xl font-semibold mb-4">Filtros Avanzados</h2>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Filtro Sangre -->
+                        <div class="discord-card p-4 rounded-lg">
+                            <h3 class="text-lg font-semibold mb-3">Filtro Sangre</h3>
+                            
+                            <div class="space-y-4">
+                                <div>
+                                    <label class="text-sm discord-text-secondary">Categoría Principal</label>
+                                    <select id="filtro-sangre-categoria" class="w-full discord-input text-sm rounded px-2 py-1 mt-1">
+                                        <option value="">Seleccionar categoría...</option>
+                                        <option value="pacto">Pacto</option>
+                                        <option value="sacrificio">Sacrificio</option>
+                                        <option value="redencion">Redención</option>
+                                        <option value="expiacion">Expiación</option>
+                                        <option value="vida">Vida</option>
+                                    </select>
+                                </div>
+                                
+                                <div>
+                                    <label class="text-sm discord-text-secondary">Subcategoría</label>
+                                    <select id="filtro-sangre-subcategoria" class="w-full discord-input text-sm rounded px-2 py-1 mt-1" disabled>
+                                        <option value="">Seleccionar subcategoría...</option>
+                                    </select>
+                                </div>
+                                
+                                <div>
+                                    <label class="text-sm discord-text-secondary">Testamento</label>
+                                    <div class="flex space-x-4 mt-1">
+                                        <label class="inline-flex items-center">
+                                            <input type="checkbox" id="filtro-sangre-at" class="form-checkbox" checked>
+                                            <span class="ml-2 text-sm">Antiguo</span>
+                                        </label>
+                                        <label class="inline-flex items-center">
+                                            <input type="checkbox" id="filtro-sangre-nt" class="form-checkbox" checked>
+                                            <span class="ml-2 text-sm">Nuevo</span>
+                                        </label>
+                                    </div>
+                                </div>
+                                
+                                <div>
+                                    <label class="text-sm discord-text-secondary">Opciones Avanzadas</label>
+                                    <div class="grid grid-cols-2 gap-2 mt-1">
+                                        <label class="inline-flex items-center">
+                                            <input type="checkbox" id="filtro-sangre-tipologia" class="form-checkbox">
+                                            <span class="ml-2 text-sm">Tipología</span>
+                                        </label>
+                                        <label class="inline-flex items-center">
+                                            <input type="checkbox" id="filtro-sangre-simbolismo" class="form-checkbox">
+                                            <span class="ml-2 text-sm">Simbolismo</span>
+                                        </label>
+                                        <label class="inline-flex items-center">
+                                            <input type="checkbox" id="filtro-sangre-profecia" class="form-checkbox">
+                                            <span class="ml-2 text-sm">Profecía</span>
+                                        </label>
+                                        <label class="inline-flex items-center">
+                                            <input type="checkbox" id="filtro-sangre-doctrina" class="form-checkbox">
+                                            <span class="ml-2 text-sm">Doctrina</span>
+                                        </label>
+                                    </div>
+                                </div>
+                                
+                                <div>
+                                    <label class="text-sm discord-text-secondary">Visualización</label>
+                                    <select id="filtro-sangre-visualizacion" class="w-full discord-input text-sm rounded px-2 py-1 mt-1">
+                                        <option value="lista">Lista de versículos</option>
+                                        <option value="mapa">Mapa conceptual</option>
+                                        <option value="cronologia">Cronología</option>
+                                        <option value="estadisticas">Estadísticas</option>
+                                    </select>
+                                </div>
+                                
+                                <button id="aplicar-filtro-sangre-btn" class="w-full text-sm discord-button-primary px-3 py-1 rounded">
+                                    Aplicar Filtro
+                                </button>
+                            </div>
+                            
+                            <div id="filtro-sangre-resultados" class="mt-4 hidden">
+                                <h4 class="font-medium mb-2">Resultados</h4>
+                                <div class="discord-card p-3 rounded-lg">
+                                    <p class="text-sm discord-text-secondary">No hay resultados para mostrar</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Filtro Agua -->
+                        <div class="discord-card p-4 rounded-lg">
+                            <h3 class="text-lg font-semibold mb-3">Filtro Agua</h3>
+                            
+                            <div class="space-y-4">
+                                <div>
+                                    <label class="text-sm discord-text-secondary">Elemento Principal</label>
+                                    <select id="filtro-agua-elemento" class="w-full discord-input text-sm rounded px-2 py-1 mt-1">
+                                        <option value="">Seleccionar elemento...</option>
+                                        <option value="purificacion">Purificación</option>
+                                        <option value="bautismo">Bautismo</option>
+                                        <option value="vida">Vida</option>
+                                        <option value="juicio">Juicio</option>
+                                        <option value="espiritu">Espíritu</option>
+                                    </select>
+                                </div>
+                                
+                                <div>
+                                    <label class="text-sm discord-text-secondary">Contexto</label>
+                                    <select id="filtro-agua-contexto" class="w-full discord-input text-sm rounded px-2 py-1 mt-1" disabled>
+                                        <option value="">Seleccionar contexto...</option>
+                                    </select>
+                                </div>
+                                
+                                <div>
+                                    <label class="text-sm discord-text-secondary">Testamento</label>
+                                    <div class="flex space-x-4 mt-1">
+                                        <label class="inline-flex items-center">
+                                            <input type="checkbox" id="filtro-agua-at" class="form-checkbox" checked>
+                                            <span class="ml-2 text-sm">Antiguo</span>
+                                        </label>
+                                        <label class="inline-flex items-center">
+                                            <input type="checkbox" id="filtro-agua-nt" class="form-checkbox" checked>
+                                            <span class="ml-2 text-sm">Nuevo</span>
+                                        </label>
+                                    </div>
+                                </div>
+                                
+                                <div>
+                                    <label class="text-sm discord-text-secondary">Opciones Avanzadas</label>
+                                    <div class="grid grid-cols-2 gap-2 mt-1">
+                                        <label class="inline-flex items-center">
+                                            <input type="checkbox" id="filtro-agua-literal" class="form-checkbox">
+                                            <span class="ml-2 text-sm">Literal</span>
+                                        </label>
+                                        <label class="inline-flex items-center">
+                                            <input type="checkbox" id="filtro-agua-simbolico" class="form-checkbox">
+                                            <span class="ml-2 text-sm">Simbólico</span>
+                                        </label>
+                                        <label class="inline-flex items-center">
+                                            <input type="checkbox" id="filtro-agua-milagros" class="form-checkbox">
+                                            <span class="ml-2 text-sm">Milagros</span>
+                                        </label>
+                                        <label class="inline-flex items-center">
+                                            <input type="checkbox" id="filtro-agua-ensenanza" class="form-checkbox">
+                                            <span class="ml-2 text-sm">Enseñanza</span>
+                                        </label>
+                                    </div>
+                                </div>
+                                
+                                <div>
+                                    <label class="text-sm discord-text-secondary">Visualización</label>
+                                    <select id="filtro-agua-visualizacion" class="w-full discord-input text-sm rounded px-2 py-1 mt-1">
+                                        <option value="lista">Lista de versículos</option>
+                                        <option value="mapa">Mapa conceptual</option>
+                                        <option value="cronologia">Cronología</option>
+                                        <option value="estadisticas">Estadísticas</option>
+                                    </select>
+                                </div>
+                                
+                                <button id="aplicar-filtro-agua-btn" class="w-full text-sm discord-button-primary px-3 py-1 rounded">
+                                    Aplicar Filtro
+                                </button>
+                            </div>
+                            
+                            <div id="filtro-agua-resultados" class="mt-4 hidden">
+                                <h4 class="font-medium mb-2">Resultados</h4>
+                                <div class="discord-card p-3 rounded-lg">
+                                    <p class="text-sm discord-text-secondary">No hay resultados para mostrar</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Panel de análisis avanzado -->
+                    <div class="mt-6 discord-card p-4 rounded-lg">
+                        <h3 class="text-lg font-semibold mb-3">Análisis Avanzado</h3>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="text-sm discord-text-secondary">Tipo de Análisis</label>
+                                <select id="analisis-tipo" class="w-full discord-input text-sm rounded px-2 py-1 mt-1">
+                                    <option value="frecuencia">Análisis de Frecuencia</option>
+                                    <option value="contexto">Análisis de Contexto</option>
+                                    <option value="tematico">Análisis Temático</option>
+                                    <option value="comparativo">Análisis Comparativo</option>
+                                </select>
+                            </div>
+                            
+                            <div>
+                                <label class="text-sm discord-text-secondary">Formato de Resultados</label>
+                                <select id="analisis-formato" class="w-full discord-input text-sm rounded px-2 py-1 mt-1">
+                                    <option value="grafico">Gráfico</option>
+                                    <option value="tabla">Tabla</option>
+                                    <option value="texto">Texto</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-4">
+                            <label class="text-sm discord-text-secondary">Parámetros de Análisis</label>
+                            <textarea id="analisis-parametros" class="w-full h-20 discord-input text-sm rounded px-2 py-1 mt-1" placeholder="Ingresa palabras clave, referencias o parámetros separados por comas..."></textarea>
+                        </div>
+                        
+                        <button id="ejecutar-analisis-btn" class="mt-4 text-sm discord-button-primary px-3 py-1 rounded">
+                            Ejecutar Análisis
+                        </button>
+                        
+                        <div id="analisis-resultados" class="mt-4 hidden">
+                            <h4 class="font-medium mb-2">Resultados del Análisis</h4>
+                            <div class="discord-card p-3 rounded-lg">
+                                <p class="text-sm discord-text-secondary">No hay resultados para mostrar</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Contenedor Social -->
+            <div id="content-social" class="animate-fadeIn hidden">
+                <!-- El contenido social se cargará dinámicamente -->
+                <p class="text-center py-8">Cargando funcionalidades sociales...</p>
+            </div>
+            
+            <!-- Contenedor de Recursos -->
+            <div id="content-recursos" class="animate-fadeIn hidden">
+                <div class="discord-card p-4 rounded-lg">
+                    <h2 class="text-xl font-semibold mb-4">Recursos</h2>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <!-- Diccionario Bíblico -->
+                        <div class="discord-card p-4 rounded-lg">
+                            <h3 class="text-lg font-semibold mb-3">Diccionario Bíblico</h3>
+                            
+                            <div class="mb-4">
+                                <div class="flex">
+                                    <input type="text" id="diccionario-busqueda" class="flex-grow discord-input text-sm rounded-l px-2 py-1" placeholder="Buscar término...">
+                                    <button id="diccionario-buscar-btn" class="discord-button-primary text-sm rounded-r px-3 py-1">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div id="diccionario-resultados" class="discord-card p-3 rounded-lg">
+                                <p class="text-sm discord-text-secondary">Ingresa un término para buscar</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Concordancia -->
+                        <div class="discord-card p-4 rounded-lg">
+                            <h3 class="text-lg font-semibold mb-3">Concordancia</h3>
+                            
+                            <div class="mb-4">
+                                <div class="flex">
+                                    <input type="text" id="concordancia-busqueda" class="flex-grow discord-input text-sm rounded-l px-2 py-1" placeholder="Buscar palabra...">
+                                    <button id="concordancia-buscar-btn" class="discord-button-primary text-sm rounded-r px-3 py-1">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div id="concordancia-resultados" class="discord-card p-3 rounded-lg">
+                                <p class="text-sm discord-text-secondary">Ingresa una palabra para buscar</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Mapas y Cronología -->
+                        <div class="discord-card p-4 rounded-lg">
+                            <h3 class="text-lg font-semibold mb-3">Mapas y Cronología</h3>
+                            
+                            <div class="space-y-3">
+                                <div>
+                                    <label class="text-sm discord-text-secondary">Categoría</label>
+                                    <select id="mapas-categoria" class="w-full discord-input text-sm rounded px-2 py-1 mt-1">
+                                        <option value="geograficos">Mapas Geográficos</option>
+                                        <option value="historicos">Mapas Históricos</option>
+                                        <option value="cronologia">Líneas de Tiempo</option>
+                                        <option value="arqueologia">Arqueología</option>
+                                    </select>
+                                </div>
+                                
+                                <div>
+                                    <label class="text-sm discord-text-secondary">Seleccionar Recurso</label>
+                                    <select id="mapas-recurso" class="w-full discord-input text-sm rounded px-2 py-1 mt-1">
+                                        <option value="">Seleccionar recurso...</option>
+                                    </select>
+                                </div>
+                                
+                                <button id="cargar-mapa-btn" class="w-full text-sm discord-button-secondary px-3 py-1 rounded">
+                                    Cargar Recurso
+                                </button>
+                            </div>
+                            
+                            <div id="mapas-visualizacion" class="mt-4 discord-card p-3 rounded-lg">
+                                <p class="text-sm discord-text-secondary text-center">Selecciona un recurso para visualizar</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Herramientas de Estudio -->
+                    <div class="mt-6 discord-card p-4 rounded-lg">
+                        <h3 class="text-lg font-semibold mb-3">Herramientas de Estudio</h3>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <!-- Plan de Lectura -->
+                            <div class="discord-card p-4 rounded-lg">
+                                <h4 class="font-medium mb-2">Plan de Lectura</h4>
+                                
+                                <div class="space-y-3">
+                                    <div>
+                                        <label class="text-sm discord-text-secondary">Tipo de Plan</label>
+                                        <select id="plan-lectura-tipo" class="w-full discord-input text-sm rounded px-2 py-1 mt-1">
+                                            <option value="cronologico">Cronológico</option>
+                                            <option value="tematico">Temático</option>
+                                            <option value="devocional">Devocional</option>
+                                            <option value="completo">Biblia Completa</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div>
+                                        <label class="text-sm discord-text-secondary">Duración</label>
+                                        <select id="plan-lectura-duracion" class="w-full discord-input text-sm rounded px-2 py-1 mt-1">
+                                            <option value="30">30 días</option>
+                                            <option value="90">90 días</option>
+                                            <option value="180">6 meses</option>
+                                            <option value="365">1 año</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <button id="generar-plan-lectura-btn" class="w-full text-sm discord-button-secondary px-3 py-1 rounded">
+                                        Generar Plan
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <!-- Memorización -->
+                            <div class="discord-card p-4 rounded-lg">
+                                <h4 class="font-medium mb-2">Memorización</h4>
+                                
+                                <div class="space-y-3">
+                                    <div>
+                                        <label class="text-sm discord-text-secondary">Categoría</label>
+                                        <select id="memorizacion-categoria" class="w-full discord-input text-sm rounded px-2 py-1 mt-1">
+                                            <option value="promesas">Promesas</option>
+                                            <option value="salvacion">Salvación</option>
+                                            <option value="oracion">Oración</option>
+                                            <option value="personalizado">Personalizado</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div>
+                                        <label class="text-sm discord-text-secondary">Dificultad</label>
+                                        <select id="memorizacion-dificultad" class="w-full discord-input text-sm rounded px-2 py-1 mt-1">
+                                            <option value="principiante">Principiante</option>
+                                            <option value="intermedio">Intermedio</option>
+                                            <option value="avanzado">Avanzado</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <button id="iniciar-memorizacion-btn" class="w-full text-sm discord-button-secondary px-3 py-1 rounded">
+                                        Iniciar Práctica
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+        
+        <!-- Pie de página -->
+        <footer class="mt-8 py-4 text-center text-sm discord-text-muted">
+            <p>Formación Bíblica Avanzada &copy; 2025 - Versión Mejorada</p>
+            <p class="mt-1">Biblia Reina Valera 1960 - Sociedades Bíblicas Unidas</p>
+        </footer>
+    </div>
+    
+    <!-- Modales -->
+    <div id="modal-container" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div id="modal-content" class="discord-card rounded-lg p-4 max-w-md w-full max-h-[90vh] overflow-y-auto">
+            <!-- El contenido del modal se cargará dinámicamente -->
+        </div>
+    </div>
+    
+    <!-- Notificaciones -->
+    <div id="notificacion-container" class="fixed bottom-4 right-4 z-40">
+        <!-- Las notificaciones se cargarán dinámicamente -->
+    </div>
+    
+    <!-- Scripts -->
+    <script src="funciones_analiticas.js"></script>
+    <script src="biblia_rv1960.js"></script>
+    <script src="social_avanzado.js"></script>
+    
+    <script>
+        // Función principal
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Inicializando aplicación de Formación Bíblica Avanzada...');
+            
+            // Inicializar componentes
+            inicializarNavegacion();
+            inicializarFiltros();
+            inicializarEstudio();
+            inicializarRecursos();
+            inicializarTema();
+            inicializarModales();
+            inicializarNotificaciones();
+            
+            // Mostrar notificación de bienvenida
+            mostrarNotificacion('¡Bienvenido a la versión mejorada!', 'Explora todas las nuevas funcionalidades.', 'info');
+        });
+        
+        // Navegación principal
+        function inicializarNavegacion() {
+            const secciones = ['biblia', 'estudio', 'filtros', 'social', 'recursos'];
+            const botones = secciones.map(seccion => document.getElementById(`nav-${seccion}-btn`));
+            const contenedores = secciones.map(seccion => document.getElementById(`content-${seccion}`));
+            
+            botones.forEach((boton, index) => {
+                if (!boton) return;
+                
+                boton.addEventListener('click', () => {
+                    // Actualizar botones
+                    botones.forEach(b => b.classList.remove('active'));
+                    boton.classList.add('active');
+                    
+                    // Actualizar contenedores
+                    contenedores.forEach(c => {
+                        if (c) c.classList.add('hidden');
+                    });
+                    
+                    if (contenedores[index]) {
+                        contenedores[index].classList.remove('hidden');
+                    }
+                    
+                    // Acciones específicas por sección
+                    const seccion = secciones[index];
+                    
+                    if (seccion === 'social') {
+                        // Mostrar botones de navegación social
+                        document.getElementById('social-general-btn')?.classList.remove('hidden');
+                        document.getElementById('social-teoria-btn')?.classList.remove('hidden');
+                        document.getElementById('social-practica-btn')?.classList.remove('hidden');
+                        
+                        // Ocultar botones de filtros
+                        document.getElementById('filtro-sangre-btn')?.classList.add('hidden');
+                        document.getElementById('filtro-agua-btn')?.classList.add('hidden');
+                    } else if (seccion === 'filtros') {
+                        // Mostrar botones de filtros
+                        document.getElementById('filtro-sangre-btn')?.classList.remove('hidden');
+                        document.getElementById('filtro-agua-btn')?.classList.remove('hidden');
+                        
+                        // Ocultar botones de navegación social
+                        document.getElementById('social-general-btn')?.classList.add('hidden');
+                        document.getElementById('social-teoria-btn')?.classList.add('hidden');
+                        document.getElementById('social-practica-btn')?.classList.add('hidden');
+                    } else {
+                        // Ocultar todos los botones secundarios
+                        document.getElementById('social-general-btn')?.classList.add('hidden');
+                        document.getElementById('social-teoria-btn')?.classList.add('hidden');
+                        document.getElementById('social-practica-btn')?.classList.add('hidden');
+                        document.getElementById('filtro-sangre-btn')?.classList.add('hidden');
+                        document.getElementById('filtro-agua-btn')?.classList.add('hidden');
+                    }
+                });
+            });
+            
+            // Configurar botones de navegación social
+            const botonesNavSocial = ['general', 'teoria', 'practica'].map(tipo => 
+                document.getElementById(`social-${tipo}-btn`)
+            );
+            
+            botonesNavSocial.forEach((boton, index) => {
+                if (!boton) return;
+                
+                boton.addEventListener('click', () => {
+                    botonesNavSocial.forEach(b => b.classList.remove('active'));
+                    boton.classList.add('active');
+                    
+                    // Aquí se implementaría la lógica para cambiar entre secciones sociales
+                    console.log(`Cambiando a sección social: ${['general', 'teoria', 'practica'][index]}`);
+                });
+            });
+            
+            // Configurar botones de filtros
+            const botonesFiltros = ['sangre', 'agua'].map(tipo => 
+                document.getElementById(`filtro-${tipo}-btn`)
+            );
+            
+            botonesFiltros.forEach((boton, index) => {
+                if (!boton) return;
+                
+                boton.addEventListener('click', () => {
+                    botonesFiltros.forEach(b => b.classList.remove('active'));
+                    boton.classList.add('active');
+                    
+                    // Aquí se implementaría la lógica para cambiar entre filtros
+                    console.log(`Cambiando a filtro: ${['sangre', 'agua'][index]}`);
+                });
+            });
+        }
+        
+        // Inicializar filtros
+        function inicializarFiltros() {
+            // Filtro Sangre
+            const filtroSangreCategoria = document.getElementById('filtro-sangre-categoria');
+            const filtroSangreSubcategoria = document.getElementById('filtro-sangre-subcategoria');
+            const aplicarFiltroSangreBtn = document.getElementById('aplicar-filtro-sangre-btn');
+            
+            if (filtroSangreCategoria && filtroSangreSubcategoria) {
+                filtroSangreCategoria.addEventListener('change', () => {
+                    const categoria = filtroSangreCategoria.value;
+                    
+                    // Limpiar y desactivar subcategoría si no hay categoría seleccionada
+                    if (!categoria) {
+                        filtroSangreSubcategoria.innerHTML = '<option value="">Seleccionar subcategoría...</option>';
+                        filtroSangreSubcategoria.disabled = true;
+                        return;
+                    }
+                    
+                    // Activar subcategoría y cargar opciones según la categoría
+                    filtroSangreSubcategoria.disabled = false;
+                    
+                    // Opciones de subcategoría según la categoría seleccionada
+                    const opciones = {
+                        pacto: ['Noé', 'Abraham', 'Moisés', 'David', 'Nuevo Pacto'],
+                        sacrificio: ['Holocausto', 'Ofrenda', 'Paz', 'Expiación', 'Cristo'],
+                        redencion: ['Israel', 'Personal', 'Universal', 'Futura'],
+                        expiacion: ['Día de Expiación', 'Sacrificios', 'Cruz', 'Propiciación'],
+                        vida: ['Prohibición', 'Simbolismo', 'Cristo']
+                    };
+                    
+                    // Cargar opciones
+                    filtroSangreSubcategoria.innerHTML = '<option value="">Seleccionar subcategoría...</option>';
+                    
+                    if (opciones[categoria]) {
+                        opciones[categoria].forEach(opcion => {
+                            const option = document.createElement('option');
+                            option.value = opcion.toLowerCase().replace(/\s+/g, '_');
+                            option.textContent = opcion;
+                            filtroSangreSubcategoria.appendChild(option);
+                        });
+                    }
+                });
+            }
+            
+            if (aplicarFiltroSangreBtn) {
+                aplicarFiltroSangreBtn.addEventListener('click', () => {
+                    const categoria = filtroSangreCategoria?.value || '';
+                    const subcategoria = filtroSangreSubcategoria?.value || '';
+                    const at = document.getElementById('filtro-sangre-at')?.checked || false;
+                    const nt = document.getElementById('filtro-sangre-nt')?.checked || false;
+                    const tipologia = document.getElementById('filtro-sangre-tipologia')?.checked || false;
+                    const simbolismo = document.getElementById('filtro-sangre-simbolismo')?.checked || false;
+                    const profecia = document.getElementById('filtro-sangre-profecia')?.checked || false;
+                    const doctrina = document.getElementById('filtro-sangre-doctrina')?.checked || false;
+                    const visualizacion = document.getElementById('filtro-sangre-visualizacion')?.value || 'lista';
+                    
+                    console.log('Aplicando filtro Sangre:', {
+                        categoria,
+                        subcategoria,
+                        at,
+                        nt,
+                        tipologia,
+                        simbolismo,
+                        profecia,
+                        doctrina,
+                        visualizacion
+                    });
+                    
+                    // Aquí se implementaría la lógica para aplicar el filtro
+                    // Por ahora, solo mostramos el contenedor de resultados
+                    const resultadosContainer = document.getElementById('filtro-sangre-resultados');
+                    if (resultadosContainer) {
+                        resultadosContainer.classList.remove('hidden');
+                        resultadosContainer.innerHTML = `
+                            <h4 class="font-medium mb-2">Resultados</h4>
+                            <div class="discord-card p-3 rounded-lg">
+                                <p class="text-sm">Procesando filtro para: ${categoria} ${subcategoria ? `> ${subcategoria}` : ''}</p>
+                                <div class="mt-2 loader mx-auto w-6 h-6"></div>
+                            </div>
+                        `;
+                        
+                        // Simular carga
+                        setTimeout(() => {
+                            if (categoria) {
+                                resultadosContainer.innerHTML = `
+                                    <h4 class="font-medium mb-2">Resultados</h4>
+                                    <div class="discord-card p-3 rounded-lg">
+                                        <p class="text-sm mb-2">Se encontraron 15 referencias para: ${categoria} ${subcategoria ? `> ${subcategoria}` : ''}</p>
+                                        <div class="space-y-2 text-sm">
+                                            <div class="p-2 bg-[var(--bg-input)]/30 rounded">
+                                                <p class="font-medium">Génesis 9:4-6</p>
+                                                <p class="text-xs discord-text-secondary mt-1">Pero carne con su vida, que es su sangre, no comeréis...</p>
+                                            </div>
+                                            <div class="p-2 bg-[var(--bg-input)]/30 rounded">
+                                                <p class="font-medium">Levítico 17:11</p>
+                                                <p class="text-xs discord-text-secondary mt-1">Porque la vida de la carne en la sangre está...</p>
+                                            </div>
+                                            <div class="p-2 bg-[var(--bg-input)]/30 rounded">
+                                                <p class="font-medium">Hebreos 9:22</p>
+                                                <p class="text-xs discord-text-secondary mt-1">Y casi todo es purificado, según la ley, con sangre...</p>
+                                            </div>
+                                            <button class="w-full text-xs discord-button-secondary px-2 py-1 rounded mt-2">
+                                                Ver más resultados
+                                            </button>
+                                        </div>
+                                    </div>
+                                `;
+                            } else {
+                                resultadosContainer.innerHTML = `
+                                    <h4 class="font-medium mb-2">Resultados</h4>
+                                    <div class="discord-card p-3 rounded-lg">
+                                        <p class="text-sm discord-text-secondary">Selecciona al menos una categoría para ver resultados</p>
+                                    </div>
+                                `;
+                            }
+                        }, 1500);
+                    }
+                });
+            }
+            
+            // Filtro Agua
+            const filtroAguaElemento = document.getElementById('filtro-agua-elemento');
+            const filtroAguaContexto = document.getElementById('filtro-agua-contexto');
+            const aplicarFiltroAguaBtn = document.getElementById('aplicar-filtro-agua-btn');
+            
+            if (filtroAguaElemento && filtroAguaContexto) {
+                filtroAguaElemento.addEventListener('change', () => {
+                    const elemento = filtroAguaElemento.value;
+                    
+                    // Limpiar y desactivar contexto si no hay elemento seleccionado
+                    if (!elemento) {
+                        filtroAguaContexto.innerHTML = '<option value="">Seleccionar contexto...</option>';
+                        filtroAguaContexto.disabled = true;
+                        return;
+                    }
+                    
+                    // Activar contexto y cargar opciones según el elemento
+                    filtroAguaContexto.disabled = false;
+                    
+                    // Opciones de contexto según el elemento seleccionado
+                    const opciones = {
+                        purificacion: ['Ritual', 'Moral', 'Espiritual', 'Simbólico'],
+                        bautismo: ['Juan', 'Jesús', 'Espíritu Santo', 'Iglesia Primitiva'],
+                        vida: ['Físico', 'Espiritual', 'Eterno', 'Simbólico'],
+                        juicio: ['Diluvio', 'Mar Rojo', 'Profético', 'Escatológico'],
+                        espiritu: ['Regeneración', 'Santificación', 'Dones', 'Fruto']
+                    };
+                    
+                    // Cargar opciones
+                    filtroAguaContexto.innerHTML = '<option value="">Seleccionar contexto...</option>';
+                    
+                    if (opciones[elemento]) {
+                        opciones[elemento].forEach(opcion => {
+                            const option = document.createElement('option');
+                            option.value = opcion.toLowerCase().replace(/\s+/g, '_');
+                            option.textContent = opcion;
+                            filtroAguaContexto.appendChild(option);
+                        });
+                    }
+                });
+            }
+            
+            if (aplicarFiltroAguaBtn) {
+                aplicarFiltroAguaBtn.addEventListener('click', () => {
+                    const elemento = filtroAguaElemento?.value || '';
+                    const contexto = filtroAguaContexto?.value || '';
+                    const at = document.getElementById('filtro-agua-at')?.checked || false;
+                    const nt = document.getElementById('filtro-agua-nt')?.checked || false;
+                    const literal = document.getElementById('filtro-agua-literal')?.checked || false;
+                    const simbolico = document.getElementById('filtro-agua-simbolico')?.checked || false;
+                    const milagros = document.getElementById('filtro-agua-milagros')?.checked || false;
+                    const ensenanza = document.getElementById('filtro-agua-ensenanza')?.checked || false;
+                    const visualizacion = document.getElementById('filtro-agua-visualizacion')?.value || 'lista';
+                    
+                    console.log('Aplicando filtro Agua:', {
+                        elemento,
+                        contexto,
+                        at,
+                        nt,
+                        literal,
+                        simbolico,
+                        milagros,
+                        ensenanza,
+                        visualizacion
+                    });
+                    
+                    // Aquí se implementaría la lógica para aplicar el filtro
+                    // Por ahora, solo mostramos el contenedor de resultados
+                    const resultadosContainer = document.getElementById('filtro-agua-resultados');
+                    if (resultadosContainer) {
+                        resultadosContainer.classList.remove('hidden');
+                        resultadosContainer.innerHTML = `
+                            <h4 class="font-medium mb-2">Resultados</h4>
+                            <div class="discord-card p-3 rounded-lg">
+                                <p class="text-sm">Procesando filtro para: ${elemento} ${contexto ? `> ${contexto}` : ''}</p>
+                                <div class="mt-2 loader mx-auto w-6 h-6"></div>
+                            </div>
+                        `;
+                        
+                        // Simular carga
+                        setTimeout(() => {
+                            if (elemento) {
+                                resultadosContainer.innerHTML = `
+                                    <h4 class="font-medium mb-2">Resultados</h4>
+                                    <div class="discord-card p-3 rounded-lg">
+                                        <p class="text-sm mb-2">Se encontraron 12 referencias para: ${elemento} ${contexto ? `> ${contexto}` : ''}</p>
+                                        <div class="space-y-2 text-sm">
+                                            <div class="p-2 bg-[var(--bg-input)]/30 rounded">
+                                                <p class="font-medium">Juan 4:14</p>
+                                                <p class="text-xs discord-text-secondary mt-1">Mas el que bebiere del agua que yo le daré, no tendrá sed jamás...</p>
+                                            </div>
+                                            <div class="p-2 bg-[var(--bg-input)]/30 rounded">
+                                                <p class="font-medium">Ezequiel 36:25</p>
+                                                <p class="text-xs discord-text-secondary mt-1">Esparciré sobre vosotros agua limpia, y seréis limpiados...</p>
+                                            </div>
+                                            <div class="p-2 bg-[var(--bg-input)]/30 rounded">
+                                                <p class="font-medium">Apocalipsis 22:1</p>
+                                                <p class="text-xs discord-text-secondary mt-1">Después me mostró un río limpio de agua de vida...</p>
+                                            </div>
+                                            <button class="w-full text-xs discord-button-secondary px-2 py-1 rounded mt-2">
+                                                Ver más resultados
+                                            </button>
+                                        </div>
+                                    </div>
+                                `;
+                            } else {
+                                resultadosContainer.innerHTML = `
+                                    <h4 class="font-medium mb-2">Resultados</h4>
+                                    <div class="discord-card p-3 rounded-lg">
+                                        <p class="text-sm discord-text-secondary">Selecciona al menos un elemento para ver resultados</p>
+                                    </div>
+                                `;
+                            }
+                        }, 1500);
+                    }
+                });
+            }
+            
+            // Análisis Avanzado
+            const ejecutarAnalisisBtn = document.getElementById('ejecutar-analisis-btn');
+            
+            if (ejecutarAnalisisBtn) {
+                ejecutarAnalisisBtn.addEventListener('click', () => {
+                    const tipoAnalisis = document.getElementById('analisis-tipo')?.value || 'frecuencia';
+                    const formatoResultados = document.getElementById('analisis-formato')?.value || 'grafico';
+                    const parametros = document.getElementById('analisis-parametros')?.value || '';
+                    
+                    console.log('Ejecutando análisis:', {
+                        tipoAnalisis,
+                        formatoResultados,
+                        parametros
+                    });
+                    
+                    // Aquí se implementaría la lógica para ejecutar el análisis
+                    // Por ahora, solo mostramos el contenedor de resultados
+                    const resultadosContainer = document.getElementById('analisis-resultados');
+                    if (resultadosContainer) {
+                        resultadosContainer.classList.remove('hidden');
+                        resultadosContainer.innerHTML = `
+                            <h4 class="font-medium mb-2">Resultados del Análisis</h4>
+                            <div class="discord-card p-3 rounded-lg">
+                                <p class="text-sm">Procesando análisis de tipo: ${tipoAnalisis}</p>
+                                <div class="mt-2 loader mx-auto w-6 h-6"></div>
+                            </div>
+                        `;
+                        
+                        // Simular carga
+                        setTimeout(() => {
+                            if (parametros.trim()) {
+                                if (formatoResultados === 'grafico') {
+                                    resultadosContainer.innerHTML = `
+                                        <h4 class="font-medium mb-2">Resultados del Análisis</h4>
+                                        <div class="discord-card p-3 rounded-lg">
+                                            <p class="text-sm mb-3">Análisis de ${tipoAnalisis} para: ${parametros}</p>
+                                            <div class="h-64">
+                                                <canvas id="analisis-grafico"></canvas>
+                                            </div>
+                                            <p class="text-xs discord-text-secondary mt-3">El gráfico muestra la frecuencia de aparición en diferentes libros de la Biblia.</p>
+                                        </div>
+                                    `;
+                                    
+                                    // Crear gráfico de ejemplo
+                                    const ctx = document.getElementById('analisis-grafico')?.getContext('2d');
+                                    if (ctx) {
+                                        new Chart(ctx, {
+                                            type: 'bar',
+                                            data: {
+                                                labels: ['Génesis', 'Éxodo', 'Levítico', 'Números', 'Deuteronomio', 'Josué'],
+                                                datasets: [{
+                                                    label: 'Frecuencia',
+                                                    data: [12, 19, 8, 5, 2, 3],
+                                                    backgroundColor: 'rgba(88, 101, 242, 0.6)',
+                                                    borderColor: 'rgba(88, 101, 242, 1)',
+                                                    borderWidth: 1
+                                                }]
+                                            },
+                                            options: {
+                                                responsive: true,
+                                                maintainAspectRatio: false,
+                                                scales: {
+                                                    y: {
+                                                        beginAtZero: true,
+                                                        ticks: {
+                                                            color: 'rgba(220, 221, 222, 0.8)'
+                                                        },
+                                                        grid: {
+                                                            color: 'rgba(47, 49, 54, 0.6)'
+                                                        }
+                                                    },
+                                                    x: {
+                                                        ticks: {
+                                                            color: 'rgba(220, 221, 222, 0.8)'
+                                                        },
+                                                        grid: {
+                                                            color: 'rgba(47, 49, 54, 0.6)'
+                                                        }
+                                                    }
+                                                },
+                                                plugins: {
+                                                    legend: {
+                                                        labels: {
+                                                            color: 'rgba(220, 221, 222, 0.8)'
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        });
+                                    }
+                                } else if (formatoResultados === 'tabla') {
+                                    resultadosContainer.innerHTML = `
+                                        <h4 class="font-medium mb-2">Resultados del Análisis</h4>
+                                        <div class="discord-card p-3 rounded-lg">
+                                            <p class="text-sm mb-3">Análisis de ${tipoAnalisis} para: ${parametros}</p>
+                                            <div class="overflow-x-auto">
+                                                <table class="w-full text-sm">
+                                                    <thead>
+                                                        <tr class="bg-[var(--bg-input)]/50">
+                                                            <th class="p-2 text-left">Libro</th>
+                                                            <th class="p-2 text-left">Capítulo</th>
+                                                            <th class="p-2 text-left">Versículo</th>
+                                                            <th class="p-2 text-left">Contexto</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr class="border-b border-[var(--bg-input)]/30">
+                                                            <td class="p-2">Génesis</td>
+                                                            <td class="p-2">1</td>
+                                                            <td class="p-2">2</td>
+                                                            <td class="p-2">Creación</td>
+                                                        </tr>
+                                                        <tr class="border-b border-[var(--bg-input)]/30">
+                                                            <td class="p-2">Éxodo</td>
+                                                            <td class="p-2">14</td>
+                                                            <td class="p-2">21-22</td>
+                                                            <td class="p-2">Mar Rojo</td>
+                                                        </tr>
+                                                        <tr class="border-b border-[var(--bg-input)]/30">
+                                                            <td class="p-2">Juan</td>
+                                                            <td class="p-2">4</td>
+                                                            <td class="p-2">14</td>
+                                                            <td class="p-2">Mujer Samaritana</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    `;
+                                } else {
+                                    resultadosContainer.innerHTML = `
+                                        <h4 class="font-medium mb-2">Resultados del Análisis</h4>
+                                        <div class="discord-card p-3 rounded-lg">
+                                            <p class="text-sm mb-3">Análisis de ${tipoAnalisis} para: ${parametros}</p>
+                                            <div class="text-sm space-y-2">
+                                                <p>El análisis muestra que los términos aparecen principalmente en contextos de:</p>
+                                                <ul class="list-disc list-inside pl-2 space-y-1">
+                                                    <li>Narrativas históricas (42%)</li>
+                                                    <li>Pasajes proféticos (28%)</li>
+                                                    <li>Enseñanzas doctrinales (18%)</li>
+                                                    <li>Literatura poética (12%)</li>
+                                                </ul>
+                                                <p class="mt-3">La distribución temporal muestra una concentración en el período del Nuevo Testamento, con énfasis en las enseñanzas de Jesús y las epístolas paulinas.</p>
+                                            </div>
+                                        </div>
+                                    `;
+                                }
+                            } else {
+                                resultadosContainer.innerHTML = `
+                                    <h4 class="font-medium mb-2">Resultados del Análisis</h4>
+                                    <div class="discord-card p-3 rounded-lg">
+                                        <p class="text-sm discord-text-secondary">Ingresa parámetros para realizar el análisis</p>
+                                    </div>
+                                `;
+                            }
+                        }, 2000);
+                    }
+                });
+            }
+            
+            // Configurar eventos para paneles desplegables
+            document.querySelectorAll('.filtro-header').forEach(header => {
+                header.addEventListener('click', () => {
+                    const content = header.nextElementSibling;
+                    if (content) {
+                        content.classList.toggle('hidden');
+                        
+                        // Rotar icono
+                        const icon = header.querySelector('svg');
+                        if (icon) {
+                            icon.style.transform = content.classList.contains('hidden') ? 'rotate(0deg)' : 'rotate(180deg)';
+                        }
+                    }
+                });
+            });
+        }
+        
+        // Inicializar modo de estudio
+        function inicializarEstudio() {
+            // Configurar eventos para paneles desplegables
+            document.querySelectorAll('#content-estudio .filtro-header').forEach(header => {
+                header.addEventListener('click', () => {
+                    const content = header.nextElementSibling;
+                    if (content) {
+                        content.classList.toggle('hidden');
+                        
+                        // Rotar icono
+                        const icon = header.querySelector('svg');
+                        if (icon) {
+                            icon.style.transform = content.classList.contains('hidden') ? 'rotate(0deg)' : 'rotate(180deg)';
+                        }
+                    }
+                });
+            });
+            
+            // Botón para aplicar filtros en modo estudio
+            const aplicarFiltrosEstudioBtn = document.getElementById('aplicar-filtros-estudio-btn');
+            
+            if (aplicarFiltrosEstudioBtn) {
+                aplicarFiltrosEstudioBtn.addEventListener('click', () => {
+                    const filtroSangre = document.getElementById('estudio-filtro-sangre')?.value || '';
+                    const filtroAgua = document.getElementById('estudio-filtro-agua')?.value || '';
+                    
+                    console.log('Aplicando filtros en modo estudio:', {
+                        filtroSangre,
+                        filtroAgua
+                    });
+                    
+                    // Aquí se implementaría la lógica para aplicar los filtros al texto actual
+                    // Por ahora, solo mostramos una notificación
+                    mostrarNotificacion('Filtros aplicados', 'Los filtros se han aplicado al texto actual.', 'success');
+                });
+            }
+            
+            // Botón para guardar notas
+            const guardarNotasBtn = document.getElementById('guardar-notas-btn');
+            
+            if (guardarNotasBtn) {
+                guardarNotasBtn.addEventListener('click', () => {
+                    const notas = document.getElementById('estudio-notas')?.value || '';
+                    
+                    console.log('Guardando notas:', notas);
+                    
+                    // Aquí se implementaría la lógica para guardar las notas
+                    // Por ahora, solo mostramos una notificación
+                    mostrarNotificacion('Notas guardadas', 'Tus notas de estudio se han guardado correctamente.', 'success');
+                });
+            }
+        }
+        
+        // Inicializar recursos
+        function inicializarRecursos() {
+            // Diccionario Bíblico
+            const diccionarioBuscarBtn = document.getElementById('diccionario-buscar-btn');
+            
+            if (diccionarioBuscarBtn) {
+                diccionarioBuscarBtn.addEventListener('click', () => {
+                    const termino = document.getElementById('diccionario-busqueda')?.value || '';
+                    
+                    if (!termino.trim()) {
+                        return;
+                    }
+                    
+                    console.log('Buscando término en diccionario:', termino);
+                    
+                    // Aquí se implementaría la lógica para buscar en el diccionario
+                    // Por ahora, mostramos resultados de ejemplo
+                    const resultadosContainer = document.getElementById('diccionario-resultados');
+                    if (resultadosContainer) {
+                        resultadosContainer.innerHTML = `
+                            <p class="text-sm">Buscando "${termino}"...</p>
+                            <div class="mt-2 loader mx-auto w-6 h-6"></div>
+                        `;
+                        
+                        // Simular carga
+                        setTimeout(() => {
+                            resultadosContainer.innerHTML = `
+                                <h4 class="font-medium mb-2">${termino.charAt(0).toUpperCase() + termino.slice(1)}</h4>
+                                <div class="text-sm space-y-2">
+                                    <p>Término bíblico que se refiere a...</p>
+                                    <p>Aparece en varios contextos en la Biblia, principalmente en...</p>
+                                    <p>Significado teológico: ...</p>
+                                    <div class="mt-3">
+                                        <p class="font-medium">Referencias principales:</p>
+                                        <ul class="list-disc list-inside pl-2 space-y-1 text-xs discord-text-secondary">
+                                            <li>Génesis 1:1</li>
+                                            <li>Salmos 23:1</li>
+                                            <li>Juan 3:16</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            `;
+                        }, 1500);
+                    }
+                });
+                
+                // Permitir búsqueda con Enter
+                const diccionarioBusqueda = document.getElementById('diccionario-busqueda');
+                if (diccionarioBusqueda) {
+                    diccionarioBusqueda.addEventListener('keypress', (e) => {
+                        if (e.key === 'Enter') {
+                            diccionarioBuscarBtn.click();
+                        }
+                    });
+                }
+            }
+            
+            // Concordancia
+            const concordanciaBuscarBtn = document.getElementById('concordancia-buscar-btn');
+            
+            if (concordanciaBuscarBtn) {
+                concordanciaBuscarBtn.addEventListener('click', () => {
+                    const palabra = document.getElementById('concordancia-busqueda')?.value || '';
+                    
+                    if (!palabra.trim()) {
+                        return;
+                    }
+                    
+                    console.log('Buscando palabra en concordancia:', palabra);
+                    
+                    // Aquí se implementaría la lógica para buscar en la concordancia
+                    // Por ahora, mostramos resultados de ejemplo
+                    const resultadosContainer = document.getElementById('concordancia-resultados');
+                    if (resultadosContainer) {
+                        resultadosContainer.innerHTML = `
+                            <p class="text-sm">Buscando "${palabra}"...</p>
+                            <div class="mt-2 loader mx-auto w-6 h-6"></div>
+                        `;
+                        
+                        // Simular carga
+                        setTimeout(() => {
+                            resultadosContainer.innerHTML = `
+                                <p class="text-sm mb-2">Se encontraron 24 ocurrencias de "${palabra}":</p>
+                                <div class="space-y-2 text-xs">
+                                    <div class="p-2 bg-[var(--bg-input)]/30 rounded">
+                                        <p class="font-medium">Génesis 1:1</p>
+                                        <p class="discord-text-secondary mt-1">En el <span class="bg-[var(--bg-primary)]/20 font-medium">${palabra}</span> creó Dios los cielos y la tierra.</p>
+                                    </div>
+                                    <div class="p-2 bg-[var(--bg-input)]/30 rounded">
+                                        <p class="font-medium">Juan 1:1</p>
+                                        <p class="discord-text-secondary mt-1">En el <span class="bg-[var(--bg-primary)]/20 font-medium">${palabra}</span> era el Verbo, y el Verbo era con Dios, y el Verbo era Dios.</p>
+                                    </div>
+                                    <div class="p-2 bg-[var(--bg-input)]/30 rounded">
+                                        <p class="font-medium">Apocalipsis 22:13</p>
+                                        <p class="discord-text-secondary mt-1">Yo soy el Alfa y la Omega, el <span class="bg-[var(--bg-primary)]/20 font-medium">${palabra}</span> y el fin, el primero y el último.</p>
+                                    </div>
+                                    <button class="w-full text-xs discord-button-secondary px-2 py-1 rounded mt-2">
+                                        Ver más resultados
+                                    </button>
+                                </div>
+                            `;
+                        }, 1500);
+                    }
+                });
+                
+                // Permitir búsqueda con Enter
+                const concordanciaBusqueda = document.getElementById('concordancia-busqueda');
+                if (concordanciaBusqueda) {
+                    concordanciaBusqueda.addEventListener('keypress', (e) => {
+                        if (e.key === 'Enter') {
+                            concordanciaBuscarBtn.click();
+                        }
+                    });
+                }
+            }
+            
+            // Mapas y Cronología
+            const mapasCategoria = document.getElementById('mapas-categoria');
+            const mapasRecurso = document.getElementById('mapas-recurso');
+            const cargarMapaBtn = document.getElementById('cargar-mapa-btn');
+            
+            if (mapasCategoria && mapasRecurso) {
+                mapasCategoria.addEventListener('change', () => {
+                    const categoria = mapasCategoria.value;
+                    
+                    // Cargar opciones según la categoría
+                    mapasRecurso.innerHTML = '<option value="">Seleccionar recurso...</option>';
+                    
+                    // Opciones según la categoría seleccionada
+                    const opciones = {
+                        geograficos: ['Palestina en tiempos de Jesús', 'Viajes de Pablo', 'Éxodo de Egipto', 'Tierra Prometida'],
+                        historicos: ['Imperio Babilónico', 'Imperio Romano', 'Reino de David y Salomón', 'Reinos divididos'],
+                        cronologia: ['Línea de tiempo del AT', 'Línea de tiempo del NT', 'Reyes de Israel y Judá', 'Profetas'],
+                        arqueologia: ['Jericó', 'Jerusalén', 'Qumrán', 'Megido']
+                    };
+                    
+                    if (opciones[categoria]) {
+                        opciones[categoria].forEach(opcion => {
+                            const option = document.createElement('option');
+                            option.value = opcion.toLowerCase().replace(/\s+/g, '_');
+                            option.textContent = opcion;
+                            mapasRecurso.appendChild(option);
+                        });
+                    }
+                });
+            }
+            
+            if (cargarMapaBtn) {
+                cargarMapaBtn.addEventListener('click', () => {
+                    const categoria = mapasCategoria?.value || '';
+                    const recurso = mapasRecurso?.value || '';
+                    
+                    if (!recurso) {
+                        return;
+                    }
+                    
+                    console.log('Cargando recurso:', { categoria, recurso });
+                    
+                    // Aquí se implementaría la lógica para cargar el recurso
+                    // Por ahora, mostramos un ejemplo
+                    const visualizacionContainer = document.getElementById('mapas-visualizacion');
+                    if (visualizacionContainer) {
+                        visualizacionContainer.innerHTML = `
+                            <p class="text-sm text-center">Cargando recurso...</p>
+                            <div class="mt-2 loader mx-auto w-6 h-6"></div>
+                        `;
+                        
+                        // Simular carga
+                        setTimeout(() => {
+                            const recursoNombre = mapasRecurso.options[mapasRecurso.selectedIndex].text;
+                            
+                            visualizacionContainer.innerHTML = `
+                                <h4 class="font-medium mb-2 text-center">${recursoNombre}</h4>
+                                <div class="bg-[var(--bg-input)]/30 rounded p-2 text-center">
+                                    <p class="text-sm discord-text-secondary mb-2">Visualización de ejemplo</p>
+                                    <div class="w-full h-48 bg-[var(--bg-input)] rounded flex items-center justify-center">
+                                        <p class="text-sm">Imagen de ${recursoNombre}</p>
+                                    </div>
+                                    <p class="text-xs discord-text-muted mt-2">Fuente: Recursos Bíblicos</p>
+                                </div>
+                            `;
+                        }, 1500);
+                    }
+                });
+            }
+            
+            // Plan de Lectura
+            const generarPlanLecturaBtn = document.getElementById('generar-plan-lectura-btn');
+            
+            if (generarPlanLecturaBtn) {
+                generarPlanLecturaBtn.addEventListener('click', () => {
+                    const tipo = document.getElementById('plan-lectura-tipo')?.value || 'cronologico';
+                    const duracion = document.getElementById('plan-lectura-duracion')?.value || '30';
+                    
+                    console.log('Generando plan de lectura:', { tipo, duracion });
+                    
+                    // Aquí se implementaría la lógica para generar el plan
+                    // Por ahora, mostramos un modal con información de ejemplo
+                    mostrarModal(`
+                        <h3 class="text-xl font-semibold mb-4">Plan de Lectura: ${tipo.charAt(0).toUpperCase() + tipo.slice(1)}</h3>
+                        <p class="text-sm mb-4">Plan generado para ${duracion} días</p>
+                        
+                        <div class="space-y-3 max-h-96 overflow-y-auto">
+                            <div class="p-3 bg-[var(--bg-input)]/30 rounded">
+                                <p class="font-medium">Día 1</p>
+                                <p class="text-sm discord-text-secondary mt-1">Génesis 1-3</p>
+                            </div>
+                            <div class="p-3 bg-[var(--bg-input)]/30 rounded">
+                                <p class="font-medium">Día 2</p>
+                                <p class="text-sm discord-text-secondary mt-1">Génesis 4-7</p>
+                            </div>
+                            <div class="p-3 bg-[var(--bg-input)]/30 rounded">
+                                <p class="font-medium">Día 3</p>
+                                <p class="text-sm discord-text-secondary mt-1">Génesis 8-11</p>
+                            </div>
+                            <div class="p-3 bg-[var(--bg-input)]/30 rounded">
+                                <p class="font-medium">Día 4</p>
+                                <p class="text-sm discord-text-secondary mt-1">Génesis 12-15</p>
+                            </div>
+                            <div class="p-3 bg-[var(--bg-input)]/30 rounded">
+                                <p class="font-medium">Día 5</p>
+                                <p class="text-sm discord-text-secondary mt-1">Génesis 16-18</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex justify-between mt-6">
+                            <button id="modal-cancelar-btn" class="text-sm discord-button-secondary px-3 py-1 rounded">
+                                Cerrar
+                            </button>
+                            <button id="modal-guardar-btn" class="text-sm discord-button-primary px-3 py-1 rounded">
+                                Guardar Plan
+                            </button>
+                        </div>
+                    `);
+                    
+                    // Configurar eventos del modal
+                    document.getElementById('modal-cancelar-btn')?.addEventListener('click', cerrarModal);
+                    document.getElementById('modal-guardar-btn')?.addEventListener('click', () => {
+                        cerrarModal();
+                        mostrarNotificacion('Plan guardado', 'Tu plan de lectura ha sido guardado correctamente.', 'success');
+                    });
+                });
+            }
+            
+            // Memorización
+            const iniciarMemorizacionBtn = document.getElementById('iniciar-memorizacion-btn');
+            
+            if (iniciarMemorizacionBtn) {
+                iniciarMemorizacionBtn.addEventListener('click', () => {
+                    const categoria = document.getElementById('memorizacion-categoria')?.value || 'promesas';
+                    const dificultad = document.getElementById('memorizacion-dificultad')?.value || 'principiante';
+                    
+                    console.log('Iniciando práctica de memorización:', { categoria, dificultad });
+                    
+                    // Aquí se implementaría la lógica para iniciar la práctica
+                    // Por ahora, mostramos un modal con información de ejemplo
+                    mostrarModal(`
+                        <h3 class="text-xl font-semibold mb-4">Práctica de Memorización</h3>
+                        <p class="text-sm mb-4">Categoría: ${categoria.charAt(0).toUpperCase() + categoria.slice(1)} - Dificultad: ${dificultad.charAt(0).toUpperCase() + dificultad.slice(1)}</p>
+                        
+                        <div class="p-4 bg-[var(--bg-input)]/30 rounded text-center">
+                            <p class="font-medium mb-2">Juan 3:16</p>
+                            <p class="text-sm discord-text-secondary">Porque de tal manera amó Dios al mundo, que ha dado a su Hijo unigénito, para que todo aquel que en él cree, no se pierda, mas tenga vida eterna.</p>
+                        </div>
+                        
+                        <div class="mt-6 space-y-3">
+                            <p class="text-sm">Escribe el versículo para practicar:</p>
+                            <textarea id="memorizacion-input" class="w-full h-24 discord-input text-sm rounded px-2 py-1" placeholder="Escribe el versículo aquí..."></textarea>
+                            
+                            <div class="flex justify-between">
+                                <button id="modal-pista-btn" class="text-sm discord-button-secondary px-3 py-1 rounded">
+                                    Mostrar Pista
+                                </button>
+                                <button id="modal-verificar-btn" class="text-sm discord-button-primary px-3 py-1 rounded">
+                                    Verificar
+                                </button>
+                            </div>
+                        </div>
+                    `);
+                    
+                    // Configurar eventos del modal
+                    document.getElementById('modal-pista-btn')?.addEventListener('click', () => {
+                        mostrarNotificacion('Pista', 'Porque de tal manera amó Dios al mundo...', 'info');
+                    });
+                    
+                    document.getElementById('modal-verificar-btn')?.addEventListener('click', () => {
+                        const texto = document.getElementById('memorizacion-input')?.value || '';
+                        
+                        if (texto.length > 10) {
+                            cerrarModal();
+                            mostrarNotificacion('¡Buen trabajo!', 'Has completado la práctica de memorización.', 'success');
+                        } else {
+                            mostrarNotificacion('Intenta de nuevo', 'El texto es demasiado corto o incompleto.', 'error');
+                        }
+                    });
+                });
+            }
+        }
+        
+        // Inicializar tema
+        function inicializarTema() {
+            const temaToggleBtn = document.getElementById('theme-toggle-btn');
+            
+            if (temaToggleBtn) {
+                temaToggleBtn.addEventListener('click', () => {
+                    // Aquí se implementaría la lógica para cambiar entre tema claro y oscuro
+                    // Por ahora, solo mostramos una notificación
+                    mostrarNotificacion('Cambio de tema', 'Funcionalidad en desarrollo.', 'info');
+                });
+            }
+            
+            // Botón de ajustes
+            const ajustesBtn = document.getElementById('settings-btn');
+            
+            if (ajustesBtn) {
+                ajustesBtn.addEventListener('click', () => {
+                    // Aquí se implementaría la lógica para mostrar ajustes
+                    // Por ahora, mostramos un modal con opciones de ejemplo
+                    mostrarModal(`
+                        <h3 class="text-xl font-semibold mb-4">Ajustes</h3>
+                        
+                        <div class="space-y-4">
+                            <div>
+                                <label class="font-medium">Tema</label>
+                                <div class="flex space-x-4 mt-2">
+                                    <label class="inline-flex items-center">
+                                        <input type="radio" name="tema" value="oscuro" class="form-radio" checked>
+                                        <span class="ml-2 text-sm">Oscuro</span>
+                                    </label>
+                                    <label class="inline-flex items-center">
+                                        <input type="radio" name="tema" value="claro" class="form-radio">
+                                        <span class="ml-2 text-sm">Claro</span>
+                                    </label>
+                                    <label class="inline-flex items-center">
+                                        <input type="radio" name="tema" value="sistema" class="form-radio">
+                                        <span class="ml-2 text-sm">Sistema</span>
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <label class="font-medium">Tamaño de texto</label>
+                                <select id="ajustes-tamano-texto" class="w-full discord-input text-sm rounded px-2 py-1 mt-2">
+                                    <option value="pequeno">Pequeño</option>
+                                    <option value="normal" selected>Normal</option>
+                                    <option value="grande">Grande</option>
+                                    <option value="muy-grande">Muy grande</option>
+                                </select>
+                            </div>
+                            
+                            <div>
+                                <label class="font-medium">Versión de la Biblia</label>
+                                <select id="ajustes-version-biblia" class="w-full discord-input text-sm rounded px-2 py-1 mt-2">
+                                    <option value="rvr1960" selected>Reina Valera 1960</option>
+                                    <option value="rvr1995">Reina Valera 1995</option>
+                                    <option value="nvi">Nueva Versión Internacional</option>
+                                    <option value="dhh">Dios Habla Hoy</option>
+                                </select>
+                            </div>
+                            
+                            <div>
+                                <label class="font-medium">Notificaciones</label>
+                                <div class="space-y-2 mt-2">
+                                    <label class="inline-flex items-center w-full">
+                                        <input type="checkbox" class="form-checkbox" checked>
+                                        <span class="ml-2 text-sm">Eventos sociales</span>
+                                    </label>
+                                    <label class="inline-flex items-center w-full">
+                                        <input type="checkbox" class="form-checkbox" checked>
+                                        <span class="ml-2 text-sm">Recordatorios de lectura</span>
+                                    </label>
+                                    <label class="inline-flex items-center w-full">
+                                        <input type="checkbox" class="form-checkbox" checked>
+                                        <span class="ml-2 text-sm">Actualizaciones de la aplicación</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="flex justify-between mt-6">
+                            <button id="modal-cancelar-btn" class="text-sm discord-button-secondary px-3 py-1 rounded">
+                                Cancelar
+                            </button>
+                            <button id="modal-guardar-btn" class="text-sm discord-button-primary px-3 py-1 rounded">
+                                Guardar Cambios
+                            </button>
+                        </div>
+                    `);
+                    
+                    // Configurar eventos del modal
+                    document.getElementById('modal-cancelar-btn')?.addEventListener('click', cerrarModal);
+                    document.getElementById('modal-guardar-btn')?.addEventListener('click', () => {
+                        cerrarModal();
+                        mostrarNotificacion('Ajustes guardados', 'Tus preferencias han sido actualizadas.', 'success');
+                    });
+                });
+            }
+        }
+        
+        // Inicializar modales
+        function inicializarModales() {
+            const modalContainer = document.getElementById('modal-container');
+            
+            if (modalContainer) {
+                modalContainer.addEventListener('click', (e) => {
+                    if (e.target === modalContainer) {
+                        cerrarModal();
+                    }
+                });
+            }
+        }
+        
+        // Mostrar modal
+        function mostrarModal(contenido) {
+            const modalContainer = document.getElementById('modal-container');
+            const modalContent = document.getElementById('modal-content');
+            
+            if (modalContainer && modalContent) {
+                modalContent.innerHTML = contenido;
+                modalContainer.classList.remove('hidden');
+                document.body.style.overflow = 'hidden';
+            }
+        }
+        
+        // Cerrar modal
+        function cerrarModal() {
+            const modalContainer = document.getElementById('modal-container');
+            
+            if (modalContainer) {
+                modalContainer.classList.add('hidden');
+                document.body.style.overflow = '';
+            }
+        }
+        
+        // Inicializar notificaciones
+        function inicializarNotificaciones() {
+            // No se requiere inicialización específica
+        }
+        
+        // Mostrar notificación
+        function mostrarNotificacion(titulo, mensaje, tipo = 'info') {
+            const container = document.getElementById('notificacion-container');
+            
+            if (!container) return;
+            
+            // Crear elemento de notificación
+            const notificacion = document.createElement('div');
+            notificacion.className = `discord-card p-3 rounded-lg mb-2 animate-fadeIn max-w-xs w-full shadow-lg`;
+            
+            // Icono según tipo
+            let icono = '';
+            switch (tipo) {
+                case 'success':
+                    icono = `<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                    </svg>`;
+                    break;
+                case 'error':
+                    icono = `<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>`;
+                    break;
+                case 'warning':
+                    icono = `<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-yellow-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                    </svg>`;
+                    break;
+                default: // info
+                    icono = `<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>`;
+            }
+            
+            // Contenido de la notificación
+            notificacion.innerHTML = `
+                <div class="flex items-start">
+                    <div class="flex-shrink-0 mr-3">
+                        ${icono}
+                    </div>
+                    <div class="flex-grow">
+                        <h4 class="font-medium">${titulo}</h4>
+                        <p class="text-sm discord-text-secondary mt-1">${mensaje}</p>
+                    </div>
+                    <button class="cerrar-notificacion-btn flex-shrink-0 ml-2 text-gray-400 hover:text-gray-300">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+            `;
+            
+            // Agregar al contenedor
+            container.appendChild(notificacion);
+            
+            // Configurar botón de cierre
+            const cerrarBtn = notificacion.querySelector('.cerrar-notificacion-btn');
+            if (cerrarBtn) {
+                cerrarBtn.addEventListener('click', () => {
+                    notificacion.remove();
+                });
+            }
+            
+            // Eliminar automáticamente después de 5 segundos
+            setTimeout(() => {
+                if (notificacion.parentNode) {
+                    notificacion.classList.add('opacity-0');
+                    setTimeout(() => notificacion.remove(), 300);
+                }
+            }, 5000);
+        }
+    </script>
+</body>
+</html>
