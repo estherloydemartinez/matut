@@ -1,0 +1,517 @@
+/* ==========================================================================
+   BIBLIAAPP PRO v3.0 - CORE CSS FRAMEWORK
+   Framework de diseño optimizado sin código basura
+   ========================================================================== */
+
+/* Variables CSS Profesionales */
+:root {
+    /* Colores Base Discord-like Mejorados */
+    --bg-dark: #2f3136;
+    --bg-sidebar: #202225;
+    --bg-card: #36393f;
+    --bg-input: #40444b;
+    --bg-primary: #5865f2;
+    --bg-secondary: #4f545c;
+    --bg-tertiary: #2f3349;
+    
+    /* Colores de Texto */
+    --text-primary: #ffffff;
+    --text-secondary: #b9bbbe;
+    --text-muted: #72767d;
+    --text-accent: #00a8fc;
+    
+    /* Colores de Estado */
+    --success-500: #10b981;
+    --warning-500: #f59e0b;
+    --error-500: #ef4444;
+    --info-500: #3b82f6;
+    
+    /* Bordes y Sombras */
+    --border-color: #4f545c;
+    --border-radius: 0.5rem;
+    --border-radius-lg: 0.75rem;
+    --border-radius-xl: 1rem;
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    
+    /* Espaciado Consistente */
+    --spacing-xs: 0.25rem;
+    --spacing-sm: 0.5rem;
+    --spacing-md: 1rem;
+    --spacing-lg: 1.5rem;
+    --spacing-xl: 2rem;
+    --spacing-2xl: 3rem;
+    
+    /* Tipografía */
+    --font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --font-size-xs: 0.75rem;
+    --font-size-sm: 0.875rem;
+    --font-size-base: 1rem;
+    --font-size-lg: 1.125rem;
+    --font-size-xl: 1.25rem;
+    --font-size-2xl: 1.5rem;
+    --font-size-3xl: 1.875rem;
+    --font-size-4xl: 2.25rem;
+    
+    /* Transiciones */
+    --transition-fast: 0.15s ease-out;
+    --transition-base: 0.2s ease-out;
+    --transition-slow: 0.3s ease-out;
+    
+    /* Z-Index Layers */
+    --z-dropdown: 1000;
+    --z-sticky: 1020;
+    --z-fixed: 1030;
+    --z-modal-backdrop: 1040;
+    --z-modal: 1050;
+    --z-popover: 1060;
+    --z-tooltip: 1070;
+    --z-toast: 1080;
+}
+
+/* Tema Claro (Opcional) */
+[data-theme="light"] {
+    --bg-dark: #ffffff;
+    --bg-sidebar: #f8fafc;
+    --bg-card: #ffffff;
+    --bg-input: #f1f5f9;
+    --text-primary: #1e293b;
+    --text-secondary: #64748b;
+    --text-muted: #94a3b8;
+    --border-color: #e2e8f0;
+}
+
+/* Reset y Estilos Base */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+    font-size: 16px;
+    line-height: 1.5;
+}
+
+body {
+    font-family: var(--font-family);
+    background-color: var(--bg-dark);
+    color: var(--text-primary);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+}
+
+/* Elementos Base */
+h1, h2, h3, h4, h5, h6 {
+    line-height: 1.25;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+p {
+    line-height: 1.6;
+    color: var(--text-secondary);
+}
+
+a {
+    color: var(--text-accent);
+    text-decoration: none;
+    transition: color var(--transition-fast);
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+button {
+    font-family: inherit;
+    cursor: pointer;
+    border: none;
+    outline: none;
+    transition: all var(--transition-base);
+}
+
+input, textarea, select {
+    font-family: inherit;
+    outline: none;
+    transition: all var(--transition-base);
+}
+
+/* Utilidades de Layout */
+.flex {
+    display: flex;
+}
+
+.flex-col {
+    flex-direction: column;
+}
+
+.items-center {
+    align-items: center;
+}
+
+.justify-center {
+    justify-content: center;
+}
+
+.justify-between {
+    justify-content: space-between;
+}
+
+.space-x-2 > * + * {
+    margin-left: var(--spacing-sm);
+}
+
+.space-x-3 > * + * {
+    margin-left: 0.75rem;
+}
+
+.space-x-4 > * + * {
+    margin-left: var(--spacing-md);
+}
+
+.space-y-2 > * + * {
+    margin-top: var(--spacing-sm);
+}
+
+.space-y-3 > * + * {
+    margin-top: 0.75rem;
+}
+
+.space-y-4 > * + * {
+    margin-top: var(--spacing-md);
+}
+
+/* Componentes Discord-like Base */
+.discord-sidebar {
+    background-color: var(--bg-sidebar);
+    border-right: 1px solid var(--border-color);
+}
+
+.discord-card {
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow-sm);
+}
+
+.discord-input {
+    background-color: var(--bg-input);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    color: var(--text-primary);
+    padding: 0.75rem;
+}
+
+.discord-input:focus {
+    border-color: var(--bg-primary);
+    box-shadow: 0 0 0 3px rgba(88, 101, 242, 0.1);
+}
+
+.discord-button-primary {
+    background: linear-gradient(135deg, var(--bg-primary), #4752c4);
+    color: var(--text-primary);
+    border-radius: var(--border-radius);
+    font-weight: 500;
+    box-shadow: var(--shadow-sm);
+}
+
+.discord-button-primary:hover {
+    background: linear-gradient(135deg, #4752c4, #3c47a3);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-1px);
+}
+
+.discord-button-secondary {
+    background-color: var(--bg-secondary);
+    color: var(--text-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    font-weight: 500;
+}
+
+.discord-button-secondary:hover {
+    background-color: #5d6269;
+    color: var(--text-primary);
+    border-color: var(--bg-primary);
+}
+
+/* Navegación */
+.nav-button {
+    color: var(--text-secondary);
+    transition: all var(--transition-base);
+    border-radius: var(--border-radius);
+    font-weight: 500;
+}
+
+.nav-button:hover:not(.active) {
+    background-color: var(--bg-input);
+    color: var(--text-primary);
+}
+
+.nav-button.active {
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    box-shadow: var(--shadow-sm);
+}
+
+.quick-action {
+    color: var(--text-muted);
+    transition: all var(--transition-base);
+    border-radius: var(--border-radius);
+}
+
+.quick-action:hover {
+    background-color: var(--bg-input);
+    color: var(--text-secondary);
+}
+
+/* Tabs */
+.tab-button {
+    color: var(--text-secondary);
+    transition: all var(--transition-base);
+    border-bottom: 2px solid transparent;
+    font-weight: 500;
+}
+
+.tab-button:hover:not(.active) {
+    color: var(--text-primary);
+    border-bottom-color: var(--bg-secondary);
+}
+
+.tab-button.active {
+    color: var(--text-primary);
+    border-bottom-color: var(--bg-primary);
+    font-weight: 600;
+}
+
+/* Breadcrumbs */
+.breadcrumbs {
+    color: var(--text-muted);
+    font-size: var(--font-size-sm);
+}
+
+.breadcrumb-current {
+    color: var(--text-primary);
+    font-weight: 500;
+}
+
+/* Sistema Agua */
+.agua-columna {
+    background-color: var(--bg-card);
+    border: 2px dashed var(--border-color);
+    border-radius: var(--border-radius-xl);
+    transition: all var(--transition-base);
+    min-height: 400px;
+}
+
+.agua-columna:hover {
+    border-color: var(--bg-primary);
+    background-color: rgba(88, 101, 242, 0.05);
+}
+
+.agua-elemento {
+    background-color: var(--bg-secondary);
+    border: 1px solid transparent;
+    border-radius: var(--border-radius);
+    cursor: move;
+    transition: all var(--transition-base);
+    user-select: none;
+}
+
+.agua-elemento:hover {
+    border-color: var(--bg-primary);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+}
+
+.agua-elemento.dragging {
+    opacity: 0.5;
+    transform: rotate(5deg);
+}
+
+/* Estados de Carga */
+.loading-skeleton {
+    background: linear-gradient(90deg, 
+        var(--bg-input) 25%, 
+        var(--bg-secondary) 50%, 
+        var(--bg-input) 75%
+    );
+    background-size: 200% 100%;
+    animation: loading-shimmer 1.5s infinite;
+}
+
+@keyframes loading-shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+}
+
+/* Scrollbars Personalizados */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--bg-input);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--bg-secondary);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--bg-primary);
+}
+
+/* Focus States */
+*:focus-visible {
+    outline: 2px solid var(--bg-primary);
+    outline-offset: 2px;
+}
+
+/* Selección de Texto */
+::selection {
+    background-color: rgba(88, 101, 242, 0.3);
+    color: var(--text-primary);
+}
+
+/* Estados de Elementos Interactivos */
+.interactive:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+}
+
+.clickable {
+    cursor: pointer;
+    transition: all var(--transition-base);
+}
+
+.clickable:hover {
+    opacity: 0.8;
+}
+
+.clickable:active {
+    transform: scale(0.98);
+}
+
+/* Utilidades de Display */
+.hidden {
+    display: none !important;
+}
+
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    :root {
+        --font-size-3xl: 1.5rem;
+        --font-size-4xl: 1.875rem;
+    }
+    
+    .discord-sidebar {
+        width: 100%;
+        height: auto;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        z-index: var(--z-fixed);
+        border-top: 1px solid var(--border-color);
+        border-right: none;
+    }
+    
+    body {
+        padding-bottom: 4rem;
+    }
+    
+    .agua-columna {
+        min-height: 200px;
+    }
+}
+
+@media (max-width: 480px) {
+    .discord-card {
+        border-radius: var(--border-radius);
+        margin: var(--spacing-sm);
+    }
+    
+    .tab-button {
+        font-size: var(--font-size-xs);
+        padding: var(--spacing-sm);
+    }
+}
+
+/* Estados de Error y Validación */
+.error {
+    border-color: var(--error-500) !important;
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1) !important;
+}
+
+.success {
+    border-color: var(--success-500) !important;
+    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1) !important;
+}
+
+.warning {
+    border-color: var(--warning-500) !important;
+    box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.1) !important;
+}
+
+/* Performance Optimizations */
+.will-change-transform {
+    will-change: transform;
+}
+
+.will-change-opacity {
+    will-change: opacity;
+}
+
+.backface-hidden {
+    backface-visibility: hidden;
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+@media (prefers-contrast: high) {
+    :root {
+        --border-color: #ffffff;
+        --text-secondary: #ffffff;
+    }
+}
+
+/* Print Styles */
+@media print {
+    .discord-sidebar,
+    .nav-button,
+    .quick-action {
+        display: none !important;
+    }
+    
+    .discord-card {
+        border: 1px solid #000000 !important;
+        box-shadow: none !important;
+    }
+}

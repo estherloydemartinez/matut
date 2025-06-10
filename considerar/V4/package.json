@@ -1,0 +1,156 @@
+{
+  "name": "bibliaapp-pro-enhanced",
+  "version": "3.0.0",
+  "description": "Plataforma avanzada de estudio bíblico con herramientas analíticas de clase mundial, sistema SRS inteligente y funciones sociales",
+  "main": "assets/js/app-enhanced.js",
+  "scripts": {
+    "start": "python -m http.server 8000",
+    "serve": "npx serve .",
+    "build": "node deploy.js",
+    "deploy": "npm run build && echo 'Build completed. Check dist/ directory'",
+    "dev": "npx live-server --port=3000 --no-browser",
+    "test": "echo 'Test suite not implemented yet'",
+    "lint": "echo 'Linting not configured yet'",
+    "validate": "node -e \"console.log('Validating project structure...'); require('./deploy.js');\"",
+    "stats": "node -e \"const fs=require('fs'); const path=require('path'); function getSize(dir){let size=0; try{const files=fs.readdirSync(dir); files.forEach(file=>{const filePath=path.join(dir,file); const stat=fs.statSync(filePath); if(stat.isDirectory()){size+=getSize(filePath);}else{size+=stat.size;}})}catch(e){}return size;} console.log('Project size:', (getSize('.')/1024/1024).toFixed(2), 'MB');\""
+  },
+  "keywords": [
+    "bible",
+    "study",
+    "biblical-analysis",
+    "memorization",
+    "srs",
+    "pwa",
+    "analytical-tools",
+    "social-learning",
+    "education",
+    "theology",
+    "hermeneutics",
+    "scripture"
+  ],
+  "author": {
+    "name": "BibliaApp Team",
+    "email": "team@bibliaapp.pro",
+    "url": "https://bibliaapp.pro"
+  },
+  "license": "MIT",
+  "homepage": "https://bibliaapp.pro",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bibliaapp/bibliaapp-pro-enhanced.git"
+  },
+  "bugs": {
+    "url": "https://github.com/bibliaapp/bibliaapp-pro-enhanced/issues"
+  },
+  "engines": {
+    "node": ">=14.0.0",
+    "npm": ">=6.0.0"
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead",
+    "not ie <= 11"
+  ],
+  "pwa": {
+    "name": "BibliaApp Pro Enhanced",
+    "short_name": "BibliaApp Pro",
+    "theme_color": "#5865f2",
+    "background_color": "#2f3136",
+    "display": "standalone",
+    "orientation": "portrait-primary",
+    "start_url": "/",
+    "scope": "/"
+  },
+  "features": {
+    "srs_system": {
+      "name": "Sistema de Repetición Espaciada",
+      "description": "Memorización inteligente adaptativa",
+      "version": "2.1.0"
+    },
+    "agua_system": {
+      "name": "Sistema de Categorización Agua",
+      "description": "Categorización flexible con tres columnas",
+      "version": "1.5.0"
+    },
+    "analytical_tools": {
+      "name": "Herramientas Analíticas",
+      "description": "50+ herramientas especializadas de análisis bíblico",
+      "version": "3.0.0",
+      "count": 50
+    },
+    "social_system": {
+      "name": "Sistema Social",
+      "description": "Comunidades, competencias y mentorías",
+      "version": "2.0.0"
+    },
+    "bible_data": {
+      "name": "Datos Bíblicos Mejorados",
+      "description": "Gestión avanzada de texto bíblico con anotaciones",
+      "version": "1.8.0"
+    },
+    "pwa_support": {
+      "name": "Progressive Web App",
+      "description": "Aplicación instalable con soporte offline",
+      "version": "1.0.0"
+    }
+  },
+  "performance": {
+    "bundle_size_limit": "2MB",
+    "initial_load_time": "<2s",
+    "subsequent_load_time": "<500ms",
+    "offline_support": true,
+    "cache_strategy": "service-worker"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "live-server": "^1.2.2",
+    "serve": "^14.2.0"
+  },
+  "optionalDependencies": {},
+  "config": {
+    "port": 3000,
+    "host": "localhost",
+    "build_dir": "dist",
+    "assets_dir": "assets"
+  },
+  "files": [
+    "index.html",
+    "manifest.json",
+    "sw.js",
+    "assets/",
+    "README.md",
+    "deploy.js"
+  ],
+  "directories": {
+    "assets": "./assets",
+    "css": "./assets/css",
+    "js": "./assets/js",
+    "images": "./assets/images"
+  },
+  "architecture": {
+    "pattern": "modular",
+    "modules": [
+      "core/constants.js",
+      "core/utils.js", 
+      "core/storage.js",
+      "core/state-manager.js",
+      "core/ui-manager.js",
+      "modules/srs-system.js",
+      "modules/agua-system.js",
+      "modules/filters-system.js",
+      "modules/bible-data-enhanced.js",
+      "modules/social-system-enhanced.js",
+      "modules/analytical-tools-enhanced.js"
+    ],
+    "entry_point": "app-enhanced.js"
+  },
+  "quality": {
+    "code_style": "clean",
+    "performance": "optimized",
+    "accessibility": "wcag-aa",
+    "browser_support": "modern",
+    "mobile_friendly": true,
+    "offline_capable": true
+  }
+}
