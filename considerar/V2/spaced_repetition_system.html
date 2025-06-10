@@ -1,0 +1,1381 @@
+<!DOCTYPE html>
+<html lang="es" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BibliaApp Pro - Sistema de Memorización con Repetición Espaciada</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/11.11.0/math.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --bg-tertiary: #334155;
+            --bg-card: #1e293b;
+            --bg-input: #374151;
+            --accent-primary: #3b82f6;
+            --accent-secondary: #8b5cf6;
+            --accent-success: #10b981;
+            --accent-warning: #f59e0b;
+            --accent-error: #ef4444;
+            --text-primary: #f8fafc;
+            --text-secondary: #cbd5e1;
+            --text-muted: #64748b;
+            --border-color: #475569;
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+            --gradient-primary: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            --gradient-secondary: linear-gradient(135deg, #10b981, #059669);
+            --gradient-memory: linear-gradient(135deg, #f59e0b, #d97706);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            overflow-x: hidden;
+        }
+
+        /* Advanced styling */
+        .memory-card {
+            background: linear-gradient(135deg, var(--bg-card) 0%, rgba(245, 158, 11, 0.05) 100%);
+            border: 2px solid var(--border-color);
+            border-radius: 20px;
+            padding: 32px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            min-height: 300px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .memory-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient-memory);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .memory-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .memory-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            border-color: var(--accent-warning);
+            box-shadow: 0 25px 50px rgba(245, 158, 11, 0.3);
+        }
+
+        .memory-card.flipped {
+            transform: rotateY(180deg);
+        }
+
+        .memory-card.correct {
+            border-color: var(--accent-success);
+            background: linear-gradient(135deg, var(--bg-card) 0%, rgba(16, 185, 129, 0.1) 100%);
+        }
+
+        .memory-card.incorrect {
+            border-color: var(--accent-error);
+            background: linear-gradient(135deg, var(--bg-card) 0%, rgba(239, 68, 68, 0.1) 100%);
+        }
+
+        .memory-card.studying {
+            border-color: var(--accent-warning);
+            background: linear-gradient(135deg, var(--bg-card) 0%, rgba(245, 158, 11, 0.1) 100%);
+        }
+
+        .difficulty-btn {
+            background: var(--bg-tertiary);
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            padding: 16px 24px;
+            color: var(--text-secondary);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            min-width: 120px;
+        }
+
+        .difficulty-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+        }
+
+        .difficulty-again {
+            border-color: var(--accent-error);
+            color: var(--accent-error);
+        }
+
+        .difficulty-again:hover {
+            background: var(--accent-error);
+            color: white;
+        }
+
+        .difficulty-hard {
+            border-color: var(--accent-warning);
+            color: var(--accent-warning);
+        }
+
+        .difficulty-hard:hover {
+            background: var(--accent-warning);
+            color: white;
+        }
+
+        .difficulty-good {
+            border-color: var(--accent-success);
+            color: var(--accent-success);
+        }
+
+        .difficulty-good:hover {
+            background: var(--accent-success);
+            color: white;
+        }
+
+        .difficulty-easy {
+            border-color: var(--accent-primary);
+            color: var(--accent-primary);
+        }
+
+        .difficulty-easy:hover {
+            background: var(--accent-primary);
+            color: white;
+        }
+
+        .progress-ring {
+            width: 120px;
+            height: 120px;
+            transform: rotate(-90deg);
+        }
+
+        .progress-ring-circle {
+            stroke: var(--accent-warning);
+            stroke-width: 8;
+            fill: transparent;
+            stroke-dasharray: 314;
+            stroke-dashoffset: 314;
+            transition: stroke-dashoffset 0.5s ease;
+        }
+
+        .stats-panel {
+            background: linear-gradient(135deg, var(--bg-secondary) 0%, rgba(59, 130, 246, 0.05) 100%);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 24px;
+        }
+
+        .retention-graph {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 24px;
+        }
+
+        /* Animations */
+        @keyframes cardFlip {
+            0% { transform: rotateY(0deg); }
+            50% { transform: rotateY(90deg); }
+            100% { transform: rotateY(180deg); }
+        }
+
+        @keyframes fadeInScale {
+            from {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes slideInUp {
+            from {
+                transform: translateY(30px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .animate-flip {
+            animation: cardFlip 0.6s ease-in-out;
+        }
+
+        .animate-fade-scale {
+            animation: fadeInScale 0.5s ease-out;
+        }
+
+        .animate-slide-up {
+            animation: slideInUp 0.4s ease-out;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .memory-card {
+                padding: 24px;
+                min-height: 250px;
+            }
+            
+            .difficulty-btn {
+                padding: 12px 16px;
+                min-width: 100px;
+                font-size: 14px;
+            }
+        }
+
+        /* Special effects */
+        .sparkle {
+            position: absolute;
+            pointer-events: none;
+            width: 6px;
+            height: 6px;
+            background: var(--accent-warning);
+            border-radius: 50%;
+            animation: sparkle 1s ease-out forwards;
+        }
+
+        @keyframes sparkle {
+            0% {
+                transform: scale(0) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(1) rotate(180deg);
+                opacity: 0;
+            }
+        }
+
+        .streak-indicator {
+            background: var(--gradient-memory);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 14px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .mastery-badge {
+            background: var(--gradient-secondary);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 16px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .session-timer {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 12px 20px;
+            font-family: 'Courier New', monospace;
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--accent-primary);
+            text-align: center;
+            min-width: 120px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="bg-slate-800/90 backdrop-blur-lg border-b border-slate-700 p-6 sticky top-0 z-50">
+        <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-4">
+                <div class="w-12 h-12 bg-gradient-to-br from-yellow-500 to-orange-600 rounded-xl flex items-center justify-center">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
+                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                    </svg>
+                </div>
+                <div>
+                    <h1 class="text-2xl font-bold text-white">Sistema de Memorización Avanzado</h1>
+                    <p class="text-sm text-gray-400">Algoritmos de repetición espaciada y retención optimizada</p>
+                </div>
+            </div>
+            <div class="flex items-center space-x-4">
+                <div class="session-timer" id="session-timer">00:00:00</div>
+                <div class="streak-indicator">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 2l.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                    </svg>
+                    <span id="current-streak">0</span> días
+                </div>
+                <button id="settings-btn" class="btn-secondary p-3">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.38a2 2 0 0 0-.73-2.73l-.15-.1a2 2 0 0 1-1-1.72v-.51a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/>
+                        <circle cx="12" cy="12" r="3"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <div class="max-w-7xl mx-auto p-6">
+        <!-- Statistics Panel -->
+        <div class="grid grid-cols-1 lg:grid-cols-4 gap-6 mb-8">
+            <div class="stats-panel">
+                <h3 class="text-lg font-semibold mb-4 text-white">Progreso General</h3>
+                <div class="flex items-center justify-center">
+                    <div class="relative">
+                        <svg class="progress-ring">
+                            <circle class="progress-ring-circle" cx="60" cy="60" r="50" id="overall-progress-circle"></circle>
+                        </svg>
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <span class="text-2xl font-bold text-white" id="overall-progress-text">0%</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-4 text-center">
+                    <div class="text-sm text-gray-400" id="cards-stats">0 de 0 tarjetas</div>
+                </div>
+            </div>
+
+            <div class="stats-panel">
+                <h3 class="text-lg font-semibold mb-4 text-white">Retención</h3>
+                <div class="space-y-3">
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-300">Hoy</span>
+                        <span class="text-green-400 font-semibold" id="retention-today">0%</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-300">Esta semana</span>
+                        <span class="text-blue-400 font-semibold" id="retention-week">0%</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-300">Este mes</span>
+                        <span class="text-purple-400 font-semibold" id="retention-month">0%</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-300">Promedio</span>
+                        <span class="text-yellow-400 font-semibold" id="retention-average">0%</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stats-panel">
+                <h3 class="text-lg font-semibold mb-4 text-white">Actividad</h3>
+                <div class="space-y-3">
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-300">Tiempo hoy</span>
+                        <span class="text-green-400 font-semibold" id="time-today">0min</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-300">Tarjetas hoy</span>
+                        <span class="text-blue-400 font-semibold" id="cards-today">0</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-300">Racha actual</span>
+                        <span class="text-purple-400 font-semibold" id="current-streak-display">0 días</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-300">Mejor racha</span>
+                        <span class="text-yellow-400 font-semibold" id="best-streak">0 días</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stats-panel">
+                <h3 class="text-lg font-semibold mb-4 text-white">Predicción</h3>
+                <div class="space-y-3">
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-300">Próxima sesión</span>
+                        <span class="text-green-400 font-semibold" id="next-session">Hoy</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-300">Tiempo estimado</span>
+                        <span class="text-blue-400 font-semibold" id="estimated-time">15min</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-300">Eficacia</span>
+                        <span class="text-purple-400 font-semibold" id="learning-efficiency">85%</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-300">Dominio proyectado</span>
+                        <span class="text-yellow-400 font-semibold" id="mastery-projection">30 días</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Study Session Area -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
+            <!-- Memory Card Area -->
+            <div class="lg:col-span-2">
+                <div id="study-area" class="text-center">
+                    <!-- Study Session State -->
+                    <div id="session-setup" class="animate-fade-scale">
+                        <h2 class="text-3xl font-bold mb-6 text-white">Iniciar Sesión de Memorización</h2>
+                        <div class="max-w-md mx-auto space-y-6">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-300 mb-2">Seleccionar categoría</label>
+                                <select id="category-selector" class="w-full bg-slate-700 border border-slate-600 rounded-lg p-3 text-white">
+                                    <option value="verses">Versículos clave</option>
+                                    <option value="books">Libros de la Biblia</option>
+                                    <option value="themes">Temas teológicos</option>
+                                    <option value="characters">Personajes bíblicos</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-300 mb-2">Duración de la sesión</label>
+                                <select id="session-duration" class="w-full bg-slate-700 border border-slate-600 rounded-lg p-3 text-white">
+                                    <option value="5">5 minutos</option>
+                                    <option value="10">10 minutos</option>
+                                    <option value="15">15 minutos</option>
+                                    <option value="20">20 minutos</option>
+                                    <option value="30">30 minutos</option>
+                                </select>
+                            </div>
+                            <button id="start-session" class="w-full bg-gradient-to-r from-yellow-500 to-orange-600 text-white px-8 py-4 rounded-lg font-semibold text-lg hover:shadow-lg transition-all duration-300">
+                                Comenzar Sesión
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Active Study Session -->
+                    <div id="active-session" class="hidden">
+                        <div class="mb-6 flex justify-between items-center">
+                            <div class="flex items-center space-x-4">
+                                <h2 class="text-xl font-semibold text-white">Sesión Activa</h2>
+                                <div class="mastery-badge" id="current-level">Principiante</div>
+                            </div>
+                            <div class="flex items-center space-x-4">
+                                <div class="text-sm text-gray-400">
+                                    <span id="current-card-number">1</span> de <span id="total-cards">10</span>
+                                </div>
+                                <button id="end-session" class="text-red-400 hover:text-red-300 transition-colors">
+                                    Terminar sesión
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Memory Card -->
+                        <div id="memory-card" class="memory-card studying animate-fade-scale">
+                            <div class="text-center">
+                                <div id="card-front" class="card-side">
+                                    <div class="text-sm text-gray-400 mb-3" id="card-reference">Cargando...</div>
+                                    <div class="text-xl text-white mb-6" id="card-question">Cargando pregunta...</div>
+                                    <button id="show-answer" class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-lg font-medium transition-colors">
+                                        Mostrar Respuesta
+                                    </button>
+                                </div>
+                                <div id="card-back" class="card-side hidden">
+                                    <div class="text-sm text-gray-400 mb-3" id="answer-reference">Referencia</div>
+                                    <div class="text-lg text-white mb-6" id="card-answer">Respuesta...</div>
+                                    <div class="text-sm text-gray-300 mb-8" id="card-explanation">Explicación adicional...</div>
+                                    
+                                    <!-- Difficulty Buttons -->
+                                    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                                        <button class="difficulty-btn difficulty-again" data-difficulty="again">
+                                            <div class="font-semibold">Otra vez</div>
+                                            <div class="text-xs mt-1">&lt; 1min</div>
+                                        </button>
+                                        <button class="difficulty-btn difficulty-hard" data-difficulty="hard">
+                                            <div class="font-semibold">Difícil</div>
+                                            <div class="text-xs mt-1" id="hard-interval">6min</div>
+                                        </button>
+                                        <button class="difficulty-btn difficulty-good" data-difficulty="good">
+                                            <div class="font-semibold">Bien</div>
+                                            <div class="text-xs mt-1" id="good-interval">15min</div>
+                                        </button>
+                                        <button class="difficulty-btn difficulty-easy" data-difficulty="easy">
+                                            <div class="font-semibold">Fácil</div>
+                                            <div class="text-xs mt-1" id="easy-interval">4 días</div>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Session Complete -->
+                    <div id="session-complete" class="hidden animate-fade-scale">
+                        <h2 class="text-3xl font-bold mb-6 text-white">¡Sesión Completada!</h2>
+                        <div class="max-w-md mx-auto space-y-6">
+                            <div class="bg-slate-700 rounded-lg p-6">
+                                <h3 class="text-lg font-semibold mb-4 text-white">Resultados de la sesión</h3>
+                                <div class="space-y-3">
+                                    <div class="flex justify-between">
+                                        <span class="text-gray-300">Tarjetas estudiadas</span>
+                                        <span class="text-white font-semibold" id="session-cards-count">0</span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span class="text-gray-300">Tiempo total</span>
+                                        <span class="text-white font-semibold" id="session-time-total">0min</span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span class="text-gray-300">Precisión</span>
+                                        <span class="text-green-400 font-semibold" id="session-accuracy">0%</span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span class="text-gray-300">Puntos ganados</span>
+                                        <span class="text-yellow-400 font-semibold" id="session-points">+0 XP</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <button id="new-session" class="w-full bg-gradient-to-r from-green-500 to-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:shadow-lg transition-all duration-300">
+                                Nueva Sesión
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Side Panel -->
+            <div class="space-y-6">
+                <!-- Retention Graph -->
+                <div class="retention-graph">
+                    <h3 class="text-lg font-semibold mb-4 text-white">Curva de Retención</h3>
+                    <canvas id="retention-chart" width="300" height="200"></canvas>
+                    <div class="mt-4 text-sm text-gray-400 text-center">
+                        Basado en la curva de olvido de Ebbinghaus
+                    </div>
+                </div>
+
+                <!-- Upcoming Reviews -->
+                <div class="retention-graph">
+                    <h3 class="text-lg font-semibold mb-4 text-white">Próximas Revisiones</h3>
+                    <div id="upcoming-reviews" class="space-y-3">
+                        <!-- Dynamic content -->
+                    </div>
+                </div>
+
+                <!-- Learning Analytics -->
+                <div class="retention-graph">
+                    <h3 class="text-lg font-semibold mb-4 text-white">Análisis de Aprendizaje</h3>
+                    <canvas id="learning-analytics-chart" width="300" height="200"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ============================================================================
+        // SISTEMA DE MEMORIZACIÓN CON REPETICIÓN ESPACIADA AVANZADO
+        // ============================================================================
+
+        class SpacedRepetitionSystem {
+            constructor() {
+                this.sessionStartTime = null;
+                this.sessionDuration = 15; // minutes
+                this.currentCard = null;
+                this.sessionCards = [];
+                this.completedCards = [];
+                this.sessionStats = {
+                    cardsStudied: 0,
+                    correctAnswers: 0,
+                    totalTime: 0,
+                    points: 0
+                };
+                
+                // Spaced Repetition Algorithm Parameters (SuperMemo-2 inspired)
+                this.algorithm = {
+                    easinessFactor: 2.5,
+                    minimumEF: 1.3,
+                    intervalMultiplier: 1,
+                    maxInterval: 365 * 2 // 2 years max
+                };
+
+                // User progress data (normally stored in database)
+                this.userData = this.loadUserData();
+                
+                // Card database
+                this.cardDatabase = this.initializeCardDatabase();
+                
+                // Charts
+                this.charts = new Map();
+                
+                this.initializeSystem();
+                this.setupEventListeners();
+                this.initializeCharts();
+                this.updateUI();
+            }
+
+            initializeCardDatabase() {
+                return {
+                    verses: [
+                        {
+                            id: 'v1',
+                            category: 'verses',
+                            question: '¿Cuál es el versículo más conocido sobre el amor de Dios?',
+                            answer: 'Juan 3:16',
+                            fullText: 'Porque de tal manera amó Dios al mundo, que ha dado a su Hijo unigénito, para que todo aquel que en él cree, no se pierda, mas tenga vida eterna.',
+                            reference: 'Juan 3:16',
+                            explanation: 'Este versículo encapsula el mensaje central del evangelio: el amor sacrificial de Dios por la humanidad.',
+                            difficulty: 0.5,
+                            tags: ['amor', 'salvación', 'evangelio']
+                        },
+                        {
+                            id: 'v2',
+                            category: 'verses',
+                            question: '¿Qué versículo habla sobre la creación del mundo?',
+                            answer: 'Génesis 1:1',
+                            fullText: 'En el principio creó Dios los cielos y la tierra.',
+                            reference: 'Génesis 1:1',
+                            explanation: 'El primer versículo de la Biblia establece a Dios como el creador de todo lo que existe.',
+                            difficulty: 0.3,
+                            tags: ['creación', 'Dios', 'principio']
+                        },
+                        {
+                            id: 'v3',
+                            category: 'verses',
+                            question: '¿Cuál es el gran mandamiento según Jesús?',
+                            answer: 'Mateo 22:37-39',
+                            fullText: 'Jesús le dijo: Amarás al Señor tu Dios con todo tu corazón, y con toda tu alma, y con toda tu mente. Este es el primero y grande mandamiento. Y el segundo es semejante: Amarás a tu prójimo como a ti mismo.',
+                            reference: 'Mateo 22:37-39',
+                            explanation: 'Jesús resume toda la ley y los profetas en estos dos mandamientos fundamentales sobre el amor.',
+                            difficulty: 0.6,
+                            tags: ['mandamientos', 'amor', 'Jesús']
+                        }
+                    ],
+                    books: [
+                        {
+                            id: 'b1',
+                            category: 'books',
+                            question: '¿Cuántos libros tiene el Antiguo Testamento?',
+                            answer: '39 libros',
+                            fullText: 'El Antiguo Testamento contiene 39 libros, desde Génesis hasta Malaquías.',
+                            reference: 'Estructura bíblica',
+                            explanation: 'Los 39 libros del AT se dividen en: Ley (5), Historia (12), Poesía (5), Profetas Mayores (5), Profetas Menores (12).',
+                            difficulty: 0.4,
+                            tags: ['estructura', 'AT', 'números']
+                        }
+                    ],
+                    themes: [
+                        {
+                            id: 't1',
+                            category: 'themes',
+                            question: '¿Qué es la justificación por la fe?',
+                            answer: 'Ser declarado justo por Dios mediante la fe en Cristo',
+                            fullText: 'La justificación es el acto judicial de Dios por el cual declara justos a los pecadores basándose en la obra de Cristo, recibida por fe.',
+                            reference: 'Romanos 3:28',
+                            explanation: 'Doctrina central del cristianismo que enseña que la salvación es por gracia mediante la fe, no por obras.',
+                            difficulty: 0.7,
+                            tags: ['doctrina', 'salvación', 'fe']
+                        }
+                    ]
+                };
+            }
+
+            loadUserData() {
+                // Simulate loading user data (normally from localStorage or API)
+                const defaultData = {
+                    totalCards: 0,
+                    masteredCards: 0,
+                    currentStreak: 0,
+                    bestStreak: 0,
+                    totalStudyTime: 0,
+                    lastStudyDate: null,
+                    cardProgress: new Map(),
+                    dailyStats: [],
+                    retentionHistory: []
+                };
+
+                try {
+                    const saved = localStorage.getItem('bibliaapp_memory_data');
+                    if (saved) {
+                        const parsed = JSON.parse(saved);
+                        // Convert Map back from JSON
+                        parsed.cardProgress = new Map(Object.entries(parsed.cardProgress || {}));
+                        return { ...defaultData, ...parsed };
+                    }
+                } catch (error) {
+                    console.error('Error loading user data:', error);
+                }
+
+                return defaultData;
+            }
+
+            saveUserData() {
+                try {
+                    const dataToSave = {
+                        ...this.userData,
+                        // Convert Map to object for JSON serialization
+                        cardProgress: Object.fromEntries(this.userData.cardProgress)
+                    };
+                    localStorage.setItem('bibliaapp_memory_data', JSON.stringify(dataToSave));
+                } catch (error) {
+                    console.error('Error saving user data:', error);
+                }
+            }
+
+            initializeSystem() {
+                console.log('🧠 Inicializando Sistema de Memorización con Repetición Espaciada');
+                
+                // Initialize card progress for new cards
+                Object.values(this.cardDatabase).flat().forEach(card => {
+                    if (!this.userData.cardProgress.has(card.id)) {
+                        this.userData.cardProgress.set(card.id, {
+                            interval: 1, // days
+                            repetitions: 0,
+                            easinessFactor: 2.5,
+                            nextReview: new Date(),
+                            lastReviewed: null,
+                            quality: 0, // last quality response
+                            totalReviews: 0,
+                            correctCount: 0,
+                            masteryLevel: 0 // 0-100
+                        });
+                    }
+                });
+
+                // Start session timer
+                this.startSessionTimer();
+            }
+
+            setupEventListeners() {
+                // Session setup
+                document.getElementById('start-session').addEventListener('click', this.startStudySession.bind(this));
+                document.getElementById('end-session').addEventListener('click', this.endStudySession.bind(this));
+                document.getElementById('new-session').addEventListener('click', this.resetForNewSession.bind(this));
+
+                // Card interaction
+                document.getElementById('show-answer').addEventListener('click', this.showAnswer.bind(this));
+                
+                // Difficulty buttons
+                document.querySelectorAll('.difficulty-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const difficulty = e.currentTarget.dataset.difficulty;
+                        this.processCardResponse(difficulty);
+                    });
+                });
+
+                // Category selector
+                document.getElementById('category-selector').addEventListener('change', this.updateAvailableCards.bind(this));
+            }
+
+            startSessionTimer() {
+                this.sessionStartTime = new Date();
+                
+                setInterval(() => {
+                    if (this.sessionStartTime) {
+                        const elapsed = new Date() - this.sessionStartTime;
+                        const hours = Math.floor(elapsed / 3600000);
+                        const minutes = Math.floor((elapsed % 3600000) / 60000);
+                        const seconds = Math.floor((elapsed % 60000) / 1000);
+                        
+                        document.getElementById('session-timer').textContent = 
+                            `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                    }
+                }, 1000);
+            }
+
+            async startStudySession() {
+                const category = document.getElementById('category-selector').value;
+                const duration = parseInt(document.getElementById('session-duration').value);
+                
+                this.sessionDuration = duration;
+                this.sessionStats = { cardsStudied: 0, correctAnswers: 0, totalTime: 0, points: 0 };
+                
+                console.log(`🎯 Iniciando sesión: ${category}, ${duration} minutos`);
+                
+                // Get due cards using spaced repetition algorithm
+                this.sessionCards = this.getDueCards(category);
+                
+                if (this.sessionCards.length === 0) {
+                    this.showNotification('No hay tarjetas pendientes para revisar en esta categoría', 'info');
+                    return;
+                }
+
+                // Transition to active session
+                document.getElementById('session-setup').classList.add('hidden');
+                document.getElementById('active-session').classList.remove('hidden');
+                
+                // Load first card
+                this.loadNextCard();
+                
+                // Set session timer
+                this.sessionTimeout = setTimeout(() => {
+                    this.endStudySession();
+                }, duration * 60 * 1000);
+            }
+
+            getDueCards(category) {
+                const now = new Date();
+                const allCards = this.cardDatabase[category] || [];
+                
+                // Filter due cards based on spaced repetition schedule
+                const dueCards = allCards.filter(card => {
+                    const progress = this.userData.cardProgress.get(card.id);
+                    if (!progress) return true; // New cards are always due
+                    
+                    return progress.nextReview <= now;
+                });
+
+                // Sort by priority (overdue cards first, then by difficulty)
+                dueCards.sort((a, b) => {
+                    const progressA = this.userData.cardProgress.get(a.id);
+                    const progressB = this.userData.cardProgress.get(b.id);
+                    
+                    // Overdue cards have higher priority
+                    const overdueA = progressA ? (now - progressA.nextReview) : 0;
+                    const overdueB = progressB ? (now - progressB.nextReview) : 0;
+                    
+                    if (overdueA !== overdueB) {
+                        return overdueB - overdueA; // More overdue first
+                    }
+                    
+                    // Then by difficulty (harder cards first)
+                    return b.difficulty - a.difficulty;
+                });
+
+                console.log(`📚 Encontradas ${dueCards.length} tarjetas pendientes en categoría ${category}`);
+                return dueCards;
+            }
+
+            loadNextCard() {
+                if (this.sessionCards.length === 0) {
+                    this.endStudySession();
+                    return;
+                }
+
+                this.currentCard = this.sessionCards.shift();
+                const progress = this.userData.cardProgress.get(this.currentCard.id);
+                
+                // Update card display
+                document.getElementById('card-reference').textContent = this.currentCard.reference;
+                document.getElementById('card-question').textContent = this.currentCard.question;
+                document.getElementById('answer-reference').textContent = this.currentCard.reference;
+                document.getElementById('card-answer').textContent = this.currentCard.answer;
+                document.getElementById('card-explanation').textContent = this.currentCard.explanation;
+                
+                // Update progress display
+                const currentNum = this.sessionStats.cardsStudied + 1;
+                const totalNum = this.sessionStats.cardsStudied + this.sessionCards.length + 1;
+                document.getElementById('current-card-number').textContent = currentNum;
+                document.getElementById('total-cards').textContent = totalNum;
+                
+                // Update mastery level display
+                document.getElementById('current-level').textContent = this.getMasteryLevel(progress?.masteryLevel || 0);
+                
+                // Calculate and display intervals
+                this.updateIntervalDisplays(progress);
+                
+                // Reset card state
+                document.getElementById('card-front').classList.remove('hidden');
+                document.getElementById('card-back').classList.add('hidden');
+                document.getElementById('memory-card').className = 'memory-card studying animate-fade-scale';
+                
+                console.log(`📖 Cargando tarjeta: ${this.currentCard.question}`);
+            }
+
+            showAnswer() {
+                document.getElementById('card-front').classList.add('hidden');
+                document.getElementById('card-back').classList.remove('hidden');
+                document.getElementById('memory-card').classList.add('animate-flip');
+                
+                // Add sparkle effect
+                this.addSparkleEffect();
+                
+                setTimeout(() => {
+                    document.getElementById('memory-card').classList.remove('animate-flip');
+                }, 600);
+            }
+
+            processCardResponse(difficulty) {
+                const progress = this.userData.cardProgress.get(this.currentCard.id);
+                const quality = this.getDifficultyQuality(difficulty);
+                
+                console.log(`⚖️ Procesando respuesta: ${difficulty} (calidad: ${quality})`);
+                
+                // Update session stats
+                this.sessionStats.cardsStudied++;
+                if (quality >= 3) { // 3 = "good", 4 = "easy"
+                    this.sessionStats.correctAnswers++;
+                    this.sessionStats.points += this.calculatePoints(difficulty, progress);
+                }
+                
+                // Apply spaced repetition algorithm
+                this.updateCardProgress(this.currentCard.id, quality);
+                
+                // Visual feedback
+                this.showCardFeedback(difficulty);
+                
+                // Load next card after delay
+                setTimeout(() => {
+                    this.loadNextCard();
+                }, 1500);
+            }
+
+            getDifficultyQuality(difficulty) {
+                const qualityMap = {
+                    'again': 0,  // Complete blackout
+                    'hard': 2,   // Difficult to recall
+                    'good': 3,   // Normal recall
+                    'easy': 4    // Perfect recall
+                };
+                return qualityMap[difficulty] || 0;
+            }
+
+            updateCardProgress(cardId, quality) {
+                const progress = this.userData.cardProgress.get(cardId);
+                const now = new Date();
+                
+                // SuperMemo-2 Algorithm Implementation
+                let { interval, easinessFactor, repetitions } = progress;
+                
+                if (quality >= 3) {
+                    // Correct response
+                    if (repetitions === 0) {
+                        interval = 1;
+                    } else if (repetitions === 1) {
+                        interval = 6;
+                    } else {
+                        interval = Math.round(interval * easinessFactor);
+                    }
+                    repetitions++;
+                } else {
+                    // Incorrect response - reset
+                    repetitions = 0;
+                    interval = 1;
+                }
+                
+                // Update ease factor
+                easinessFactor = easinessFactor + (0.1 - (5 - quality) * (0.08 + (5 - quality) * 0.02));
+                easinessFactor = Math.max(easinessFactor, this.algorithm.minimumEF);
+                
+                // Cap maximum interval
+                interval = Math.min(interval, this.algorithm.maxInterval);
+                
+                // Calculate next review date
+                const nextReview = new Date(now.getTime() + interval * 24 * 60 * 60 * 1000);
+                
+                // Update mastery level
+                let masteryLevel = progress.masteryLevel || 0;
+                if (quality >= 3) {
+                    masteryLevel = Math.min(100, masteryLevel + (quality * 5));
+                } else {
+                    masteryLevel = Math.max(0, masteryLevel - 10);
+                }
+                
+                // Update progress
+                this.userData.cardProgress.set(cardId, {
+                    ...progress,
+                    interval,
+                    repetitions,
+                    easinessFactor,
+                    nextReview,
+                    lastReviewed: now,
+                    quality,
+                    totalReviews: progress.totalReviews + 1,
+                    correctCount: progress.correctCount + (quality >= 3 ? 1 : 0),
+                    masteryLevel
+                });
+                
+                console.log(`📈 Tarjeta actualizada: intervalo=${interval}d, facilidad=${easinessFactor.toFixed(2)}, dominio=${masteryLevel}%`);
+                
+                // Save progress
+                this.saveUserData();
+            }
+
+            calculatePoints(difficulty, progress) {
+                const basePoints = {
+                    'again': 0,
+                    'hard': 5,
+                    'good': 10,
+                    'easy': 15
+                };
+                
+                let points = basePoints[difficulty] || 0;
+                
+                // Bonus for difficult cards
+                if (this.currentCard.difficulty > 0.6) {
+                    points = Math.round(points * 1.5);
+                }
+                
+                // Bonus for mastery improvement
+                if (progress && progress.masteryLevel < 50) {
+                    points = Math.round(points * 1.2);
+                }
+                
+                return points;
+            }
+
+            updateIntervalDisplays(progress) {
+                if (!progress) return;
+                
+                // Simulate intervals for different difficulties
+                const now = new Date();
+                const intervals = {
+                    hard: Math.max(1, Math.round(progress.interval * 0.6)),
+                    good: progress.interval,
+                    easy: Math.round(progress.interval * progress.easinessFactor)
+                };
+                
+                // Format interval displays
+                document.getElementById('hard-interval').textContent = this.formatInterval(intervals.hard);
+                document.getElementById('good-interval').textContent = this.formatInterval(intervals.good);
+                document.getElementById('easy-interval').textContent = this.formatInterval(intervals.easy);
+            }
+
+            formatInterval(days) {
+                if (days < 1) {
+                    return `${Math.round(days * 24 * 60)}min`;
+                } else if (days === 1) {
+                    return '1 día';
+                } else if (days < 30) {
+                    return `${days} días`;
+                } else if (days < 365) {
+                    return `${Math.round(days / 30)} meses`;
+                } else {
+                    return `${Math.round(days / 365)} años`;
+                }
+            }
+
+            getMasteryLevel(level) {
+                if (level < 20) return 'Principiante';
+                if (level < 40) return 'Básico';
+                if (level < 60) return 'Intermedio';
+                if (level < 80) return 'Avanzado';
+                return 'Maestro';
+            }
+
+            showCardFeedback(difficulty) {
+                const card = document.getElementById('memory-card');
+                card.classList.remove('studying', 'correct', 'incorrect');
+                
+                if (difficulty === 'again') {
+                    card.classList.add('incorrect');
+                } else {
+                    card.classList.add('correct');
+                }
+            }
+
+            addSparkleEffect() {
+                const card = document.getElementById('memory-card');
+                const rect = card.getBoundingClientRect();
+                
+                for (let i = 0; i < 5; i++) {
+                    setTimeout(() => {
+                        const sparkle = document.createElement('div');
+                        sparkle.className = 'sparkle';
+                        sparkle.style.left = Math.random() * rect.width + 'px';
+                        sparkle.style.top = Math.random() * rect.height + 'px';
+                        
+                        card.appendChild(sparkle);
+                        
+                        setTimeout(() => sparkle.remove(), 1000);
+                    }, i * 100);
+                }
+            }
+
+            endStudySession() {
+                clearTimeout(this.sessionTimeout);
+                
+                // Calculate session results
+                const sessionTime = (new Date() - this.sessionStartTime) / 1000 / 60; // minutes
+                const accuracy = this.sessionStats.cardsStudied > 0 ? 
+                    (this.sessionStats.correctAnswers / this.sessionStats.cardsStudied * 100) : 0;
+                
+                // Update session stats
+                this.sessionStats.totalTime = sessionTime;
+                
+                // Update user data
+                this.userData.totalStudyTime += sessionTime;
+                this.userData.lastStudyDate = new Date();
+                this.updateStreak();
+                this.saveUserData();
+                
+                // Display results
+                document.getElementById('session-cards-count').textContent = this.sessionStats.cardsStudied;
+                document.getElementById('session-time-total').textContent = `${Math.round(sessionTime)}min`;
+                document.getElementById('session-accuracy').textContent = `${Math.round(accuracy)}%`;
+                document.getElementById('session-points').textContent = `+${this.sessionStats.points} XP`;
+                
+                // Transition to complete screen
+                document.getElementById('active-session').classList.add('hidden');
+                document.getElementById('session-complete').classList.remove('hidden');
+                
+                // Update UI
+                this.updateUI();
+                this.updateCharts();
+                
+                console.log(`✅ Sesión completada: ${this.sessionStats.cardsStudied} tarjetas, ${Math.round(accuracy)}% precisión`);
+                
+                this.showNotification(`¡Sesión completada! ${this.sessionStats.points} XP ganados`, 'success');
+            }
+
+            resetForNewSession() {
+                document.getElementById('session-complete').classList.add('hidden');
+                document.getElementById('session-setup').classList.remove('hidden');
+                
+                // Reset session timer
+                this.sessionStartTime = new Date();
+            }
+
+            updateStreak() {
+                const today = new Date();
+                const lastStudy = this.userData.lastStudyDate ? new Date(this.userData.lastStudyDate) : null;
+                
+                if (!lastStudy) {
+                    this.userData.currentStreak = 1;
+                } else {
+                    const daysDiff = Math.floor((today - lastStudy) / (1000 * 60 * 60 * 24));
+                    
+                    if (daysDiff === 1) {
+                        // Consecutive day
+                        this.userData.currentStreak++;
+                    } else if (daysDiff > 1) {
+                        // Streak broken
+                        this.userData.currentStreak = 1;
+                    }
+                    // Same day: don't change streak
+                }
+                
+                this.userData.bestStreak = Math.max(this.userData.bestStreak, this.userData.currentStreak);
+            }
+
+            updateUI() {
+                // Calculate statistics
+                const totalCards = Array.from(this.userData.cardProgress.values()).length;
+                const masteredCards = Array.from(this.userData.cardProgress.values())
+                    .filter(p => p.masteryLevel >= 80).length;
+                
+                const overallProgress = totalCards > 0 ? (masteredCards / totalCards * 100) : 0;
+                
+                // Update progress ring
+                const circle = document.getElementById('overall-progress-circle');
+                const circumference = 2 * Math.PI * 50; // radius = 50
+                const offset = circumference - (overallProgress / 100 * circumference);
+                circle.style.strokeDashoffset = offset;
+                
+                // Update text displays
+                document.getElementById('overall-progress-text').textContent = `${Math.round(overallProgress)}%`;
+                document.getElementById('cards-stats').textContent = `${masteredCards} de ${totalCards} tarjetas`;
+                document.getElementById('current-streak').textContent = this.userData.currentStreak;
+                document.getElementById('current-streak-display').textContent = `${this.userData.currentStreak} días`;
+                document.getElementById('best-streak').textContent = `${this.userData.bestStreak} días`;
+                
+                // Calculate retention rates (simulated)
+                document.getElementById('retention-today').textContent = `${Math.round(85 + Math.random() * 10)}%`;
+                document.getElementById('retention-week').textContent = `${Math.round(80 + Math.random() * 10)}%`;
+                document.getElementById('retention-month').textContent = `${Math.round(75 + Math.random() * 10)}%`;
+                document.getElementById('retention-average').textContent = `${Math.round(82 + Math.random() * 8)}%`;
+                
+                // Today's activity
+                document.getElementById('time-today').textContent = `${Math.round(this.sessionStats.totalTime || 0)}min`;
+                document.getElementById('cards-today').textContent = this.sessionStats.cardsStudied || 0;
+                
+                // Predictions
+                document.getElementById('estimated-time').textContent = `${Math.round(15 + Math.random() * 10)}min`;
+                document.getElementById('learning-efficiency').textContent = `${Math.round(80 + Math.random() * 15)}%`;
+                document.getElementById('mastery-projection').textContent = `${Math.round(20 + Math.random() * 20)} días`;
+                
+                // Update upcoming reviews
+                this.updateUpcomingReviews();
+            }
+
+            updateUpcomingReviews() {
+                const container = document.getElementById('upcoming-reviews');
+                const now = new Date();
+                
+                // Get cards due soon
+                const upcomingCards = Array.from(this.userData.cardProgress.entries())
+                    .filter(([cardId, progress]) => progress.nextReview > now)
+                    .sort(([,a], [,b]) => a.nextReview - b.nextReview)
+                    .slice(0, 5);
+                
+                if (upcomingCards.length === 0) {
+                    container.innerHTML = '<div class="text-gray-400 text-sm">No hay revisiones programadas</div>';
+                    return;
+                }
+                
+                container.innerHTML = upcomingCards.map(([cardId, progress]) => {
+                    const card = this.findCardById(cardId);
+                    const timeUntil = this.formatTimeUntil(progress.nextReview);
+                    const masteryColor = progress.masteryLevel >= 80 ? 'text-green-400' : 
+                                       progress.masteryLevel >= 50 ? 'text-yellow-400' : 'text-red-400';
+                    
+                    return `
+                        <div class="flex justify-between items-center p-3 bg-slate-700 rounded-lg">
+                            <div class="flex-1">
+                                <div class="text-white text-sm font-medium">${card?.question.substring(0, 30)}...</div>
+                                <div class="text-gray-400 text-xs">${card?.reference}</div>
+                            </div>
+                            <div class="text-right">
+                                <div class="text-blue-400 text-xs">${timeUntil}</div>
+                                <div class="${masteryColor} text-xs">${Math.round(progress.masteryLevel)}%</div>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            }
+
+            findCardById(cardId) {
+                for (const category of Object.values(this.cardDatabase)) {
+                    const card = category.find(c => c.id === cardId);
+                    if (card) return card;
+                }
+                return null;
+            }
+
+            formatTimeUntil(date) {
+                const now = new Date();
+                const diffMs = date - now;
+                const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+                const diffDays = Math.floor(diffHours / 24);
+                
+                if (diffDays > 0) {
+                    return `${diffDays}d`;
+                } else if (diffHours > 0) {
+                    return `${diffHours}h`;
+                } else {
+                    return 'Pronto';
+                }
+            }
+
+            initializeCharts() {
+                // Retention Chart (Ebbinghaus Forgetting Curve)
+                const retentionCtx = document.getElementById('retention-chart').getContext('2d');
+                this.charts.set('retention', new Chart(retentionCtx, {
+                    type: 'line',
+                    data: {
+                        labels: ['0d', '1d', '2d', '7d', '14d', '30d'],
+                        datasets: [{
+                            label: 'Retención sin repaso',
+                            data: [100, 44, 28, 23, 21, 21],
+                            borderColor: '#ef4444',
+                            backgroundColor: 'rgba(239, 68, 68, 0.1)',
+                            tension: 0.4
+                        }, {
+                            label: 'Retención con repaso espaciado',
+                            data: [100, 95, 90, 88, 85, 82],
+                            borderColor: '#10b981',
+                            backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                            tension: 0.4
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: {
+                                labels: { color: '#cbd5e1', font: { size: 10 } }
+                            }
+                        },
+                        scales: {
+                            x: {
+                                ticks: { color: '#cbd5e1', font: { size: 10 } },
+                                grid: { color: '#374151' }
+                            },
+                            y: {
+                                ticks: { color: '#cbd5e1', font: { size: 10 } },
+                                grid: { color: '#374151' },
+                                min: 0,
+                                max: 100
+                            }
+                        }
+                    }
+                }));
+
+                // Learning Analytics Chart
+                const analyticsCtx = document.getElementById('learning-analytics-chart').getContext('2d');
+                this.charts.set('analytics', new Chart(analyticsCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'],
+                        datasets: [{
+                            label: 'Tarjetas estudiadas',
+                            data: [12, 15, 8, 20, 18, 25, 10],
+                            backgroundColor: 'rgba(59, 130, 246, 0.8)',
+                            borderColor: '#3b82f6',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: {
+                                labels: { color: '#cbd5e1', font: { size: 10 } }
+                            }
+                        },
+                        scales: {
+                            x: {
+                                ticks: { color: '#cbd5e1', font: { size: 10 } },
+                                grid: { color: '#374151' }
+                            },
+                            y: {
+                                ticks: { color: '#cbd5e1', font: { size: 10 } },
+                                grid: { color: '#374151' },
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                }));
+            }
+
+            updateCharts() {
+                // Update charts with real data
+                const analyticsChart = this.charts.get('analytics');
+                if (analyticsChart) {
+                    // Simulate updating with session data
+                    const today = new Date().getDay();
+                    analyticsChart.data.datasets[0].data[today] += this.sessionStats.cardsStudied;
+                    analyticsChart.update();
+                }
+            }
+
+            updateAvailableCards() {
+                // Called when category changes - could update card count display
+                const category = document.getElementById('category-selector').value;
+                const availableCards = this.getDueCards(category);
+                console.log(`📊 Categoría ${category}: ${availableCards.length} tarjetas disponibles`);
+            }
+
+            showNotification(message, type = 'info') {
+                const notification = document.createElement('div');
+                const colors = {
+                    success: 'bg-green-500',
+                    warning: 'bg-yellow-500',
+                    error: 'bg-red-500',
+                    info: 'bg-blue-500'
+                };
+                
+                notification.className = `fixed top-4 right-4 ${colors[type]} text-white p-4 rounded-lg shadow-lg z-50 animate-fade-scale`;
+                notification.textContent = message;
+                
+                document.body.appendChild(notification);
+                
+                setTimeout(() => {
+                    notification.style.animation = 'fadeInScale 0.3s ease-out reverse';
+                    setTimeout(() => notification.remove(), 300);
+                }, 4000);
+            }
+        }
+
+        // ============================================================================
+        // INICIALIZACIÓN
+        // ============================================================================
+
+        document.addEventListener('DOMContentLoaded', () => {
+            window.memorySystem = new SpacedRepetitionSystem();
+            console.log('✅ Sistema de Memorización con Repetición Espaciada inicializado correctamente');
+        });
+    </script>
+</body>
+</html>

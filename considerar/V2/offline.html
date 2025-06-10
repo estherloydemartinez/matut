@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sin Conexión - BibliaApp Pro</title>
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#4F46E5">
+    
+    <!-- Favicons -->
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/icon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/icons/icon-16x16.png">
+    <link rel="apple-touch-icon" href="/assets/icons/icon-192x192.png">
+    
+    <style>
+        /* Estilos embebidos para la página offline */
+        :root {
+            --primary-500: #4F46E5;
+            --primary-600: #4338CA;
+            --primary-50: #F0F9FF;
+            --neutral-100: #F5F5F5;
+            --neutral-600: #525252;
+            --neutral-700: #404040;
+            --neutral-800: #262626;
+            --accent-green-500: #10B981;
+            --accent-purple-500: #A855F7;
+            --accent-pink-500: #EC4899;
+            --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.1), 0 10px 10px rgba(0, 0, 0, 0.04);
+            --radius-2xl: 1rem;
+            --radius-xl: 0.75rem;
+            --radius-lg: 0.5rem;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, var(--primary-50) 0%, #E0F2FE 50%, #BAE6FD 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            color: var(--neutral-700);
+        }
+
+        .offline-container {
+            max-width: 500px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: var(--radius-2xl);
+            box-shadow: var(--shadow-xl);
+            padding: 40px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .offline-icon {
+            font-size: 4rem;
+            margin-bottom: 24px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--neutral-800);
+            margin-bottom: 12px;
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            color: var(--neutral-600);
+            margin-bottom: 32px;
+            line-height: 1.6;
+        }
+
+        .status-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #FEF3C7;
+            color: #92400E;
+            padding: 8px 16px;
+            border-radius: var(--radius-lg);
+            font-size: 0.875rem;
+            font-weight: 500;
+            margin-bottom: 32px;
+        }
+
+        .offline-features {
+            text-align: left;
+            margin-bottom: 32px;
+        }
+
+        .features-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--neutral-800);
+            margin-bottom: 16px;
+            text-align: center;
+        }
+
+        .feature-list {
+            display: grid;
+            gap: 12px;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            background: var(--primary-50);
+            border-radius: var(--radius-lg);
+            font-size: 0.9rem;
+            color: var(--neutral-700);
+        }
+
+        .feature-icon {
+            font-size: 1.2rem;
+            width: 24px;
+            text-align: center;
+        }
+
+        .actions {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: var(--radius-xl);
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-500), var(--primary-600));
+            color: white;
+            box-shadow: 0 4px 14px 0 rgba(79, 70, 229, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px 0 rgba(79, 70, 229, 0.4);
+        }
+
+        .btn-outline {
+            background: white;
+            color: var(--neutral-700);
+            border: 2px solid var(--neutral-100);
+        }
+
+        .btn-outline:hover {
+            border-color: var(--primary-500);
+            color: var(--primary-600);
+            background: var(--primary-50);
+        }
+
+        .connection-status {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-size: 0.875rem;
+            color: var(--neutral-600);
+            margin-top: 24px;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #EF4444;
+            animation: blink 1.5s infinite;
+        }
+
+        .status-dot.online {
+            background: var(--accent-green-500);
+            animation: none;
+        }
+
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0.3; }
+        }
+
+        .tips {
+            background: linear-gradient(135deg, #F3E8FF, #E9D5FF);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            margin-top: 24px;
+        }
+
+        .tips-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--accent-purple-500);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .tip-item {
+            font-size: 0.875rem;
+            color: var(--neutral-600);
+            margin-bottom: 8px;
+            line-height: 1.4;
+        }
+
+        .tip-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 32px;
+        }
+
+        .logo-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--primary-500), var(--primary-600));
+            border-radius: var(--radius-lg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--neutral-800);
+        }
+
+        /* Responsive */
+        @media (max-width: 480px) {
+            .offline-container {
+                padding: 24px;
+            }
+
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            .subtitle {
+                font-size: 1rem;
+            }
+
+            .actions {
+                gap: 8px;
+            }
+
+            .btn {
+                padding: 10px 20px;
+                font-size: 0.9rem;
+            }
+        }
+
+        /* Modo oscuro */
+        @media (prefers-color-scheme: dark) {
+            body {
+                background: linear-gradient(135deg, #1F2937 0%, #111827 50%, #0F172A 100%);
+            }
+
+            .offline-container {
+                background: rgba(31, 41, 55, 0.95);
+                color: #F3F4F6;
+                border-color: rgba(75, 85, 99, 0.3);
+            }
+
+            h1 {
+                color: #F9FAFB;
+            }
+
+            .subtitle {
+                color: #D1D5DB;
+            }
+
+            .feature-item {
+                background: rgba(79, 70, 229, 0.1);
+                color: #E5E7EB;
+            }
+
+            .btn-outline {
+                background: rgba(31, 41, 55, 0.8);
+                color: #D1D5DB;
+                border-color: #4B5563;
+            }
+
+            .tips {
+                background: linear-gradient(135deg, rgba(147, 51, 234, 0.1), rgba(168, 85, 247, 0.1));
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="offline-container">
+        <!-- Logo -->
+        <div class="logo">
+            <div class="logo-icon">📖</div>
+            <div class="logo-text">BibliaApp Pro</div>
+        </div>
+
+        <!-- Icono principal -->
+        <div class="offline-icon">📱</div>
+
+        <!-- Título y descripción -->
+        <h1>Modo Offline</h1>
+        <p class="subtitle">
+            No hay conexión a Internet, pero BibliaApp Pro sigue funcionando con las características offline.
+        </p>
+
+        <!-- Indicador de estado -->
+        <div class="status-indicator">
+            <span>📡</span>
+            <span>Sin conexión detectada</span>
+        </div>
+
+        <!-- Características disponibles offline -->
+        <div class="offline-features">
+            <h3 class="features-title">✨ Disponible sin conexión</h3>
+            <div class="feature-list">
+                <div class="feature-item">
+                    <span class="feature-icon">📖</span>
+                    <span>Contenido bíblico guardado localmente</span>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-icon">🙏</span>
+                    <span>Herramientas de oración y reflexión</span>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-icon">📝</span>
+                    <span>Notas y marcadores guardados</span>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-icon">⭐</span>
+                    <span>Versículos favoritos y memorización</span>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-icon">📊</span>
+                    <span>Progreso de lectura y estadísticas</span>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-icon">🎯</span>
+                    <span>Planes de lectura descargados</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Acciones -->
+        <div class="actions">
+            <button class="btn btn-primary" onclick="retryConnection()">
+                🔄 Verificar Conexión
+            </button>
+            <a href="/" class="btn btn-outline">
+                🏠 Ir a Inicio
+            </a>
+        </div>
+
+        <!-- Estado de conexión -->
+        <div class="connection-status">
+            <div class="status-dot" id="connectionDot"></div>
+            <span id="connectionText">Desconectado</span>
+        </div>
+
+        <!-- Consejos -->
+        <div class="tips">
+            <div class="tips-title">
+                <span>💡</span>
+                <span>Consejos para el modo offline</span>
+            </div>
+            <div class="tip-item">• Todas tus notas y progreso se guardan automáticamente</div>
+            <div class="tip-item">• Los cambios se sincronizarán cuando recuperes la conexión</div>
+            <div class="tip-item">• Puedes seguir usando todas las herramientas de estudio</div>
+            <div class="tip-item">• El contenido se actualiza regularmente cuando estás online</div>
+        </div>
+    </div>
+
+    <script>
+        // Verificar estado de conexión
+        function updateConnectionStatus() {
+            const dot = document.getElementById('connectionDot');
+            const text = document.getElementById('connectionText');
+            
+            if (navigator.onLine) {
+                dot.classList.add('online');
+                text.textContent = 'Conexión restaurada';
+                
+                // Mostrar mensaje de éxito
+                showConnectionMessage('✅ Conexión restaurada - Sincronizando datos...', 'success');
+                
+                // Redirigir a la aplicación principal después de un momento
+                setTimeout(() => {
+                    window.location.href = '/';
+                }, 2000);
+            } else {
+                dot.classList.remove('online');
+                text.textContent = 'Sin conexión';
+            }
+        }
+
+        // Reintentar conexión
+        function retryConnection() {
+            updateConnectionStatus();
+            
+            if (!navigator.onLine) {
+                showConnectionMessage('⚠️ Aún sin conexión - Verifica tu red', 'warning');
+            }
+        }
+
+        // Mostrar mensaje de conexión
+        function showConnectionMessage(message, type) {
+            // Remover mensaje anterior si existe
+            const existingMessage = document.querySelector('.connection-message');
+            if (existingMessage) {
+                existingMessage.remove();
+            }
+
+            const messageEl = document.createElement('div');
+            messageEl.className = `connection-message ${type}`;
+            messageEl.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: ${type === 'success' ? '#10B981' : '#F59E0B'};
+                color: white;
+                padding: 12px 20px;
+                border-radius: 8px;
+                font-size: 14px;
+                font-weight: 500;
+                z-index: 1000;
+                animation: slideIn 0.3s ease-out;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            `;
+            messageEl.textContent = message;
+
+            document.body.appendChild(messageEl);
+
+            // Remover después de 3 segundos
+            setTimeout(() => {
+                messageEl.style.animation = 'slideOut 0.3s ease-out';
+                setTimeout(() => messageEl.remove(), 300);
+            }, 3000);
+        }
+
+        // Agregar estilos de animación
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from {
+                    transform: translateX(100%);
+                    opacity: 0;
+                }
+                to {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
+            }
+            
+            @keyframes slideOut {
+                from {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
+                to {
+                    transform: translateX(100%);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Event listeners
+        window.addEventListener('online', () => {
+            console.log('🌐 Conexión restaurada');
+            updateConnectionStatus();
+        });
+
+        window.addEventListener('offline', () => {
+            console.log('📵 Conexión perdida');
+            updateConnectionStatus();
+        });
+
+        // Verificar estado inicial
+        updateConnectionStatus();
+
+        // Verificar periódicamente la conexión
+        setInterval(updateConnectionStatus, 5000);
+
+        // Manejo de Service Worker
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.ready.then(registration => {
+                console.log('✅ Service Worker listo para página offline');
+                
+                // Escuchar mensajes del Service Worker
+                navigator.serviceWorker.addEventListener('message', event => {
+                    if (event.data.type === 'CACHE_UPDATE') {
+                        console.log('📦 Cache actualizado desde página offline');
+                    }
+                });
+            });
+        }
+
+        // Analytics para página offline (si está disponible)
+        if (window.gtag) {
+            gtag('event', 'page_view', {
+                page_title: 'Offline Page',
+                page_location: window.location.href
+            });
+        }
+
+        // Debug en desarrollo
+        if (window.location.hostname === 'localhost') {
+            console.log('🔧 Página offline en modo desarrollo');
+            
+            // Botón para simular reconexión (solo en desarrollo)
+            const debugBtn = document.createElement('button');
+            debugBtn.textContent = '🔧 Simular Reconexión';
+            debugBtn.style.cssText = `
+                position: fixed;
+                bottom: 20px;
+                left: 20px;
+                background: #6366F1;
+                color: white;
+                border: none;
+                padding: 8px 16px;
+                border-radius: 6px;
+                font-size: 12px;
+                cursor: pointer;
+            `;
+            debugBtn.onclick = () => {
+                window.dispatchEvent(new Event('online'));
+            };
+            document.body.appendChild(debugBtn);
+        }
+    </script>
+</body>
+</html>

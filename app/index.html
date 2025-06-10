@@ -1,0 +1,895 @@
+<!DOCTYPE html>
+<html lang="es" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BibliaApp Pro v3.0 - Formación Bíblica de Clase Mundial</title>
+    
+    <!-- Meta Tags PWA -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#5865f2">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="BibliaApp Pro">
+    
+    <!-- Preconnects para optimización -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    
+    <!-- Iconos Lucide -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    
+    <!-- Framework CSS Base -->
+    <link rel="stylesheet" href="assets/css/output.css">
+    <link rel="stylesheet" href="assets/css/components.css">
+    <link rel="stylesheet" href="assets/css/animations.css">
+</head>
+
+<body class="bg-[var(--bg-dark)] text-[var(--text-primary)] font-inter overflow-hidden">
+    <!-- Loading Screen -->
+    <div id="loadingScreen" class="fixed inset-0 bg-[var(--bg-dark)] flex items-center justify-center z-50">
+        <div class="text-center">
+            <div class="w-16 h-16 border-4 border-[var(--bg-primary)] border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+            <h2 class="text-xl font-semibold mb-2">BibliaApp Pro</h2>
+            <p class="text-[var(--text-secondary)] text-sm">Cargando herramientas de estudio...</p>
+        </div>
+    </div>
+
+    <!-- Main Container -->
+    <div id="appContainer" class="hidden h-screen flex">
+        
+        <!-- Sidebar Navigation -->
+        <nav id="sidebar" class="discord-sidebar w-64 h-full flex-shrink-0 overflow-y-auto border-r border-[var(--border-color)]">
+            <!-- Header -->
+            <div class="p-4 border-b border-[var(--border-color)]">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-gradient-to-br from-[var(--bg-primary)] to-purple-600 rounded-lg flex items-center justify-center">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                        </svg>
+                    </div>
+                    <div>
+                        <h1 class="text-lg font-bold">BibliaApp Pro</h1>
+                        <p class="text-xs text-[var(--text-muted)]">v3.0 Mejorada</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- User Profile -->
+            <div class="p-4 border-b border-[var(--border-color)]">
+                <div class="flex items-center space-x-3">
+                    <div class="w-8 h-8 bg-[var(--bg-primary)] rounded-full flex items-center justify-center">
+                        <span class="text-sm font-semibold">U</span>
+                    </div>
+                    <div class="flex-1">
+                        <p class="font-medium text-sm">Usuario</p>
+                        <p class="text-xs text-[var(--text-secondary)]">Nivel 1 - Principiante</p>
+                    </div>
+                    <div class="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
+                        <div class="w-2 h-2 bg-white rounded-full"></div>
+                    </div>
+                </div>
+                
+                <!-- Progress Bar -->
+                <div class="mt-3">
+                    <div class="flex justify-between text-xs mb-1">
+                        <span class="text-[var(--text-secondary)]">Progreso XP</span>
+                        <span class="text-[var(--text-secondary)]">0/100</span>
+                    </div>
+                    <div class="w-full bg-[var(--bg-input)] rounded-full h-2">
+                        <div class="bg-gradient-to-r from-[var(--bg-primary)] to-purple-500 h-2 rounded-full" style="width: 0%"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Navigation -->
+            <div class="p-3">
+                <div class="space-y-1">
+                    <button class="nav-button active w-full text-left px-3 py-2 rounded-md flex items-center space-x-3" data-target="teoria">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                        </svg>
+                        <span class="nav-text font-medium">Teoría</span>
+                        <div class="ml-auto w-2 h-2 bg-[var(--bg-primary)] rounded-full"></div>
+                    </button>
+                    
+                    <button class="nav-button w-full text-left px-3 py-2 rounded-md flex items-center space-x-3" data-target="practica">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                            <polyline points="22,4 12,14.01 9,11.01"></polyline>
+                        </svg>
+                        <span class="nav-text font-medium">Práctica</span>
+                    </button>
+                    
+                    <button class="nav-button w-full text-left px-3 py-2 rounded-md flex items-center space-x-3" data-target="social">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="9" cy="7" r="4"></circle>
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                        </svg>
+                        <span class="nav-text font-medium">Social</span>
+                        <span class="ml-auto bg-red-500 text-white text-xs px-1.5 py-0.5 rounded-full">3</span>
+                    </button>
+                    
+                    <button class="nav-button w-full text-left px-3 py-2 rounded-md flex items-center space-x-3" data-target="inicio">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                            <polyline points="9,22 9,12 15,12 15,22"></polyline>
+                        </svg>
+                        <span class="nav-text font-medium">Inicio</span>
+                    </button>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="mt-6">
+                    <h3 class="text-xs font-semibold text-[var(--text-muted)] uppercase tracking-wider mb-2 px-3">Acceso Rápido</h3>
+                    <div class="space-y-1">
+                        <button class="quick-action w-full text-left px-3 py-2 rounded-md flex items-center space-x-3 text-sm" data-action="daily-reading">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <polyline points="12,6 12,12 16,14"></polyline>
+                            </svg>
+                            <span>Lectura Diaria</span>
+                        </button>
+                        
+                        <button class="quick-action w-full text-left px-3 py-2 rounded-md flex items-center space-x-3 text-sm" data-action="prayer-session">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                                <polyline points="22,4 12,14.01 9,11.01"></polyline>
+                            </svg>
+                            <span>Sesión de Oración</span>
+                        </button>
+                        
+                        <button class="quick-action w-full text-left px-3 py-2 rounded-md flex items-center space-x-3 text-sm" data-action="memory-review">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M9 11H3v6h6v-6zM21 11h-6v6h6v-6zM9 3H3v6h6V3zM21 3h-6v6h6V3z"></path>
+                            </svg>
+                            <span>Revisar Memoria</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Settings -->
+                <div class="mt-6 pt-4 border-t border-[var(--border-color)]">
+                    <button class="nav-button w-full text-left px-3 py-2 rounded-md flex items-center space-x-3" data-target="ajustes">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="3"></circle>
+                            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1 1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                        </svg>
+                        <span class="nav-text font-medium">Ajustes</span>
+                    </button>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content Area -->
+        <main class="flex-1 flex flex-col h-full overflow-hidden">
+            
+            <!-- Top Header -->
+            <header class="bg-[var(--bg-card)] border-b border-[var(--border-color)] px-6 py-4 flex-shrink-0">
+                <div class="flex items-center justify-between">
+                    <!-- Breadcrumbs -->
+                    <nav class="breadcrumbs flex items-center space-x-2 text-sm">
+                        <span class="breadcrumb-current">Teoría</span>
+                        <span class="text-[var(--text-muted)]">/</span>
+                        <span class="text-[var(--text-secondary)]">Lectura</span>
+                        <span class="text-[var(--text-muted)]">/</span>
+                        <span class="text-[var(--text-secondary)]">Modo Profundo</span>
+                    </nav>
+
+                    <!-- Header Controls -->
+                    <div class="flex items-center space-x-4">
+                        <!-- Search -->
+                        <div class="relative">
+                            <input type="text" 
+                                   placeholder="Buscar..." 
+                                   class="discord-input pl-10 pr-4 py-2 text-sm rounded-lg w-64 focus:outline-none focus:ring-2 focus:ring-[var(--bg-primary)]">
+                            <svg class="absolute left-3 top-2.5 w-4 h-4 text-[var(--text-muted)]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="11" cy="11" r="8"></circle>
+                                <path d="m21 21-4.35-4.35"></path>
+                            </svg>
+                        </div>
+
+                        <!-- Notifications -->
+                        <button class="relative p-2 rounded-lg hover:bg-[var(--bg-input)] transition-colors">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                                <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                            </svg>
+                            <span class="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full"></span>
+                        </button>
+
+                        <!-- Theme Toggle -->
+                        <button id="themeToggle" class="p-2 rounded-lg hover:bg-[var(--bg-input)] transition-colors">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="5"></circle>
+                                <line x1="12" y1="1" x2="12" y2="3"></line>
+                                <line x1="12" y1="21" x2="12" y2="23"></line>
+                                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                                <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                                <line x1="1" y1="12" x2="3" y2="12"></line>
+                                <line x1="21" y1="12" x2="23" y2="12"></line>
+                                <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                                <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Content Area with Tabs -->
+            <div class="flex-1 flex flex-col overflow-hidden">
+                <!-- Content Sections -->
+                <div id="contentContainer" class="flex-1 overflow-hidden">
+                    
+                    <!-- TEORÍA SECTION -->
+                    <section id="content-teoria" class="content-section h-full flex flex-col">
+                        <!-- Sub Navigation Tabs -->
+                        <div class="border-b border-[var(--border-color)] bg-[var(--bg-card)] px-6">
+                            <nav class="flex space-x-6 overflow-x-auto">
+                                <button class="tab-button active py-4 text-sm font-medium border-b-2 border-transparent whitespace-nowrap" data-target="lectura">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="inline mr-2">
+                                        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                                        <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                                    </svg>
+                                    Lectura
+                                </button>
+                                <button class="tab-button py-4 text-sm font-medium border-b-2 border-transparent whitespace-nowrap" data-target="memorizacion">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="inline mr-2">
+                                        <path d="M9 11H3v6h6v-6zM21 11h-6v6h6v-6zM9 3H3v6h6V3zM21 3h-6v6h6V3z"></path>
+                                    </svg>
+                                    Memorización
+                                </button>
+                                <button class="tab-button py-4 text-sm font-medium border-b-2 border-transparent whitespace-nowrap" data-target="agua">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="inline mr-2">
+                                        <path d="M7 16.3c2.2 0 4-1.83 4-4.05 0-1.16-.57-2.26-1.71-3.19S7.29 6.75 7 5.3c-.29 1.45-1.14 2.84-2.29 3.76S3 11.1 3 12.25c0 2.22 1.8 4.05 4 4.05z"></path>
+                                        <path d="M12.56 6.6A10.97 10.97 0 0 0 14 3.02c.5 2.5 2.26 4.89 4.56 6.01a10.97 10.97 0 0 1 .01 11.02C17.43 17.5 14.95 16.4 14 14.02c-.95 2.38-3.43 3.48-4.57 6.02a10.97 10.97 0 0 1 .01-11.02c2.3-1.12 4.06-3.51 4.56-6.01"></path>
+                                    </svg>
+                                    Sistema Agua
+                                </button>
+                                <button class="tab-button py-4 text-sm font-medium border-b-2 border-transparent whitespace-nowrap" data-target="filtros">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="inline mr-2">
+                                        <polygon points="22,3 2,3 10,12.46 10,19 14,21 14,12.46 22,3"></polygon>
+                                    </svg>
+                                    Filtros Analíticos
+                                </button>
+                                <button class="tab-button py-4 text-sm font-medium border-b-2 border-transparent whitespace-nowrap" data-target="analisis">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="inline mr-2">
+                                        <line x1="18" y1="20" x2="18" y2="10"></line>
+                                        <line x1="12" y1="20" x2="12" y2="4"></line>
+                                        <line x1="6" y1="20" x2="6" y2="14"></line>
+                                    </svg>
+                                    Análisis
+                                </button>
+                            </nav>
+                        </div>
+
+                        <!-- Sub Content Area -->
+                        <div class="flex-1 overflow-y-auto p-6">
+                            <!-- LECTURA SUBCONTENT -->
+                            <div id="subcontent-lectura" class="subcontent">
+                                <div class="max-w-7xl mx-auto">
+                                    <div class="mb-6">
+                                        <h1 class="text-3xl font-bold mb-2">Lectura Bíblica</h1>
+                                        <p class="text-[var(--text-secondary)] text-lg">Elige tu modo de estudio y profundiza en las Escrituras</p>
+                                    </div>
+
+                                    <!-- Reading Mode Selection -->
+                                    <div class="grid lg:grid-cols-2 gap-6 mb-8">
+                                        <!-- Modo Simple -->
+                                        <div class="discord-card rounded-xl p-6 hover:scale-[1.02] transition-transform cursor-pointer">
+                                            <div class="flex items-start space-x-4">
+                                                <div class="w-12 h-12 bg-green-500/20 rounded-lg flex items-center justify-center">
+                                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-green-400">
+                                                        <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"></path>
+                                                        <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                                                        <line x1="12" y1="19" x2="12" y2="23"></line>
+                                                        <line x1="8" y1="23" x2="16" y2="23"></line>
+                                                    </svg>
+                                                </div>
+                                                <div class="flex-1">
+                                                    <h3 class="text-xl font-semibold mb-2">Modo Simple</h3>
+                                                    <p class="text-[var(--text-secondary)] mb-4">Lectura devocional con interfaz limpia y sin distracciones. Perfecto para tu tiempo diario con Dios.</p>
+                                                    <div class="flex items-center text-sm text-[var(--text-muted)]">
+                                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="mr-2">
+                                                            <circle cx="12" cy="12" r="10"></circle>
+                                                            <polyline points="12,6 12,12 16,14"></polyline>
+                                                        </svg>
+                                                        Lectura rápida • Sin herramientas
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Modo Profundo -->
+                                        <div class="discord-card rounded-xl p-6 hover:scale-[1.02] transition-transform cursor-pointer border-l-4 border-[var(--bg-primary)]">
+                                            <div class="flex items-start space-x-4">
+                                                <div class="w-12 h-12 bg-[var(--bg-primary)]/20 rounded-lg flex items-center justify-center">
+                                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-[var(--bg-primary)]">
+                                                        <circle cx="12" cy="12" r="3"></circle>
+                                                        <path d="M12 1v6m0 6v6"></path>
+                                                        <path d="m15.5 3.5-1.5 1.5"></path>
+                                                        <path d="m8.5 8.5-1.5 1.5"></path>
+                                                        <path d="m15.5 20.5-1.5-1.5"></path>
+                                                        <path d="m8.5 15.5-1.5-1.5"></path>
+                                                        <path d="M23 12h-6m-6 0H1"></path>
+                                                    </svg>
+                                                </div>
+                                                <div class="flex-1">
+                                                    <h3 class="text-xl font-semibold mb-2">Modo Profundo</h3>
+                                                    <p class="text-[var(--text-secondary)] mb-4">Estudio académico con 50+ herramientas especializadas. Para un análisis riguroso de las Escrituras.</p>
+                                                    <div class="flex items-center text-sm text-[var(--text-muted)]">
+                                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="mr-2">
+                                                            <path d="M9 11H3v6h6v-6zM21 11h-6v6h6v-6zM9 3H3v6h6V3zM21 3h-6v6h6V3z"></path>
+                                                        </svg>
+                                                        50+ herramientas • Análisis completo
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Study Tools Categories Preview -->
+                                    <div class="mb-8">
+                                        <h2 class="text-2xl font-semibold mb-4">Categorías de Herramientas</h2>
+                                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                                            <div class="discord-card rounded-lg p-4">
+                                                <div class="flex items-center space-x-3 mb-3">
+                                                    <div class="w-10 h-10 bg-blue-500/20 rounded-lg flex items-center justify-center">
+                                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-blue-400">
+                                                            <circle cx="12" cy="12" r="10"></circle>
+                                                            <polygon points="10,8 16,12 10,16 10,8"></polygon>
+                                                        </svg>
+                                                    </div>
+                                                    <div>
+                                                        <h3 class="font-semibold">Hermenéutica</h3>
+                                                        <p class="text-sm text-[var(--text-muted)]">12 herramientas</p>
+                                                    </div>
+                                                </div>
+                                                <p class="text-sm text-[var(--text-secondary)]">Principios de interpretación bíblica y análisis contextual</p>
+                                            </div>
+
+                                            <div class="discord-card rounded-lg p-4">
+                                                <div class="flex items-center space-x-3 mb-3">
+                                                    <div class="w-10 h-10 bg-purple-500/20 rounded-lg flex items-center justify-center">
+                                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-purple-400">
+                                                            <path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"></path>
+                                                            <circle cx="12" cy="13" r="3"></circle>
+                                                        </svg>
+                                                    </div>
+                                                    <div>
+                                                        <h3 class="font-semibold">Análisis Crítico</h3>
+                                                        <p class="text-sm text-[var(--text-muted)]">10 herramientas</p>
+                                                    </div>
+                                                </div>
+                                                <p class="text-sm text-[var(--text-secondary)]">Crítica textual, de fuentes y métodos académicos</p>
+                                            </div>
+
+                                            <div class="discord-card rounded-lg p-4">
+                                                <div class="flex items-center space-x-3 mb-3">
+                                                    <div class="w-10 h-10 bg-green-500/20 rounded-lg flex items-center justify-center">
+                                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-green-400">
+                                                            <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"></path>
+                                                            <polyline points="14,2 14,8 20,8"></polyline>
+                                                            <line x1="16" y1="13" x2="8" y2="13"></line>
+                                                            <line x1="16" y1="17" x2="8" y2="17"></line>
+                                                            <polyline points="10,9 9,9 8,9"></polyline>
+                                                        </svg>
+                                                    </div>
+                                                    <div>
+                                                        <h3 class="font-semibold">Lingüística</h3>
+                                                        <p class="text-sm text-[var(--text-muted)]">10 herramientas</p>
+                                                    </div>
+                                                </div>
+                                                <p class="text-sm text-[var(--text-secondary)]">Análisis de idiomas originales y sintaxis</p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Current Reading Section -->
+                                    <div class="discord-card rounded-xl p-6">
+                                        <div class="flex items-center justify-between mb-4">
+                                            <h2 class="text-xl font-semibold">Lectura Actual</h2>
+                                            <button class="discord-button-primary px-4 py-2 rounded-lg text-sm font-medium">Continuar Leyendo</button>
+                                        </div>
+                                        
+                                        <div class="flex items-start space-x-4">
+                                            <div class="w-16 h-20 bg-gradient-to-br from-amber-400 to-orange-500 rounded-lg flex items-center justify-center">
+                                                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-white">
+                                                    <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                                                    <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                                                </svg>
+                                            </div>
+                                            <div class="flex-1">
+                                                <h3 class="text-lg font-semibold mb-1">Génesis 1</h3>
+                                                <p class="text-[var(--text-secondary)] mb-2">Plan: Biblia en 1 Año • Día 1 de 365</p>
+                                                <div class="flex items-center space-x-4 text-sm text-[var(--text-muted)]">
+                                                    <span>📖 31 versículos</span>
+                                                    <span>⏱️ 5 min lectura</span>
+                                                    <span>🎯 Creación</span>
+                                                </div>
+                                                
+                                                <!-- Progress Bar -->
+                                                <div class="mt-3">
+                                                    <div class="flex justify-between text-xs mb-1">
+                                                        <span class="text-[var(--text-secondary)]">Progreso del plan</span>
+                                                        <span class="text-[var(--text-secondary)]">1/365 días</span>
+                                                    </div>
+                                                    <div class="w-full bg-[var(--bg-input)] rounded-full h-2">
+                                                        <div class="bg-gradient-to-r from-[var(--bg-primary)] to-purple-500 h-2 rounded-full" style="width: 0.27%"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- MEMORIZACIÓN SUBCONTENT -->
+                            <div id="subcontent-memorizacion" class="subcontent hidden">
+                                <div class="max-w-4xl mx-auto">
+                                    <div class="mb-6">
+                                        <h1 class="text-3xl font-bold mb-2">Memorización SRS</h1>
+                                        <p class="text-[var(--text-secondary)] text-lg">Sistema de Repetición Espaciada científicamente probado</p>
+                                    </div>
+
+                                    <!-- SRS Card -->
+                                    <div class="discord-card rounded-xl p-8">
+                                        <div class="text-center mb-8">
+                                            <div class="w-20 h-20 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                                                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-white">
+                                                    <path d="M9 11H3v6h6v-6zM21 11h-6v6h6v-6zM9 3H3v6h6V3zM21 3h-6v6h6V3z"></path>
+                                                </svg>
+                                            </div>
+                                            <h2 class="text-2xl font-semibold mb-2">Revisar Versículo</h2>
+                                            <p class="text-[var(--text-secondary)]">Escribe el versículo de memoria</p>
+                                        </div>
+
+                                        <!-- Citation -->
+                                        <div class="text-center mb-6">
+                                            <button id="citation" class="text-3xl font-bold text-[var(--bg-primary)] hover:text-purple-400 transition-colors">
+                                                Juan 3:16
+                                            </button>
+                                            <p class="text-sm text-[var(--text-muted)] mt-1">Haz clic para revelar el versículo</p>
+                                        </div>
+
+                                        <!-- Input Area -->
+                                        <div class="mb-6">
+                                            <textarea 
+                                                id="verseInput" 
+                                                rows="4" 
+                                                class="w-full p-4 discord-input rounded-xl focus:outline-none focus:ring-2 focus:ring-[var(--bg-primary)] text-lg leading-relaxed"
+                                                placeholder="Escribe el versículo aquí..."></textarea>
+                                        </div>
+
+                                        <!-- Action Buttons -->
+                                        <div class="flex justify-center space-x-4 mb-6">
+                                            <button id="revealBtn" class="discord-button-secondary px-6 py-3 rounded-lg font-medium">
+                                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="inline mr-2">
+                                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                                    <circle cx="12" cy="12" r="3"></circle>
+                                                </svg>
+                                                Mostrar
+                                            </button>
+                                            <button id="checkBtn" class="discord-button-primary px-6 py-3 rounded-lg font-medium">
+                                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="inline mr-2">
+                                                    <polyline points="20,6 9,17 4,12"></polyline>
+                                                </svg>
+                                                Comprobar
+                                            </button>
+                                        </div>
+
+                                        <!-- Result Area -->
+                                        <div id="resultArea" class="hidden">
+                                            <div class="discord-card rounded-xl p-6 bg-[var(--bg-input)]/50">
+                                                <h3 class="text-lg font-semibold mb-4">Comparación</h3>
+                                                
+                                                <div id="comparisonOutput" class="space-y-4 mb-6">
+                                                    <div>
+                                                        <p class="text-sm font-medium text-[var(--text-secondary)] mb-1">Tu respuesta:</p>
+                                                        <p id="userAnswer" class="p-3 bg-[var(--bg-card)] rounded-lg"></p>
+                                                    </div>
+                                                    <div>
+                                                        <p class="text-sm font-medium text-[var(--text-secondary)] mb-1">Versículo correcto:</p>
+                                                        <p id="correctAnswer" class="p-3 bg-[var(--bg-card)] rounded-lg"></p>
+                                                    </div>
+                                                    <div>
+                                                        <p class="text-sm font-medium text-[var(--text-secondary)] mb-1">Análisis:</p>
+                                                        <p id="diffOutput" class="p-3 bg-[var(--bg-card)] rounded-lg"></p>
+                                                    </div>
+                                                </div>
+
+                                                <!-- SRS Rating -->
+                                                <div>
+                                                    <h3 class="text-lg font-semibold mb-3">¿Qué tan fácil fue recordar?</h3>
+                                                    <div class="grid grid-cols-4 gap-3">
+                                                        <button class="srs-btn p-3 rounded-lg bg-red-600 hover:bg-red-700 text-white font-medium transition-colors" data-rating="1">
+                                                            😰 Otra vez
+                                                        </button>
+                                                        <button class="srs-btn p-3 rounded-lg bg-orange-500 hover:bg-orange-600 text-white font-medium transition-colors" data-rating="2">
+                                                            😅 Difícil
+                                                        </button>
+                                                        <button class="srs-btn p-3 rounded-lg bg-blue-500 hover:bg-blue-600 text-white font-medium transition-colors" data-rating="3">
+                                                            😊 Bien
+                                                        </button>
+                                                        <button class="srs-btn p-3 rounded-lg bg-green-600 hover:bg-green-700 text-white font-medium transition-colors" data-rating="4">
+                                                            😎 Fácil
+                                                        </button>
+                                                    </div>
+                                                    <p id="srsFeedback" class="text-sm text-[var(--text-muted)] mt-3 text-center"></p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Statistics -->
+                                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
+                                        <div class="discord-card rounded-lg p-6 text-center">
+                                            <div class="text-3xl font-bold text-[var(--bg-primary)] mb-2">0</div>
+                                            <p class="text-[var(--text-secondary)]">Versículos memorizados</p>
+                                        </div>
+                                        <div class="discord-card rounded-lg p-6 text-center">
+                                            <div class="text-3xl font-bold text-green-500 mb-2">0</div>
+                                            <p class="text-[var(--text-secondary)]">Días de racha</p>
+                                        </div>
+                                        <div class="discord-card rounded-lg p-6 text-center">
+                                            <div class="text-3xl font-bold text-purple-500 mb-2">0</div>
+                                            <p class="text-[var(--text-secondary)]">Próximas revisiones</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- SISTEMA AGUA SUBCONTENT -->
+                            <div id="subcontent-agua" class="subcontent hidden">
+                                <div class="max-w-6xl mx-auto">
+                                    <div class="mb-6">
+                                        <h1 class="text-3xl font-bold mb-2">Sistema Agua</h1>
+                                        <p class="text-[var(--text-secondary)] text-lg">Metodología de clasificación: Valor / Añadir / No Añadir</p>
+                                    </div>
+
+                                    <!-- Instructions -->
+                                    <div class="discord-card rounded-lg p-4 mb-6 bg-blue-500/10 border border-blue-500/20">
+                                        <div class="flex items-start space-x-3">
+                                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-blue-400 mt-0.5">
+                                                <circle cx="12" cy="12" r="10"></circle>
+                                                <path d="M12 16v-4"></path>
+                                                <path d="M12 8h.01"></path>
+                                            </svg>
+                                            <div>
+                                                <h3 class="font-semibold text-blue-100 mb-1">Instrucciones</h3>
+                                                <p class="text-blue-200/80 text-sm">Arrastra elementos entre columnas o usa los botones (+) para añadir nuevos. Haz clic derecho para opciones adicionales.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Agua Columns -->
+                                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                                        <!-- Columna Valor -->
+                                        <div class="agua-columna discord-card rounded-xl p-6 border-2 border-dashed border-green-500/30">
+                                            <div class="text-center mb-4">
+                                                <div class="w-12 h-12 bg-green-500/20 rounded-lg flex items-center justify-center mx-auto mb-2">
+                                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-green-400">
+                                                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
+                                                    </svg>
+                                                </div>
+                                                <h3 class="text-xl font-semibold text-green-400">Valor</h3>
+                                                <p class="text-sm text-[var(--text-secondary)]">Elementos que aportan valor</p>
+                                            </div>
+                                            
+                                            <div class="agua-elementos-container space-y-3 min-h-[300px] mb-4">
+                                                <div class="agua-elemento bg-green-500/10 border border-green-500/20 rounded-lg p-4 cursor-move hover:bg-green-500/20 transition-colors" data-id="v1">
+                                                    <div class="flex items-center space-x-3">
+                                                        <div class="w-2 h-2 bg-green-400 rounded-full"></div>
+                                                        <span class="font-medium">Oración diaria</span>
+                                                    </div>
+                                                    <p class="text-sm text-[var(--text-muted)] mt-1 ml-5">Conexión espiritual constante</p>
+                                                </div>
+                                                
+                                                <div class="agua-elemento bg-green-500/10 border border-green-500/20 rounded-lg p-4 cursor-move hover:bg-green-500/20 transition-colors" data-id="v2">
+                                                    <div class="flex items-center space-x-3">
+                                                        <div class="w-2 h-2 bg-green-400 rounded-full"></div>
+                                                        <span class="font-medium">Estudio profundo</span>
+                                                    </div>
+                                                    <p class="text-sm text-[var(--text-muted)] mt-1 ml-5">Comprensión bíblica sólida</p>
+                                                </div>
+                                            </div>
+                                            
+                                            <button class="add-agua-elemento-btn w-full p-3 border-2 border-dashed border-green-500/30 rounded-lg text-green-400 hover:bg-green-500/10 transition-colors" data-columna="valor">
+                                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="inline mr-2">
+                                                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                                                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                                                </svg>
+                                                Añadir elemento
+                                            </button>
+                                        </div>
+
+                                        <!-- Columna Añadir -->
+                                        <div class="agua-columna discord-card rounded-xl p-6 border-2 border-dashed border-blue-500/30">
+                                            <div class="text-center mb-4">
+                                                <div class="w-12 h-12 bg-blue-500/20 rounded-lg flex items-center justify-center mx-auto mb-2">
+                                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-blue-400">
+                                                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                                                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                                                    </svg>
+                                                </div>
+                                                <h3 class="text-xl font-semibold text-blue-400">Añadir</h3>
+                                                <p class="text-sm text-[var(--text-secondary)]">Elementos por incorporar</p>
+                                            </div>
+                                            
+                                            <div class="agua-elementos-container space-y-3 min-h-[300px] mb-4">
+                                                <div class="agua-elemento bg-blue-500/10 border border-blue-500/20 rounded-lg p-4 cursor-move hover:bg-blue-500/20 transition-colors" data-id="a1">
+                                                    <div class="flex items-center space-x-3">
+                                                        <div class="w-2 h-2 bg-blue-400 rounded-full"></div>
+                                                        <span class="font-medium">Lectura en comunidad</span>
+                                                    </div>
+                                                    <p class="text-sm text-[var(--text-muted)] mt-1 ml-5">Compartir insights con otros</p>
+                                                </div>
+                                                
+                                                <div class="agua-elemento bg-blue-500/10 border border-blue-500/20 rounded-lg p-4 cursor-move hover:bg-blue-500/20 transition-colors" data-id="a2">
+                                                    <div class="flex items-center space-x-3">
+                                                        <div class="w-2 h-2 bg-blue-400 rounded-full"></div>
+                                                        <span class="font-medium">Ayuno espiritual</span>
+                                                    </div>
+                                                    <p class="text-sm text-[var(--text-muted)] mt-1 ml-5">Disciplina para el crecimiento</p>
+                                                </div>
+                                            </div>
+                                            
+                                            <button class="add-agua-elemento-btn w-full p-3 border-2 border-dashed border-blue-500/30 rounded-lg text-blue-400 hover:bg-blue-500/10 transition-colors" data-columna="anadir">
+                                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="inline mr-2">
+                                                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                                                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                                                </svg>
+                                                Añadir elemento
+                                            </button>
+                                        </div>
+
+                                        <!-- Columna No Añadir -->
+                                        <div class="agua-columna discord-card rounded-xl p-6 border-2 border-dashed border-red-500/30">
+                                            <div class="text-center mb-4">
+                                                <div class="w-12 h-12 bg-red-500/20 rounded-lg flex items-center justify-center mx-auto mb-2">
+                                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-red-400">
+                                                        <circle cx="12" cy="12" r="10"></circle>
+                                                        <line x1="15" y1="9" x2="9" y2="15"></line>
+                                                        <line x1="9" y1="9" x2="15" y2="15"></line>
+                                                    </svg>
+                                                </div>
+                                                <h3 class="text-xl font-semibold text-red-400">No Añadir</h3>
+                                                <p class="text-sm text-[var(--text-secondary)]">Elementos a evitar</p>
+                                            </div>
+                                            
+                                            <div class="agua-elementos-container space-y-3 min-h-[300px] mb-4">
+                                                <div class="agua-elemento bg-red-500/10 border border-red-500/20 rounded-lg p-4 cursor-move hover:bg-red-500/20 transition-colors" data-id="n1">
+                                                    <div class="flex items-center space-x-3">
+                                                        <div class="w-2 h-2 bg-red-400 rounded-full"></div>
+                                                        <span class="font-medium">Lectura superficial</span>
+                                                    </div>
+                                                    <p class="text-sm text-[var(--text-muted)] mt-1 ml-5">Sin reflexión ni aplicación</p>
+                                                </div>
+                                            </div>
+                                            
+                                            <button class="add-agua-elemento-btn w-full p-3 border-2 border-dashed border-red-500/30 rounded-lg text-red-400 hover:bg-red-500/10 transition-colors" data-columna="no-anadir">
+                                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="inline mr-2">
+                                                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                                                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                                                </svg>
+                                                Añadir elemento
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <!-- Summary Stats -->
+                                    <div class="grid grid-cols-3 gap-6 mt-8">
+                                        <div class="discord-card rounded-lg p-6 text-center">
+                                            <div class="text-2xl font-bold text-green-400 mb-2">2</div>
+                                            <p class="text-[var(--text-secondary)]">Elementos de Valor</p>
+                                        </div>
+                                        <div class="discord-card rounded-lg p-6 text-center">
+                                            <div class="text-2xl font-bold text-blue-400 mb-2">2</div>
+                                            <p class="text-[var(--text-secondary)]">Por Añadir</p>
+                                        </div>
+                                        <div class="discord-card rounded-lg p-6 text-center">
+                                            <div class="text-2xl font-bold text-red-400 mb-2">1</div>
+                                            <p class="text-[var(--text-secondary)]">No Añadir</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- FILTROS SUBCONTENT -->
+                            <div id="subcontent-filtros" class="subcontent hidden">
+                                <div class="max-w-6xl mx-auto">
+                                    <div class="mb-6">
+                                        <h1 class="text-3xl font-bold mb-2">Filtros Analíticos</h1>
+                                        <p class="text-[var(--text-secondary)] text-lg">Herramientas interactivas para análisis profundo</p>
+                                    </div>
+
+                                    <!-- Filters Container -->
+                                    <div id="filtros-lista-container" class="space-y-4">
+                                        <!-- Filter cards will be populated by JavaScript -->
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- ANÁLISIS SUBCONTENT -->
+                            <div id="subcontent-analisis" class="subcontent hidden">
+                                <div class="max-w-6xl mx-auto">
+                                    <div class="mb-6">
+                                        <h1 class="text-3xl font-bold mb-2">Análisis Bíblico</h1>
+                                        <p class="text-[var(--text-secondary)] text-lg">Mantenencia y Aumentancia en las Escrituras</p>
+                                    </div>
+
+                                    <!-- Analysis Sections -->
+                                    <div class="grid lg:grid-cols-2 gap-6">
+                                        <!-- Mantenencia -->
+                                        <div class="discord-card rounded-xl p-6">
+                                            <div class="flex items-center space-x-3 mb-4">
+                                                <div class="w-12 h-12 bg-blue-500/20 rounded-lg flex items-center justify-center">
+                                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-blue-400">
+                                                        <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+                                                        <path d="M2 17l10 5 10-5"></path>
+                                                        <path d="M2 12l10 5 10-5"></path>
+                                                    </svg>
+                                                </div>
+                                                <div>
+                                                    <h2 class="text-xl font-semibold">Mantenencia</h2>
+                                                    <p class="text-sm text-[var(--text-secondary)]">Vivencia Finita e Infinita</p>
+                                                </div>
+                                            </div>
+                                            <p class="text-[var(--text-secondary)] mb-4">
+                                                Exploración de la mantenencia como principio de preservación y continuidad en las enseñanzas bíblicas.
+                                            </p>
+                                            <button class="discord-button-primary px-4 py-2 rounded-lg text-sm font-medium">
+                                                Explorar Mantenencia
+                                            </button>
+                                        </div>
+
+                                        <!-- Aumentancia -->
+                                        <div class="discord-card rounded-xl p-6">
+                                            <div class="flex items-center space-x-3 mb-4">
+                                                <div class="w-12 h-12 bg-green-500/20 rounded-lg flex items-center justify-center">
+                                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-green-400">
+                                                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                                                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                                                    </svg>
+                                                </div>
+                                                <div>
+                                                    <h2 class="text-xl font-semibold">Aumentancia</h2>
+                                                    <p class="text-sm text-[var(--text-secondary)]">Reproducción y Crecimiento</p>
+                                                </div>
+                                            </div>
+                                            <p class="text-[var(--text-secondary)] mb-4">
+                                                Análisis de la aumentancia como principio de multiplicación y expansión en el reino de Dios.
+                                            </p>
+                                            <button class="discord-button-primary px-4 py-2 rounded-lg text-sm font-medium">
+                                                Explorar Aumentancia
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- PRÁCTICA SECTION -->
+                    <section id="content-practica" class="content-section hidden h-full flex flex-col">
+                        <!-- Sub Navigation Tabs -->
+                        <div class="border-b border-[var(--border-color)] bg-[var(--bg-card)] px-6">
+                            <nav class="flex space-x-6 overflow-x-auto">
+                                <button class="tab-button active py-4 text-sm font-medium border-b-2 border-transparent whitespace-nowrap" data-target="oracion-practica">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="inline mr-2">
+                                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                                        <polyline points="22,4 12,14.01 9,11.01"></polyline>
+                                    </svg>
+                                    Oración
+                                </button>
+                                <button class="tab-button py-4 text-sm font-medium border-b-2 border-transparent whitespace-nowrap" data-target="recibx-practica">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="inline mr-2">
+                                        <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                        <circle cx="9" cy="7" r="4"></circle>
+                                        <path d="M22 11v6"></path>
+                                        <path d="M19 14h6"></path>
+                                    </svg>
+                                    Recibir/Vivir
+                                </button>
+                                <button class="tab-button py-4 text-sm font-medium border-b-2 border-transparent whitespace-nowrap" data-target="aplicacion-practica">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="inline mr-2">
+                                        <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+                                        <path d="M2 17l10 5 10-5"></path>
+                                        <path d="M2 12l10 5 10-5"></path>
+                                    </svg>
+                                    Aplicación
+                                </button>
+                            </nav>
+                        </div>
+
+                        <!-- Sub Content Area -->
+                        <div class="flex-1 overflow-y-auto p-6">
+                            <!-- Oración content will be populated by JavaScript -->
+                            <div id="subcontent-oracion-practica" class="subcontent">
+                                <div class="max-w-4xl mx-auto">
+                                    <div class="mb-6">
+                                        <h1 class="text-3xl font-bold mb-2">Oración (Pedir)</h1>
+                                        <p class="text-[var(--text-secondary)] text-lg">Comunícate con Dios a través de diferentes tipos de oración</p>
+                                    </div>
+                                    <!-- Prayer content will be added here -->
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- SOCIAL SECTION -->
+                    <section id="content-social" class="content-section hidden h-full flex flex-col">
+                        <div class="flex-1 overflow-y-auto p-6">
+                            <div class="max-w-6xl mx-auto">
+                                <div class="mb-6">
+                                    <h1 class="text-3xl font-bold mb-2">Comunidad Social</h1>
+                                    <p class="text-[var(--text-secondary)] text-lg">Conecta, comparte y crece con otros estudiantes de la Biblia</p>
+                                </div>
+                                <!-- Social content will be populated by JavaScript -->
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- INICIO SECTION -->
+                    <section id="content-inicio" class="content-section hidden h-full flex flex-col">
+                        <div class="flex-1 overflow-y-auto p-6">
+                            <div class="max-w-6xl mx-auto">
+                                <div class="mb-6">
+                                    <h1 class="text-3xl font-bold mb-2">Dashboard Principal</h1>
+                                    <p class="text-[var(--text-secondary)] text-lg">Tu centro de comando para el crecimiento espiritual</p>
+                                </div>
+                                <!-- Dashboard content will be populated by JavaScript -->
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- AJUSTES SECTION -->
+                    <section id="content-ajustes" class="content-section hidden h-full flex flex-col">
+                        <div class="flex-1 overflow-y-auto p-6">
+                            <div class="max-w-4xl mx-auto">
+                                <div class="mb-6">
+                                    <h1 class="text-3xl font-bold mb-2">Configuración</h1>
+                                    <p class="text-[var(--text-secondary)] text-lg">Personaliza tu experiencia de estudio bíblico</p>
+                                </div>
+                                <!-- Settings content will be populated by JavaScript -->
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Notification Container -->
+    <div id="notificationContainer" class="fixed top-4 right-4 z-50 space-y-2"></div>
+
+    <!-- Modal Container -->
+    <div id="modalContainer" class="fixed inset-0 z-50 hidden"></div>
+
+    <!-- Scripts -->
+
+    <script type="module" src="./constants.js"></script>
+    <script type="module" src="./utils.js"></script>
+    <script type="module" src="./storage.js"></script>
+    <script type="module" src="./state-manager.js"></script>
+    <script type="module" src="./ui-manager.js"></script>
+    <script type="module" src="./srs-system.js"></script>
+    <script type="module" src="./agua-system.js"></script>
+    <script type="module" src="./filters-system.js"></script>
+    <script type="module" src="./analytical-tools-enhanced.js"></script>
+    <!-- Warning: practice-system.js not found in app/, script tag not added for this file -->
+    <script type="module" src="./social-system-enhanced.js"></script>
+    <!-- Warning: dashboard-system.js not found in app/, script tag not added for this file -->
+    <!-- Warning: settings-system.js not found in app/, script tag not added for this file -->
+    <script type="module" src="./app.js"></script>
+    <script type="module" src="./app-enhanced.js"></script>
+</body>
+</body>
+</html>

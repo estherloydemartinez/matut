@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="es" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prototipo App Formación Bíblica v5</title>
+    <!-- Fuentes y Estilos -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Variables globales para colores */
+        :root {
+            --bg-dark: #2f3136;
+            --bg-sidebar: #202225;
+            --bg-card: #36393f;
+            --bg-input: #40444b;
+            --bg-primary: #5865f2;
+            --bg-secondary: #4f545c;
+            --text-primary: #ffffff;
+            --text-secondary: #b9bbbe;
+            --text-muted: #72767d;
+        }
+
+        /* Estilos para modo oscuro y claro */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-primary);
+        }
+
+        .discord-sidebar {
+            background-color: var(--bg-sidebar);
+        }
+
+        .discord-card {
+            background-color: var(--bg-card);
+        }
+
+        .discord-input {
+            background-color: var(--bg-input);
+            border: 1px solid var(--bg-sidebar);
+        }
+
+        .discord-button-primary {
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+        }
+
+        .discord-button-primary:hover {
+            background-color: #4752c4;
+        }
+
+        .discord-button-secondary {
+            background-color: var(--bg-secondary);
+            color: var(--text-secondary);
+        }
+
+        .discord-button-secondary:hover {
+            background-color: #5d6269;
+        }
+
+        .discord-text-secondary {
+            color: var(--text-secondary);
+        }
+
+        .discord-text-muted {
+            color: var(--text-muted);
+        }
+
+        .discord-link {
+            color: #00a8fc;
+        }
+
+        .discord-link:hover {
+            text-decoration: underline;
+        }
+
+        /* Responsividad */
+        @media (max-width: 768px) {
+            .discord-sidebar {
+                width: 4rem;
+            }
+
+            .nav-button span.nav-text {
+                display: none;
+            }
+
+            .nav-button {
+                width: 3rem;
+                height: 3rem;
+                padding: 0.5rem;
+            }
+
+            .main-title-text {
+                font-size: clamp(1rem, 2.5vw, 1.5rem);
+            }
+
+            .header-controls .text-sm {
+                display: none;
+            }
+        }
+
+        /* Clases de resaltado */
+        .highlight-correct {
+            color: #43b581;
+            font-weight: bold;
+        }
+
+        .highlight-incorrect {
+            color: #f04747;
+            text-decoration: line-through;
+            font-weight: bold;
+        }
+
+        .highlight-missing {
+            color: #faa61a;
+            font-style: italic;
+            background-color: rgba(250, 166, 26, 0.1);
+            padding: 0 2px;
+            border-radius: 3px;
+        }
+
+        /* Animaciones */
+        .fade-in {
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Estilos adicionales para tabs y navegación */
+        .nav-button.active {
+            background-color: #393c43;
+            color: white;
+        }
+
+        .nav-button {
+            color: #b9bbbe;
+        }
+
+        .tab-button.active {
+            border-bottom-color: #5865f2;
+            color: #ffffff;
+        }
+
+        .tab-button {
+            border-bottom: 2px solid transparent;
+            color: #b9bbbe;
+        }
+
+        .view-toggle-button {
+            background-color: #40444b;
+            color: #b9bbbe;
+            padding: 0.5rem;
+            border-radius: 0.375rem;
+            transition: background-color 0.2s;
+        }
+
+        .view-toggle-button:hover {
+            background-color: #4f545c;
+        }
+
+        .view-toggle-button.active {
+            background-color: #5865f2;
+            color: white;
+        }
+    </style>
+</head>
+<body class="flex h-screen antialiased overflow-hidden">
+    <!-- Sidebar -->
+    <aside class="discord-sidebar w-20 flex flex-col items-center py-4 space-y-4 flex-shrink-0 transition-width duration-300">
+        <button id="nav-inicio" title="Inicio" class="nav-button active p-3 rounded-lg w-14 h-14 flex items-center justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10l9-7 9 7 0 11a2 2 0 01-2 2H5a2 2 0 01-2-2V10z" />
+            </svg>
+        </button>
+        <button id="nav-representacion" title="Representación (Teoría)" class="nav-button p-3 rounded-lg w-14 h-14 flex items-center justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 20l9-4-9-4-9 4 9 4z" />
+            </svg>
+        </button>
+        <button id="nav-representado" title="Representado (Práctica)" class="nav-button p-3 rounded-lg w-14 h-14 flex items-center justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+            </svg>
+        </button>
+    </aside>
+
+    <!-- Contenido principal -->
+    <main class="flex-1 flex flex-col overflow-hidden">
+        <header class="discord-card shadow-md p-3 md:p-4 flex justify-between items-center flex-shrink-0">
+            <h1 id="main-title" class="main-title-text text-lg md:text-xl font-semibold truncate">Inicio</h1>
+            <div class="header-controls flex items-center space-x-1 md:space-x-2">
+                <button id="toggle-representacion" title="Ir a Representación" class="view-toggle-button">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                    </svg>
+                </button>
+                <button id="toggle-representado" title="Ir a Representado" class="view-toggle-button">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                    </svg>
+                </button>
+                <span class="discord-text-muted text-sm mx-1 md:mx-2">|</span>
+                <span class="discord-text-muted text-xs md:text-sm">RV1960</span>
+                <button class="discord-button-secondary p-1 md:p-2 rounded-lg">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                </button>
+            </div>
+        </header>
+
+        <div class="flex-1 overflow-y-auto p-4 md:p-6 space-y-6">
+            <!-- Sección de Inicio -->
+            <div id="content-inicio" class="content-section">
+                <div class="discord-card rounded-lg p-4 md:p-6 shadow">
+                    <h2 class="text-xl md:text-2xl font-semibold mb-4">Panel Principal</h2>
+                    <p class="discord-text-secondary">Bienvenido a la app de formación bíblica.</p>
+                    <button id="show-checkin-modal" class="mt-4 px-4 py-2 rounded-lg discord-button-primary text-sm md:text-base">
+                        Iniciar Check-in Diario
+                    </button>
+                </div>
+            </div>
+
+            <!-- Sección de Representación -->
+            <div id="content-representacion" class="content-section hidden">
+                <div class="border-b border-gray-700 mb-4">
+                    <nav class="-mb-px flex space-x-4 md:space-x-6 overflow-x-auto" aria-label="Tabs">
+                        <button data-target="subcontent-lectura" class="tab-button active whitespace-nowrap py-3 px-1 font-medium text-xs md:text-sm">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1 inline" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                            </svg>
+                            Lectura General
+                        </button>
+                        <button data-target="subcontent-memorizacion" class="tab-button whitespace-nowrap py-3 px-1 font-medium text-xs md:text-sm">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1 inline" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                            </svg>
+                            Memorización
+                        </button>
+                    </nav>
+                </div>
+
+                <!-- Subcontenido de Lectura -->
+                <div id="subcontent-lectura" class="subcontent visible">
+                    <div class="discord-card rounded-lg p-4 md:p-6 shadow">
+                        <h2 class="text-xl md:text-2xl font-semibold mb-4">Lectura Bíblica</h2>
+                        <p class="discord-text-secondary mb-2 text-sm md:text-base">Interfaz de lectura, modos, herramientas...</p>
+                        <div class="border border-gray-700 rounded p-3 md:p-4 mt-4 bg-gray-800/30">
+                            <p class="font-semibold text-md md:text-lg mb-2">Juan 3:16 (RV1960)</p>
+                            <p class="discord-text-secondary text-sm md:text-base">Porque de tal manera amó Dios al mundo...</p>
+                            <div class="mt-3 flex items-center space-x-2 text-xs md:text-sm">
+                                <span class="discord-text-muted">Filtros Analíticos:</span>
+                                <label class="flex items-center space-x-1 cursor-pointer p-1 rounded hover:bg-gray-700">
+                                    <input type="checkbox" class="form-checkbox h-3 w-3 md:h-4 md:w-4 text-blue-500 bg-gray-700 border-gray-600 rounded focus:ring-blue-600">
+                                    <span class="discord-text-secondary">Mantenencia</span>
+                                </label>
+                                <label class="flex items-center space-x-1 cursor-pointer p-1 rounded hover:bg-gray-700">
+                                    <input type="checkbox" class="form-checkbox h-3 w-3 md:h-4 md:w-4 text-green-500 bg-gray-700 border-gray-600 rounded focus:ring-green-600">
+                                    <span class="discord-text-secondary">Aumentancia</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Subcontenido de Memorización -->
+                <div id="subcontent-memorizacion" class="subcontent hidden">
+                    <div class="discord-card rounded-lg p-4 md:p-6 shadow">
+                        <h2 class="text-xl md:text-2xl font-semibold mb-4">Memorización (SRS)</h2>
+                        <div class="mt-4">
+                            <h3 class="text-md md:text-lg font-semibold mb-1 discord-text-primary">Revisar Versículo:</h3>
+                            <p id="citation" class="text-xl md:text-2xl font-bold mb-4 discord-link cursor-pointer" title="Mostrar versículo completo">Juan 3:16</p>
+                            <div class="mb-4">
+                                <label for="verseInput" class="block text-xs md:text-sm font-medium discord-text-secondary mb-1">Escribe el versículo de memoria:</label>
+                                <textarea id="verseInput" rows="4" class="w-full p-3 discord-input rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 discord-text-primary text-sm md:text-base"></textarea>
+                            </div>
+                            <div class="flex justify-end space-x-2 md:space-x-3">
+                                <button id="revealBtn" class="px-3 py-1 md:px-4 md:py-2 rounded-lg discord-button-secondary text-xs md:text-sm">Mostrar</button>
+                                <button id="checkBtn" class="px-3 py-1 md:px-4 md:py-2 rounded-lg discord-button-primary text-xs md:text-sm">Comprobar</button>
+                            </div>
+                        </div>
+                        <div id="resultArea" class="discord-card rounded-lg p-3 md:p-6 shadow hidden mt-6 bg-gray-800/20 border border-gray-700/50">
+                            <h3 class="text-sm md:text-md font-semibold mb-2 discord-text-primary">Comparación:</h3>
+                            <div id="comparisonOutput" class="mb-4 p-2 md:p-3 border border-gray-600 rounded-md discord-text-secondary space-y-2 text-xs md:text-sm">
+                                <p><strong>Tu respuesta:</strong> <span id="userAnswer"></span></p>
+                                <p><strong>Correcto:</strong> <span id="correctAnswer"></span></p>
+                                <hr class="border-gray-600 my-2">
+                                <p><strong>Diferencias:</strong> <span id="diffOutput"></span></p>
+                            </div>
+                            <h3 class="text-sm md:text-md font-semibold mb-2 discord-text-primary">¿Qué tan fácil fue recordar? (SRS)</h3>
+                            <div class="flex flex-wrap gap-1 md:gap-2">
+                                <button class="flex-1 px-2 py-1 md:px-3 md:py-2 rounded-lg bg-red-600 hover:bg-red-700 text-white text-xs md:text-sm srs-btn" data-rating="1">Otra vez</button>
+                                <button class="flex-1 px-2 py-1 md:px-3 md:py-2 rounded-lg bg-orange-500 hover:bg-orange-600 text-white text-xs md:text-sm srs-btn" data-rating="2">Difícil</button>
+                                <button class="flex-1 px-2 py-1 md:px-3 md:py-2 rounded-lg bg-blue-500 hover:bg-blue-600 text-white text-xs md:text-sm srs-btn" data-rating="3">Bien</button>
+                                <button class="flex-1 px-2 py-1 md:px-3 md:py-2 rounded-lg bg-green-600 hover:bg-green-700 text-white text-xs md:text-sm srs-btn" data-rating="4">Fácil</button>
+                            </div>
+                            <p id="srsFeedback" class="text-xs md:text-sm discord-text-muted mt-3"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sección de Representado -->
+            <div id="content-representado" class="content-section hidden">
+                <div class="border-b border-gray-700 mb-4">
+                    <nav class="-mb-px flex space-x-4 md:space-x-6 overflow-x-auto" aria-label="Tabs">
+                        <button data-target="subcontent-oracion" class="tab-button active whitespace-nowrap py-3 px-1 font-medium text-xs md:text-sm">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1 inline" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+                            </svg>
+                            Oración
+                        </button>
+                        <button data-target="subcontent-accion" class="tab-button whitespace-nowrap py-3 px-1 font-medium text-xs md:text-sm">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1 inline" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122" />
+                            </svg>
+                            Acción/Vivencia
+                        </button>
+                    </nav>
+                </div>
+
+                <!-- Subcontenido de Oración -->
+                <div id="subcontent-oracion" class="subcontent visible">
+                    <div class="discord-card rounded-lg p-4 md:p-6 shadow">
+                        <h2 class="text-xl md:text-2xl font-semibold mb-4">Oración</h2>
+                        <p class="discord-text-secondary text-sm md:text-base">Espacio para guías, oración libre, diario...</p>
+                    </div>
+                </div>
+
+                <!-- Subcontenido de Acción -->
+                <div id="subcontent-accion" class="subcontent hidden">
+                    <div class="discord-card rounded-lg p-4 md:p-6 shadow">
+                        <h2 class="text-xl md:text-2xl font-semibold mb-4">Acción / Vivencia</h2>
+                        <p class="discord-text-secondary text-sm md:text-base">Registro de acciones, aplicación práctica...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal de Check-in -->
+        <div id="checkin-modal" class="fixed inset-0 bg-black/70 flex items-center justify-center p-4 z-50 hidden">
+            <div class="discord-card rounded-lg p-6 md:p-8 shadow-xl max-w-md w-full">
+                <h2 class="text-lg md:text-xl font-semibold mb-4">Check-in Diario de Oración</h2>
+                <p class="discord-text-secondary mb-4 text-sm md:text-base">
+                    Modo: <span class="font-medium text-cyan-400">Relación Establecida</span>
+                </p>
+                <p class="discord-text-secondary mb-4 text-sm md:text-base">
+                    Reflexiona y ora sobre la <span class="font-semibold text-red-400">Sangre</span> y el
+                    <span class="font-semibold text-blue-400">Agua</span> hoy.
+                </p>
+                <div class="mb-4">
+                    <label class="block text-xs md:text-sm font-medium discord-text-secondary mb-1">
+                        Breve oración/reflexión:
+                    </label>
+                    <textarea rows="3"
+                        class="w-full p-2 discord-input rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 discord-text-primary text-sm md:text-base"></textarea>
+                </div>
+                <div class="flex justify-end space-x-2 md:space-x-3">
+                    <button id="close-checkin-modal"
+                        class="px-3 py-1 md:px-4 md:py-2 rounded-lg discord-button-secondary text-xs md:text-sm">Cerrar</button>
+                    <button
+                        class="px-3 py-1 md:px-4 md:py-2 rounded-lg discord-button-primary text-xs md:text-sm">Completar</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+      <script>
+    // --- Elementos del DOM ---
+    const navButtons = document.querySelectorAll('.nav-button');
+    const contentSections = document.querySelectorAll('.content-section');
+    const mainTitle = document.getElementById('main-title');
+    const tabContainers = document.querySelectorAll('#content-representacion, #content-representado');
+    const checkinModal = document.getElementById('checkin-modal');
+    const showCheckinBtn = document.getElementById('show-checkin-modal');
+    const closeCheckinBtn = document.getElementById('close-checkin-modal');
+    const toggleRepresentacionBtn = document.getElementById('toggle-representacion');
+    const toggleRepresentadoBtn = document.getElementById('toggle-representado');
+
+    // --- Estado de Navegación ---
+    let currentMainSectionId = 'content-inicio';
+
+    // --- Funciones de Navegación ---
+    function navigateToSection(targetId) {
+        if (!targetId || targetId === currentMainSectionId) return;
+
+        // Determinar el botón de la barra lateral correspondiente
+        let sidebarButtonId = targetId.replace('content-', 'nav-');
+        if (targetId === 'content-memorizacion') {
+            sidebarButtonId = 'nav-representacion';
+            targetId = 'content-representacion';
+        }
+
+        // Actualizar botones de barra lateral
+        navButtons.forEach(btn => {
+            btn.classList.toggle('active', btn.id === sidebarButtonId);
+        });
+
+        // Mostrar/Ocultar secciones principales
+        contentSections.forEach(section => {
+            section.classList.toggle('hidden', section.id !== targetId);
+        });
+
+        // Actualizar título principal
+        const activeNavButton = document.getElementById(sidebarButtonId);
+        if (activeNavButton) {
+            mainTitle.textContent = activeNavButton.title;
+        }
+
+        // Actualizar estado actual
+        currentMainSectionId = targetId;
+
+        // Activar toggle rápido correspondiente
+        updateViewToggleButtons();
+
+        // Resetear/Activar tabs internas
+        const targetSectionEl = document.getElementById(targetId);
+        if (targetSectionEl) {
+            const tabs = targetSectionEl.querySelectorAll('.tab-button');
+            const subcontents = targetSectionEl.querySelectorAll('.subcontent');
+
+            if (arguments.length > 1 && arguments[1] === 'memorizacion') {
+                const memTab = targetSectionEl.querySelector('[data-target="subcontent-memorizacion"]');
+                if (memTab) {
+                    tabs.forEach(t => t.classList.remove('active'));
+                    subcontents.forEach(sc => sc.classList.add('hidden'));
+                    memTab.classList.add('active');
+                    document.getElementById('subcontent-memorizacion')?.classList.remove('hidden');
+                }
+            } else {
+                const firstTab = targetSectionEl.querySelector('.tab-button');
+                if (firstTab) {
+                    tabs.forEach(t => t.classList.remove('active'));
+                    subcontents.forEach(sc => sc.classList.add('hidden'));
+                    firstTab.classList.add('active');
+                    const firstSubcontentId = firstTab.getAttribute('data-target');
+                    document.getElementById(firstSubcontentId)?.classList.remove('hidden');
+                }
+            }
+        }
+    }
+
+    function updateViewToggleButtons() {
+        const isRepresentacionActive = currentMainSectionId === 'content-representacion';
+        const isRepresentadoActive = currentMainSectionId === 'content-representado';
+        if (toggleRepresentacionBtn) toggleRepresentacionBtn.classList.toggle('active', isRepresentacionActive);
+        if (toggleRepresentadoBtn) toggleRepresentadoBtn.classList.toggle('active', isRepresentadoActive);
+    }
+
+    // --- Event Listeners ---
+    // Navegación principal
+    navButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            let targetId = button.id.replace('nav-', 'content-');
+            if (button.id === 'nav-representacion') {
+                targetId = 'content-representacion';
+            }
+            navigateToSection(targetId);
+        });
+    });
+
+    // Botones de toggle rápido
+    if (toggleRepresentacionBtn) {
+        toggleRepresentacionBtn.addEventListener('click', () => navigateToSection('content-representacion'));
+    }
+    if (toggleRepresentadoBtn) {
+        toggleRepresentadoBtn.addEventListener('click', () => navigateToSection('content-representado'));
+    }
+
+    // Navegación por Tabs
+    tabContainers.forEach(container => {
+        const tabs = container.querySelectorAll('.tab-button');
+        tabs.forEach(tab => {
+            tab.addEventListener('click', (event) => {
+                event.stopPropagation();
+                const targetId = tab.getAttribute('data-target');
+                const container = tab.closest('[id^="content-"]');
+                if (container) {
+                    const tabs = container.querySelectorAll('.tab-button');
+                    const subcontents = container.querySelectorAll('.subcontent');
+                    tabs.forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+                    subcontents.forEach(content => {
+                        content.classList.toggle('hidden', content.id !== targetId);
+                    });
+                }
+            });
+        });
+    });
+
+    // Modal Check-in
+    if (showCheckinBtn) {
+        showCheckinBtn.addEventListener('click', () => {
+            if (checkinModal) checkinModal.classList.remove('hidden');
+        });
+    }
+    if (closeCheckinBtn) {
+        closeCheckinBtn.addEventListener('click', () => {
+            if (checkinModal) checkinModal.classList.add('hidden');
+        });
+    }
+    if (checkinModal) {
+        checkinModal.addEventListener('click', (event) => {
+            if (event.target === checkinModal) checkinModal.classList.add('hidden');
+        });
+    }
+
+    // --- Lógica de Memorización ---
+    const citationEl = document.getElementById('citation');
+    const verseInput = document.getElementById('verseInput');
+    const checkBtn = document.getElementById('checkBtn');
+    const revealBtn = document.getElementById('revealBtn');
+    const resultArea = document.getElementById('resultArea');
+    const userAnswerEl = document.getElementById('userAnswer');
+    const correctAnswerEl = document.getElementById('correctAnswer');
+    const diffOutputEl = document.getElementById('diffOutput');
+    const srsButtons = document.querySelectorAll('.srs-btn');
+    const srsFeedbackEl = document.getElementById('srsFeedback');
+
+    // Versículo actual (esto podría venir de una base de datos en una implementación real)
+    const currentVerse = {
+        citation: "Juan 3:16",
+        text: "Porque de tal manera amó Dios al mundo, que ha dado a su Hijo unigénito, para que todo aquel que en él cree, no se pierda, mas tenga vida eterna."
+    };
+
+    // Función para comparar texto
+    function simpleDiff(text1, text2) {
+        const normalize = (str) => str.toLowerCase().replace(/[.,;:]$/g, '').replace(/\s+/g, ' ').trim();
+        const norm1 = normalize(text1);
+        const norm2 = normalize(text2);
+
+        if (norm1 === norm2) return '<span class="highlight-correct">¡Perfecto!</span>';
+
+        const words1 = norm1.split(' ');
+        const words2 = norm2.split(' ');
+        let resultHtml = '';
+        let i = 0, j = 0;
+
+        while (i < words1.length || j < words2.length) {
+            if (i < words1.length && j < words2.length && words1[i] === words2[j]) {
+                resultHtml += `<span class="highlight-correct">${words2[j]}</span> `;
+                i++; j++;
+            } else if (j < words2.length) {
+                let found = false;
+                for (let k = i; k < Math.min(i + 3, words1.length); k++) {
+                    if (words1[k] === words2[j]) {
+                        for (let m = i; m < k; m++) {
+                            resultHtml += `<span class="highlight-missing">(${words1[m]})</span> `;
+                        }
+                        resultHtml += `<span class="highlight-correct">${words2[j]}</span> `;
+                        i = k + 1;
+                        j++;
+                        found = true;
+                        break;
+                    }
+                }
+                if (!found) {
+                    resultHtml += `<span class="highlight-incorrect">${words2[j]}</span> `;
+                    if (i < words1.length) {
+                        resultHtml += `<span class="highlight-missing">(${words1[i]})</span> `;
+                        i++;
+                    }
+                    j++;
+                }
+            } else if (i < words1.length) {
+                resultHtml += `<span class="highlight-missing">(${words1[i]})</span> `;
+                i++;
+            } else {
+                break;
+            }
+        }
+        return resultHtml.trim();
+    }
+
+    // Funciones de memorización
+    function checkAnswer() {
+        if (!verseInput || !userAnswerEl || !correctAnswerEl || !diffOutputEl || !resultArea) return;
+        
+        const userAnswer = verseInput.value;
+        const correctText = currentVerse.text;
+        const diffHtml = simpleDiff(correctText, userAnswer);
+        
+        userAnswerEl.textContent = userAnswer || "(Vacío)";
+        correctAnswerEl.textContent = correctText;
+        diffOutputEl.innerHTML = diffHtml;
+        resultArea.classList.remove('hidden');
+        
+        if (srsFeedbackEl) srsFeedbackEl.textContent = '';
+    }
+
+    function revealAnswer() {
+        const correctText = currentVerse.text;
+        alert(`El texto correcto es:\n\n${correctText}`);
+        if (verseInput) verseInput.value = correctText;
+    }
+
+    function handleSrsSelection(rating) {
+        if (!srsFeedbackEl) return;
+        
+        let feedback = `Calificación ${rating} registrada. `;
+        switch(rating) {
+            case 1: feedback += "Se revisará pronto."; break;
+            case 2: feedback += "Se programará revisión cercana."; break;
+            case 3: feedback += "Buen trabajo. Intervalo aumentará."; break;
+            case 4: feedback += "¡Excelente! Intervalo aumentará mucho."; break;
+        }
+        srsFeedbackEl.textContent = feedback;
+    }
+
+    // Event listeners de memorización
+    if (checkBtn) checkBtn.addEventListener('click', checkAnswer);
+    if (revealBtn) revealBtn.addEventListener('click', revealAnswer);
+    if (citationEl) citationEl.addEventListener('click', revealAnswer);
+    if (srsButtons) {
+        srsButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const rating = parseInt(button.getAttribute('data-rating'));
+                handleSrsSelection(rating);
+            });
+        });
+    }
+
+    // Inicialización
+    navigateToSection('content-inicio');
+</script>
+

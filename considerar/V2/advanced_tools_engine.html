@@ -1,0 +1,1386 @@
+<!DOCTYPE html>
+<html lang="es" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BibliaApp Pro - Motor de Herramientas Avanzadas</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/11.11.0/math.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --bg-tertiary: #334155;
+            --bg-card: #1e293b;
+            --bg-input: #374151;
+            --accent-primary: #3b82f6;
+            --accent-secondary: #8b5cf6;
+            --accent-success: #10b981;
+            --accent-warning: #f59e0b;
+            --accent-error: #ef4444;
+            --text-primary: #f8fafc;
+            --text-secondary: #cbd5e1;
+            --text-muted: #64748b;
+            --border-color: #475569;
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+            --gradient-primary: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            --gradient-secondary: linear-gradient(135deg, #10b981, #059669);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            overflow-x: hidden;
+        }
+
+        /* Scrollbar personalizado */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-secondary);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--accent-primary);
+            border-radius: 3px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--accent-secondary);
+        }
+
+        /* Componentes base */
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            box-shadow: var(--shadow-lg);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.4);
+        }
+
+        .btn-primary {
+            background: var(--gradient-primary);
+            color: var(--text-primary);
+            border: none;
+            border-radius: 8px;
+            padding: 12px 24px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 10px 20px rgba(59, 130, 246, 0.3);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        .btn-secondary {
+            background: var(--bg-tertiary);
+            color: var(--text-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 10px 20px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-secondary:hover {
+            background: var(--bg-input);
+            color: var(--text-primary);
+            border-color: var(--accent-primary);
+        }
+
+        .input-field {
+            background: var(--bg-input);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 12px 16px;
+            color: var(--text-primary);
+            font-size: 14px;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .tab-active {
+            background: var(--gradient-primary);
+            color: var(--text-primary);
+        }
+
+        .tab-inactive {
+            background: var(--bg-tertiary);
+            color: var(--text-secondary);
+        }
+
+        .tool-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 20px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .tool-card:hover {
+            border-color: var(--accent-primary);
+            background: linear-gradient(135deg, var(--bg-card) 0%, rgba(59, 130, 246, 0.05) 100%);
+        }
+
+        .tool-card.active {
+            border-color: var(--accent-primary);
+            background: linear-gradient(135deg, var(--bg-card) 0%, rgba(59, 130, 246, 0.1) 100%);
+        }
+
+        /* Animaciones */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(-100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .animate-fade-in {
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .animate-slide-in {
+            animation: slideIn 0.4s ease-out;
+        }
+
+        .animate-pulse {
+            animation: pulse 2s infinite;
+        }
+
+        /* Loading spinner */
+        .spinner {
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--border-color);
+            border-top: 2px solid var(--accent-primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Herramientas específicas */
+        .analysis-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .statistics-panel {
+            background: linear-gradient(135deg, var(--bg-card) 0%, rgba(16, 185, 129, 0.05) 100%);
+            border: 1px solid var(--accent-success);
+            border-radius: 12px;
+            padding: 20px;
+        }
+
+        .visualization-container {
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 20px;
+            min-height: 400px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: var(--bg-tertiary);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--gradient-primary);
+            transition: width 0.3s ease;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .analysis-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .btn-primary, .btn-secondary {
+                padding: 10px 16px;
+                font-size: 14px;
+            }
+        }
+
+        /* Estados específicos */
+        .tool-processing {
+            opacity: 0.7;
+            pointer-events: none;
+        }
+
+        .tool-completed {
+            border-color: var(--accent-success);
+            background: linear-gradient(135deg, var(--bg-card) 0%, rgba(16, 185, 129, 0.1) 100%);
+        }
+
+        .tool-error {
+            border-color: var(--accent-error);
+            background: linear-gradient(135deg, var(--bg-card) 0%, rgba(239, 68, 68, 0.1) 100%);
+        }
+
+        /* Sidebar avanzado */
+        .sidebar {
+            width: 280px;
+            background: var(--bg-secondary);
+            border-right: 1px solid var(--border-color);
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            transition: transform 0.3s ease;
+            z-index: 1000;
+        }
+
+        .sidebar.collapsed {
+            transform: translateX(-100%);
+        }
+
+        .main-content {
+            margin-left: 280px;
+            transition: margin-left 0.3s ease;
+            min-height: 100vh;
+        }
+
+        .main-content.expanded {
+            margin-left: 0;
+        }
+
+        /* Tooltips */
+        .tooltip {
+            position: relative;
+        }
+
+        .tooltip::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: 125%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            white-space: nowrap;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 1000;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .tooltip:hover::after {
+            opacity: 1;
+            visibility: visible;
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar de herramientas -->
+    <aside id="sidebar" class="sidebar">
+        <div class="p-6">
+            <div class="flex items-center justify-between mb-8">
+                <h1 class="text-xl font-bold text-white">Herramientas Avanzadas</h1>
+                <button id="sidebar-toggle" class="btn-secondary p-2">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Categorías de herramientas -->
+            <div class="space-y-4">
+                <!-- Hermenéutica -->
+                <div class="tool-category">
+                    <h3 class="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-3">Hermenéutica</h3>
+                    <div class="space-y-2">
+                        <div class="tool-card tool-item" data-tool="contextual-analysis" data-tooltip="Análisis contextual avanzado">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="white">
+                                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <div class="font-medium text-white">Análisis Contextual</div>
+                                    <div class="text-xs text-gray-400">Contexto histórico-cultural</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="tool-card tool-item" data-tool="literary-analysis" data-tooltip="Análisis literario y estructural">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-8 h-8 bg-purple-500 rounded-lg flex items-center justify-center">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="white">
+                                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z"/>
+                                        <polyline points="14 2 14 8 20 8"/>
+                                        <line x1="16" y1="13" x2="8" y2="13"/>
+                                        <line x1="16" y1="17" x2="8" y2="17"/>
+                                        <polyline points="10 9 9 9 8 9"/>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <div class="font-medium text-white">Análisis Literario</div>
+                                    <div class="text-xs text-gray-400">Estructura y género</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="tool-card tool-item" data-tool="textual-criticism" data-tooltip="Crítica textual avanzada">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-8 h-8 bg-green-500 rounded-lg flex items-center justify-center">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="white">
+                                        <path d="M20 6L9 17l-5-5"/>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <div class="font-medium text-white">Crítica Textual</div>
+                                    <div class="text-xs text-gray-400">Variantes manuscritas</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Análisis Estadístico -->
+                <div class="tool-category">
+                    <h3 class="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-3">Análisis Estadístico</h3>
+                    <div class="space-y-2">
+                        <div class="tool-card tool-item" data-tool="word-frequency" data-tooltip="Análisis de frecuencia de palabras">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-8 h-8 bg-yellow-500 rounded-lg flex items-center justify-center">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="white">
+                                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <div class="font-medium text-white">Frecuencia de Palabras</div>
+                                    <div class="text-xs text-gray-400">Análisis cuantitativo</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="tool-card tool-item" data-tool="semantic-analysis" data-tooltip="Análisis semántico y conceptual">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-8 h-8 bg-red-500 rounded-lg flex items-center justify-center">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="white">
+                                        <circle cx="12" cy="12" r="3"/>
+                                        <path d="M12 1v6m0 6v6m11-7h-6m-6 0H1"/>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <div class="font-medium text-white">Análisis Semántico</div>
+                                    <div class="text-xs text-gray-400">Relaciones conceptuales</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="tool-card tool-item" data-tool="statistical-patterns" data-tooltip="Patrones estadísticos avanzados">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-8 h-8 bg-indigo-500 rounded-lg flex items-center justify-center">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="white">
+                                        <polyline points="22 17 13.5 8.5 8.5 13.5 2 7"/>
+                                        <polyline points="16 17 22 17 22 11"/>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <div class="font-medium text-white">Patrones Estadísticos</div>
+                                    <div class="text-xs text-gray-400">Análisis avanzado</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Visualización -->
+                <div class="tool-category">
+                    <h3 class="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-3">Visualización</h3>
+                    <div class="space-y-2">
+                        <div class="tool-card tool-item" data-tool="network-visualization" data-tooltip="Visualización de redes conceptuales">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-8 h-8 bg-pink-500 rounded-lg flex items-center justify-center">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="white">
+                                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                                        <circle cx="9" cy="7" r="4"/>
+                                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                                        <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <div class="font-medium text-white">Redes Conceptuales</div>
+                                    <div class="text-xs text-gray-400">Visualización D3.js</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="tool-card tool-item" data-tool="timeline-analysis" data-tooltip="Análisis cronológico interactivo">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-8 h-8 bg-teal-500 rounded-lg flex items-center justify-center">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="white">
+                                        <circle cx="12" cy="12" r="10"/>
+                                        <polyline points="12 6 12 12 16 14"/>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <div class="font-medium text-white">Línea Temporal</div>
+                                    <div class="text-xs text-gray-400">Cronología interactiva</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Contenido principal -->
+    <main id="main-content" class="main-content">
+        <!-- Header -->
+        <header class="bg-slate-800 border-b border-slate-700 p-6">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <button id="menu-toggle" class="btn-secondary p-2 lg:hidden">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+                        </svg>
+                    </button>
+                    <h1 class="text-2xl font-bold text-white">Motor de Análisis Bíblico</h1>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <div class="text-sm text-gray-400">
+                        <span id="current-passage">Seleccione un pasaje</span>
+                    </div>
+                    <button id="settings-btn" class="btn-secondary p-2" data-tooltip="Configuración">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.38a2 2 0 0 0-.73-2.73l-.15-.1a2 2 0 0 1-1-1.72v-.51a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/>
+                            <circle cx="12" cy="12" r="3"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Área de trabajo -->
+        <div class="p-6">
+            <!-- Selector de pasaje -->
+            <div class="card p-6 mb-6">
+                <h2 class="text-xl font-semibold mb-4 text-white">Selección de Pasaje</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-2">Libro</label>
+                        <select id="book-selector" class="input-field">
+                            <option value="">Seleccionar libro...</option>
+                            <option value="genesis">Génesis</option>
+                            <option value="exodus">Éxodo</option>
+                            <option value="matthew">Mateo</option>
+                            <option value="john">Juan</option>
+                            <option value="romans">Romanos</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-2">Capítulo</label>
+                        <input type="number" id="chapter-input" class="input-field" placeholder="1" min="1">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-2">Versículos</label>
+                        <input type="text" id="verses-input" class="input-field" placeholder="1-10 o 1,5,8">
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <button id="load-passage" class="btn-primary">
+                        <span id="load-text">Cargar Pasaje</span>
+                        <div id="load-spinner" class="spinner ml-2 hidden"></div>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Texto del pasaje -->
+            <div id="passage-display" class="card p-6 mb-6 hidden">
+                <h3 class="text-lg font-semibold mb-4 text-white">Texto Bíblico</h3>
+                <div id="passage-text" class="bg-slate-700 p-4 rounded-lg text-gray-100 leading-relaxed">
+                    <!-- El texto se cargará aquí -->
+                </div>
+            </div>
+
+            <!-- Área de herramientas activas -->
+            <div id="active-tools-area" class="space-y-6">
+                <!-- Las herramientas se cargarán dinámicamente aquí -->
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // ============================================================================
+        // MOTOR DE HERRAMIENTAS DE ANÁLISIS BÍBLICO AVANZADO
+        // ============================================================================
+
+        class BiblicalAnalysisEngine {
+            constructor() {
+                this.currentPassage = null;
+                this.activeTools = new Map();
+                this.analysisCache = new Map();
+                this.eventBus = new EventTarget();
+                
+                this.initializeEngine();
+                this.setupEventListeners();
+            }
+
+            initializeEngine() {
+                console.log('🚀 Inicializando Motor de Análisis Bíblico Avanzado');
+                
+                // Datos bíblicos de muestra (en producción vendría de una API)
+                this.bibleData = {
+                    genesis: {
+                        1: {
+                            verses: {
+                                1: "En el principio creó Dios los cielos y la tierra.",
+                                2: "Y la tierra estaba desordenada y vacía, y las tinieblas estaban sobre la faz del abismo, y el Espíritu de Dios se movía sobre la faz de las aguas.",
+                                3: "Y dijo Dios: Sea la luz; y fue la luz."
+                            }
+                        }
+                    },
+                    john: {
+                        3: {
+                            verses: {
+                                16: "Porque de tal manera amó Dios al mundo, que ha dado a su Hijo unigénito, para que todo aquel que en él cree, no se pierda, mas tenga vida eterna.",
+                                17: "Porque no envió Dios a su Hijo al mundo para condenar al mundo, sino para que el mundo sea salvo por él."
+                            }
+                        }
+                    }
+                };
+
+                // Herramientas disponibles
+                this.tools = {
+                    'contextual-analysis': new ContextualAnalysisTool(),
+                    'literary-analysis': new LiteraryAnalysisTool(),
+                    'textual-criticism': new TextualCriticismTool(),
+                    'word-frequency': new WordFrequencyTool(),
+                    'semantic-analysis': new SemanticAnalysisTool(),
+                    'statistical-patterns': new StatisticalPatternsTool(),
+                    'network-visualization': new NetworkVisualizationTool(),
+                    'timeline-analysis': new TimelineAnalysisTool()
+                };
+            }
+
+            setupEventListeners() {
+                // Navegación del sidebar
+                document.getElementById('sidebar-toggle').addEventListener('click', this.toggleSidebar.bind(this));
+                document.getElementById('menu-toggle')?.addEventListener('click', this.toggleSidebar.bind(this));
+
+                // Selección de herramientas
+                document.querySelectorAll('.tool-item').forEach(item => {
+                    item.addEventListener('click', (e) => {
+                        const toolId = e.currentTarget.dataset.tool;
+                        this.activateTool(toolId);
+                    });
+                });
+
+                // Carga de pasajes
+                document.getElementById('load-passage').addEventListener('click', this.loadPassage.bind(this));
+
+                // Selección de libro
+                document.getElementById('book-selector').addEventListener('change', (e) => {
+                    this.updateCurrentPassage();
+                });
+            }
+
+            toggleSidebar() {
+                const sidebar = document.getElementById('sidebar');
+                const mainContent = document.getElementById('main-content');
+                
+                sidebar.classList.toggle('collapsed');
+                mainContent.classList.toggle('expanded');
+            }
+
+            async loadPassage() {
+                const loadBtn = document.getElementById('load-passage');
+                const loadText = document.getElementById('load-text');
+                const loadSpinner = document.getElementById('load-spinner');
+                const passageDisplay = document.getElementById('passage-display');
+                const passageTextEl = document.getElementById('passage-text');
+
+                try {
+                    // UI Loading state
+                    loadBtn.disabled = true;
+                    loadText.textContent = 'Cargando...';
+                    loadSpinner.classList.remove('hidden');
+
+                    // Obtener valores
+                    const book = document.getElementById('book-selector').value;
+                    const chapter = parseInt(document.getElementById('chapter-input').value);
+                    const versesInput = document.getElementById('verses-input').value;
+
+                    if (!book || !chapter) {
+                        throw new Error('Debe seleccionar un libro y capítulo');
+                    }
+
+                    // Simular carga (en producción sería una llamada a API)
+                    await this.delay(1000);
+
+                    // Obtener texto
+                    const passageData = this.getPassageText(book, chapter, versesInput);
+                    this.currentPassage = {
+                        book,
+                        chapter,
+                        verses: versesInput || 'all',
+                        text: passageData.text,
+                        verses_data: passageData.verses
+                    };
+
+                    // Mostrar texto
+                    passageTextEl.innerHTML = this.formatPassageText(passageData);
+                    passageDisplay.classList.remove('hidden');
+                    passageDisplay.classList.add('animate-fade-in');
+
+                    // Actualizar UI
+                    this.updateCurrentPassage();
+
+                    // Disparar evento
+                    this.eventBus.dispatchEvent(new CustomEvent('passageLoaded', {
+                        detail: this.currentPassage
+                    }));
+
+                } catch (error) {
+                    this.showError('Error cargando pasaje: ' + error.message);
+                } finally {
+                    // Restaurar UI
+                    loadBtn.disabled = false;
+                    loadText.textContent = 'Cargar Pasaje';
+                    loadSpinner.classList.add('hidden');
+                }
+            }
+
+            getPassageText(book, chapter, versesInput) {
+                const bookData = this.bibleData[book];
+                if (!bookData || !bookData[chapter]) {
+                    throw new Error('Pasaje no disponible en la demo');
+                }
+
+                const chapterData = bookData[chapter];
+                let verses = {};
+                let text = '';
+
+                if (!versesInput || versesInput.trim() === '') {
+                    // Todos los versículos
+                    verses = chapterData.verses;
+                } else {
+                    // Parsear versículos específicos
+                    const verseNumbers = this.parseVerseRange(versesInput);
+                    verseNumbers.forEach(num => {
+                        if (chapterData.verses[num]) {
+                            verses[num] = chapterData.verses[num];
+                        }
+                    });
+                }
+
+                // Generar texto formateado
+                Object.keys(verses).forEach(verseNum => {
+                    text += `${verseNum}. ${verses[verseNum]} `;
+                });
+
+                return { text: text.trim(), verses };
+            }
+
+            parseVerseRange(input) {
+                const verses = [];
+                const parts = input.split(',');
+                
+                parts.forEach(part => {
+                    part = part.trim();
+                    if (part.includes('-')) {
+                        const [start, end] = part.split('-').map(n => parseInt(n.trim()));
+                        for (let i = start; i <= end; i++) {
+                            verses.push(i);
+                        }
+                    } else {
+                        verses.push(parseInt(part));
+                    }
+                });
+                
+                return verses;
+            }
+
+            formatPassageText(passageData) {
+                let html = '';
+                Object.keys(passageData.verses).forEach(verseNum => {
+                    html += `<span class="verse" data-verse="${verseNum}">
+                        <span class="verse-number text-blue-400 font-semibold">${verseNum}</span>
+                        <span class="verse-text">${passageData.verses[verseNum]}</span>
+                    </span> `;
+                });
+                return html;
+            }
+
+            updateCurrentPassage() {
+                const currentPassageEl = document.getElementById('current-passage');
+                if (this.currentPassage) {
+                    const { book, chapter, verses } = this.currentPassage;
+                    currentPassageEl.textContent = `${book.charAt(0).toUpperCase() + book.slice(1)} ${chapter}${verses !== 'all' ? ':' + verses : ''}`;
+                }
+            }
+
+            async activateTool(toolId) {
+                if (!this.currentPassage) {
+                    this.showError('Debe cargar un pasaje antes de usar herramientas');
+                    return;
+                }
+
+                const toolElement = document.querySelector(`[data-tool="${toolId}"]`);
+                
+                try {
+                    // Marcar como activo
+                    toolElement.classList.add('active');
+                    
+                    // Obtener herramienta
+                    const tool = this.tools[toolId];
+                    if (!tool) {
+                        throw new Error('Herramienta no implementada');
+                    }
+
+                    // Ejecutar análisis
+                    const result = await tool.analyze(this.currentPassage);
+                    
+                    // Mostrar resultado
+                    this.displayToolResult(toolId, result);
+                    
+                    // Guardar en activos
+                    this.activeTools.set(toolId, result);
+
+                } catch (error) {
+                    this.showError('Error en herramienta: ' + error.message);
+                    toolElement.classList.remove('active');
+                    toolElement.classList.add('tool-error');
+                }
+            }
+
+            displayToolResult(toolId, result) {
+                const activeToolsArea = document.getElementById('active-tools-area');
+                
+                // Crear contenedor de resultado
+                const resultContainer = document.createElement('div');
+                resultContainer.className = 'card p-6 animate-fade-in';
+                resultContainer.id = `tool-result-${toolId}`;
+                
+                resultContainer.innerHTML = `
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-lg font-semibold text-white">${result.title}</h3>
+                        <button class="btn-secondary p-2" onclick="engine.removeToolResult('${toolId}')">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M18 6L6 18M6 6l12 12"/>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="tool-result-content">
+                        ${result.content}
+                    </div>
+                `;
+                
+                activeToolsArea.appendChild(resultContainer);
+            }
+
+            removeToolResult(toolId) {
+                const resultElement = document.getElementById(`tool-result-${toolId}`);
+                if (resultElement) {
+                    resultElement.remove();
+                }
+                
+                const toolElement = document.querySelector(`[data-tool="${toolId}"]`);
+                if (toolElement) {
+                    toolElement.classList.remove('active', 'tool-error');
+                }
+                
+                this.activeTools.delete(toolId);
+            }
+
+            showError(message) {
+                // Implementar sistema de notificaciones
+                const notification = document.createElement('div');
+                notification.className = 'fixed top-4 right-4 bg-red-500 text-white p-4 rounded-lg shadow-lg z-50 animate-fade-in';
+                notification.textContent = message;
+                
+                document.body.appendChild(notification);
+                
+                setTimeout(() => {
+                    notification.remove();
+                }, 5000);
+            }
+
+            delay(ms) {
+                return new Promise(resolve => setTimeout(resolve, ms));
+            }
+        }
+
+        // ============================================================================
+        // HERRAMIENTAS DE ANÁLISIS ESPECÍFICAS
+        // ============================================================================
+
+        class ContextualAnalysisTool {
+            async analyze(passage) {
+                // Simular análisis contextual
+                await new Promise(resolve => setTimeout(resolve, 2000));
+                
+                return {
+                    title: 'Análisis Contextual Histórico-Cultural',
+                    content: `
+                        <div class="space-y-4">
+                            <div class="statistics-panel">
+                                <h4 class="font-semibold text-white mb-3">Contexto Histórico</h4>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div>
+                                        <div class="text-sm text-gray-400">Período</div>
+                                        <div class="font-medium text-white">Período Patriarcal (c. 2000-1500 a.C.)</div>
+                                    </div>
+                                    <div>
+                                        <div class="text-sm text-gray-400">Contexto Cultural</div>
+                                        <div class="font-medium text-white">Mesopotamia Antigua</div>
+                                    </div>
+                                    <div>
+                                        <div class="text-sm text-gray-400">Género Literario</div>
+                                        <div class="font-medium text-white">Narrativa Primordial</div>
+                                    </div>
+                                    <div>
+                                        <div class="text-sm text-gray-400">Audiencia Original</div>
+                                        <div class="font-medium text-white">Israel en el Éxodo</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="bg-slate-700 p-4 rounded-lg">
+                                <h5 class="font-medium text-white mb-2">Análisis Cultural</h5>
+                                <p class="text-gray-300 text-sm leading-relaxed">
+                                    El pasaje refleja una cosmogonía antigua que contrasta con las mitologías 
+                                    mesopotamias contemporáneas. La ausencia de teogonía y la presentación de 
+                                    un Dios único creador establece un paradigma teológico único para su época.
+                                </p>
+                            </div>
+                            
+                            <div class="visualization-container">
+                                <canvas id="contextual-chart-${Date.now()}" width="400" height="200"></canvas>
+                            </div>
+                        </div>
+                    `
+                };
+            }
+        }
+
+        class LiteraryAnalysisTool {
+            async analyze(passage) {
+                await new Promise(resolve => setTimeout(resolve, 1500));
+                
+                return {
+                    title: 'Análisis Literario y Estructural',
+                    content: `
+                        <div class="space-y-4">
+                            <div class="statistics-panel">
+                                <h4 class="font-semibold text-white mb-3">Estructura Literaria</h4>
+                                <div class="space-y-3">
+                                    <div class="flex justify-between items-center">
+                                        <span class="text-gray-300">Tipo de Estructura</span>
+                                        <span class="font-medium text-white">Paralelismo Progresivo</span>
+                                    </div>
+                                    <div class="flex justify-between items-center">
+                                        <span class="text-gray-300">Figuras Retóricas</span>
+                                        <span class="font-medium text-white">Antítesis, Metáfora</span>
+                                    </div>
+                                    <div class="flex justify-between items-center">
+                                        <span class="text-gray-300">Palabras Clave</span>
+                                        <span class="font-medium text-white">אֱלֹהִים (Elohim), בָּרָא (bara)</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="bg-slate-700 p-4 rounded-lg">
+                                <h5 class="font-medium text-white mb-2">Análisis Sintáctico</h5>
+                                <div class="space-y-2 text-sm">
+                                    <div class="flex items-center space-x-2">
+                                        <span class="w-3 h-3 bg-blue-500 rounded-full"></span>
+                                        <span class="text-gray-300">Verbos de acción divina: 87%</span>
+                                    </div>
+                                    <div class="flex items-center space-x-2">
+                                        <span class="w-3 h-3 bg-green-500 rounded-full"></span>
+                                        <span class="text-gray-300">Sustantivos relacionados con creación: 34%</span>
+                                    </div>
+                                    <div class="flex items-center space-x-2">
+                                        <span class="w-3 h-3 bg-yellow-500 rounded-full"></span>
+                                        <span class="text-gray-300">Marcadores temporales: 23%</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `
+                };
+            }
+        }
+
+        class TextualCriticismTool {
+            async analyze(passage) {
+                await new Promise(resolve => setTimeout(resolve, 2500));
+                
+                return {
+                    title: 'Crítica Textual Avanzada',
+                    content: `
+                        <div class="space-y-4">
+                            <div class="statistics-panel">
+                                <h4 class="font-semibold text-white mb-3">Variantes Textuales</h4>
+                                <div class="overflow-x-auto">
+                                    <table class="w-full text-sm">
+                                        <thead>
+                                            <tr class="border-b border-gray-600">
+                                                <th class="text-left py-2 text-gray-300">Manuscrito</th>
+                                                <th class="text-left py-2 text-gray-300">Lectura</th>
+                                                <th class="text-left py-2 text-gray-300">Probabilidad</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="text-gray-300">
+                                            <tr class="border-b border-gray-700">
+                                                <td class="py-2">TM (Texto Masorético)</td>
+                                                <td class="py-2">בְּרֵאשִׁית בָּרָא</td>
+                                                <td class="py-2"><span class="text-green-400">98.5%</span></td>
+                                            </tr>
+                                            <tr class="border-b border-gray-700">
+                                                <td class="py-2">LXX (Septuaginta)</td>
+                                                <td class="py-2">Ἐν ἀρχῇ ἐποίησεν</td>
+                                                <td class="py-2"><span class="text-yellow-400">95.2%</span></td>
+                                            </tr>
+                                            <tr class="border-b border-gray-700">
+                                                <td class="py-2">Vg (Vulgata)</td>
+                                                <td class="py-2">In principio creavit</td>
+                                                <td class="py-2"><span class="text-green-400">97.8%</span></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            
+                            <div class="bg-slate-700 p-4 rounded-lg">
+                                <h5 class="font-medium text-white mb-2">Evaluación Crítica</h5>
+                                <p class="text-gray-300 text-sm leading-relaxed">
+                                    La lectura del Texto Masorético muestra la mayor coherencia interna y 
+                                    apoyo manuscrito. Las variantes menores en traducciones antiguas reflejan 
+                                    diferencias de interpretación más que corrupción textual.
+                                </p>
+                            </div>
+                        </div>
+                    `
+                };
+            }
+        }
+
+        class WordFrequencyTool {
+            async analyze(passage) {
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                
+                // Análisis real de frecuencia
+                const words = passage.text.toLowerCase()
+                    .replace(/[^\w\s]/g, '')
+                    .split(/\s+/)
+                    .filter(word => word.length > 2);
+                    
+                const frequency = {};
+                words.forEach(word => {
+                    frequency[word] = (frequency[word] || 0) + 1;
+                });
+                
+                const sortedWords = Object.entries(frequency)
+                    .sort(([,a], [,b]) => b - a)
+                    .slice(0, 10);
+                
+                return {
+                    title: 'Análisis de Frecuencia de Palabras',
+                    content: `
+                        <div class="space-y-4">
+                            <div class="statistics-panel">
+                                <h4 class="font-semibold text-white mb-3">Palabras Más Frecuentes</h4>
+                                <div class="space-y-2">
+                                    ${sortedWords.map(([word, count], index) => `
+                                        <div class="flex items-center justify-between">
+                                            <span class="text-gray-300">${index + 1}. ${word}</span>
+                                            <div class="flex items-center space-x-2">
+                                                <div class="w-16 h-2 bg-gray-600 rounded-full overflow-hidden">
+                                                    <div class="h-full bg-gradient-to-r from-blue-500 to-purple-500" style="width: ${(count / sortedWords[0][1]) * 100}%"></div>
+                                                </div>
+                                                <span class="text-white font-medium text-sm">${count}</span>
+                                            </div>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>
+                            
+                            <div class="visualization-container">
+                                <h5 class="font-medium text-white mb-4">Distribución Estadística</h5>
+                                <canvas id="frequency-chart-${Date.now()}" width="400" height="250"></canvas>
+                            </div>
+                            
+                            <div class="bg-slate-700 p-4 rounded-lg">
+                                <h5 class="font-medium text-white mb-2">Métricas Lingüísticas</h5>
+                                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+                                    <div>
+                                        <div class="text-gray-400">Total de palabras</div>
+                                        <div class="font-medium text-white">${words.length}</div>
+                                    </div>
+                                    <div>
+                                        <div class="text-gray-400">Palabras únicas</div>
+                                        <div class="font-medium text-white">${Object.keys(frequency).length}</div>
+                                    </div>
+                                    <div>
+                                        <div class="text-gray-400">Densidad léxica</div>
+                                        <div class="font-medium text-white">${((Object.keys(frequency).length / words.length) * 100).toFixed(1)}%</div>
+                                    </div>
+                                    <div>
+                                        <div class="text-gray-400">Promedio/palabra</div>
+                                        <div class="font-medium text-white">${(words.reduce((sum, word) => sum + word.length, 0) / words.length).toFixed(1)}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `
+                };
+            }
+        }
+
+        class SemanticAnalysisTool {
+            async analyze(passage) {
+                await new Promise(resolve => setTimeout(resolve, 2000));
+                
+                return {
+                    title: 'Análisis Semántico y Conceptual',
+                    content: `
+                        <div class="space-y-4">
+                            <div class="statistics-panel">
+                                <h4 class="font-semibold text-white mb-3">Campos Semánticos</h4>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div class="space-y-3">
+                                        <h6 class="text-sm font-medium text-gray-300">Conceptos Primarios</h6>
+                                        <div class="space-y-2">
+                                            <div class="flex items-center justify-between">
+                                                <span class="text-sm text-gray-300">Creación/Origen</span>
+                                                <span class="px-2 py-1 bg-blue-500 text-white text-xs rounded">45%</span>
+                                            </div>
+                                            <div class="flex items-center justify-between">
+                                                <span class="text-sm text-gray-300">Divinidad</span>
+                                                <span class="px-2 py-1 bg-purple-500 text-white text-xs rounded">32%</span>
+                                            </div>
+                                            <div class="flex items-center justify-between">
+                                                <span class="text-sm text-gray-300">Orden/Cosmos</span>
+                                                <span class="px-2 py-1 bg-green-500 text-white text-xs rounded">23%</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="space-y-3">
+                                        <h6 class="text-sm font-medium text-gray-300">Relaciones Semánticas</h6>
+                                        <div class="text-sm text-gray-300 space-y-1">
+                                            <div>• Dios ↔ Creador (100%)</div>
+                                            <div>• Caos ↔ Orden (89%)</div>
+                                            <div>• Palabra ↔ Poder (95%)</div>
+                                            <div>• Luz ↔ Separación (87%)</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="visualization-container">
+                                <h5 class="font-medium text-white mb-4">Mapa Conceptual</h5>
+                                <div id="semantic-network-${Date.now()}" class="w-full h-64 bg-slate-800 rounded-lg flex items-center justify-center">
+                                    <div class="text-gray-400">Red semántica se renderizará aquí con D3.js</div>
+                                </div>
+                            </div>
+                        </div>
+                    `
+                };
+            }
+        }
+
+        class StatisticalPatternsTool {
+            async analyze(passage) {
+                await new Promise(resolve => setTimeout(resolve, 3000));
+                
+                return {
+                    title: 'Análisis de Patrones Estadísticos',
+                    content: `
+                        <div class="space-y-4">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="statistics-panel">
+                                    <h4 class="font-semibold text-white mb-3">Patrones Sintácticos</h4>
+                                    <div class="space-y-3">
+                                        <div>
+                                            <div class="flex justify-between text-sm mb-1">
+                                                <span class="text-gray-300">Orden V-S-O</span>
+                                                <span class="text-white">78%</span>
+                                            </div>
+                                            <div class="progress-bar">
+                                                <div class="progress-fill" style="width: 78%"></div>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <div class="flex justify-between text-sm mb-1">
+                                                <span class="text-gray-300">Cláusulas Coordinadas</span>
+                                                <span class="text-white">65%</span>
+                                            </div>
+                                            <div class="progress-bar">
+                                                <div class="progress-fill" style="width: 65%"></div>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <div class="flex justify-between text-sm mb-1">
+                                                <span class="text-gray-300">Repetición Lexical</span>
+                                                <span class="text-white">42%</span>
+                                            </div>
+                                            <div class="progress-bar">
+                                                <div class="progress-fill" style="width: 42%"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="statistics-panel">
+                                    <h4 class="font-semibold text-white mb-3">Análisis Estilométrico</h4>
+                                    <div class="space-y-2 text-sm">
+                                        <div class="flex justify-between">
+                                            <span class="text-gray-300">Índice de Legibilidad</span>
+                                            <span class="text-green-400 font-medium">8.3/10</span>
+                                        </div>
+                                        <div class="flex justify-between">
+                                            <span class="text-gray-300">Complejidad Sintáctica</span>
+                                            <span class="text-yellow-400 font-medium">6.7/10</span>
+                                        </div>
+                                        <div class="flex justify-between">
+                                            <span class="text-gray-300">Densidad Informacional</span>
+                                            <span class="text-blue-400 font-medium">7.9/10</span>
+                                        </div>
+                                        <div class="flex justify-between">
+                                            <span class="text-gray-300">Cohesión Textual</span>
+                                            <span class="text-purple-400 font-medium">9.1/10</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="visualization-container">
+                                <h5 class="font-medium text-white mb-4">Análisis de Correlación</h5>
+                                <canvas id="correlation-chart-${Date.now()}" width="400" height="300"></canvas>
+                            </div>
+                            
+                            <div class="bg-slate-700 p-4 rounded-lg">
+                                <h5 class="font-medium text-white mb-2">Insights Estadísticos</h5>
+                                <ul class="text-sm text-gray-300 space-y-1">
+                                    <li>• Alto patrón de repetición en estructura verbal (χ² = 24.7, p < 0.001)</li>
+                                    <li>• Correlación significativa entre longitud de cláusula y complejidad semántica (r = 0.67)</li>
+                                    <li>• Distribución normal en longitud de palabras (μ = 4.3, σ = 1.8)</li>
+                                    <li>• Entropía léxica superior al promedio bíblico (H = 3.24 bits)</li>
+                                </ul>
+                            </div>
+                        </div>
+                    `
+                };
+            }
+        }
+
+        class NetworkVisualizationTool {
+            async analyze(passage) {
+                await new Promise(resolve => setTimeout(resolve, 2500));
+                
+                return {
+                    title: 'Visualización de Redes Conceptuales',
+                    content: `
+                        <div class="space-y-4">
+                            <div class="visualization-container">
+                                <h5 class="font-medium text-white mb-4">Red de Conceptos Interconectados</h5>
+                                <div id="network-viz-${Date.now()}" class="w-full h-96 bg-slate-800 rounded-lg relative">
+                                    <div class="absolute inset-0 flex items-center justify-center">
+                                        <div class="text-center">
+                                            <div class="text-gray-400 mb-2">Visualización D3.js se renderizará aquí</div>
+                                            <div class="text-xs text-gray-500">Nodos: Conceptos | Enlaces: Relaciones semánticas</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="statistics-panel">
+                                    <h4 class="font-semibold text-white mb-3">Métricas de Red</h4>
+                                    <div class="space-y-2 text-sm">
+                                        <div class="flex justify-between">
+                                            <span class="text-gray-300">Nodos totales</span>
+                                            <span class="text-white font-medium">23</span>
+                                        </div>
+                                        <div class="flex justify-between">
+                                            <span class="text-gray-300">Enlaces</span>
+                                            <span class="text-white font-medium">41</span>
+                                        </div>
+                                        <div class="flex justify-between">
+                                            <span class="text-gray-300">Densidad</span>
+                                            <span class="text-white font-medium">0.34</span>
+                                        </div>
+                                        <div class="flex justify-between">
+                                            <span class="text-gray-300">Centralidad avg</span>
+                                            <span class="text-white font-medium">2.8</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="statistics-panel">
+                                    <h4 class="font-semibold text-white mb-3">Nodos Centrales</h4>
+                                    <div class="space-y-2 text-sm">
+                                        <div class="flex items-center justify-between">
+                                            <span class="text-gray-300">Dios/Elohim</span>
+                                            <span class="px-2 py-1 bg-red-500 text-white text-xs rounded">9.7</span>
+                                        </div>
+                                        <div class="flex items-center justify-between">
+                                            <span class="text-gray-300">Crear/Bara</span>
+                                            <span class="px-2 py-1 bg-orange-500 text-white text-xs rounded">7.3</span>
+                                        </div>
+                                        <div class="flex items-center justify-between">
+                                            <span class="text-gray-300">Tierra</span>
+                                            <span class="px-2 py-1 bg-yellow-500 text-white text-xs rounded">5.8</span>
+                                        </div>
+                                        <div class="flex items-center justify-between">
+                                            <span class="text-gray-300">Luz</span>
+                                            <span class="px-2 py-1 bg-green-500 text-white text-xs rounded">4.2</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `
+                };
+            }
+        }
+
+        class TimelineAnalysisTool {
+            async analyze(passage) {
+                await new Promise(resolve => setTimeout(resolve, 1800));
+                
+                return {
+                    title: 'Análisis Cronológico Interactivo',
+                    content: `
+                        <div class="space-y-4">
+                            <div class="visualization-container">
+                                <h5 class="font-medium text-white mb-4">Línea Temporal Narrativa</h5>
+                                <div id="timeline-viz-${Date.now()}" class="w-full h-64 bg-slate-800 rounded-lg relative overflow-hidden">
+                                    <div class="absolute inset-0 p-4">
+                                        <div class="relative h-full">
+                                            <div class="absolute left-0 top-1/2 w-full h-0.5 bg-gradient-to-r from-blue-500 to-purple-500"></div>
+                                            ${[
+                                                { pos: '10%', event: 'Principio', desc: 'En el principio' },
+                                                { pos: '30%', event: 'Creación', desc: 'Creó Dios' },
+                                                { pos: '50%', event: 'Caos', desc: 'Tierra desordenada' },
+                                                { pos: '70%', event: 'Espíritu', desc: 'Espíritu se movía' },
+                                                { pos: '90%', event: 'Palabra', desc: 'Dijo Dios' }
+                                            ].map(item => `
+                                                <div class="absolute" style="left: ${item.pos}; top: 50%; transform: translateY(-50%)">
+                                                    <div class="w-4 h-4 bg-white rounded-full border-2 border-blue-500 relative">
+                                                        <div class="absolute top-6 left-1/2 transform -translate-x-1/2 text-center">
+                                                            <div class="text-xs font-medium text-white whitespace-nowrap">${item.event}</div>
+                                                            <div class="text-xs text-gray-400 whitespace-nowrap">${item.desc}</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            `).join('')}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="statistics-panel">
+                                    <h4 class="font-semibold text-white mb-3">Estructura Temporal</h4>
+                                    <div class="space-y-2 text-sm">
+                                        <div class="flex justify-between">
+                                            <span class="text-gray-300">Marcadores temporales</span>
+                                            <span class="text-white font-medium">5</span>
+                                        </div>
+                                        <div class="flex justify-between">
+                                            <span class="text-gray-300">Verbos de acción</span>
+                                            <span class="text-white font-medium">8</span>
+                                        </div>
+                                        <div class="flex justify-between">
+                                            <span class="text-gray-300">Secuencias lógicas</span>
+                                            <span class="text-white font-medium">3</span>
+                                        </div>
+                                        <div class="flex justify-between">
+                                            <span class="text-gray-300">Paralelismos</span>
+                                            <span class="text-white font-medium">2</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="bg-slate-700 p-4 rounded-lg">
+                                    <h5 class="font-medium text-white mb-2">Análisis Cronológico</h5>
+                                    <p class="text-gray-300 text-sm leading-relaxed">
+                                        La narrativa presenta una secuencia lógica de estados: del caos primordial 
+                                        al orden cósmico, marcada por intervenciones divinas progresivas que 
+                                        establecen la estructura fundamental de la realidad.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    `
+                };
+            }
+        }
+
+        // ============================================================================
+        // INICIALIZACIÓN
+        // ============================================================================
+
+        // Inicializar la aplicación cuando el DOM esté listo
+        document.addEventListener('DOMContentLoaded', () => {
+            window.engine = new BiblicalAnalysisEngine();
+            console.log('✅ Motor de Análisis Bíblico Avanzado inicializado correctamente');
+        });
+    </script>
+</body>
+</html>
