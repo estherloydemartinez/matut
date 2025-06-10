@@ -1,0 +1,75 @@
+/* main.css - Estilos personalizados de la aplicación */
+
+/* Asegurarse de que html y body ocupen toda la altura si no se usa Tailwind para eso directamente */
+/* html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+} */
+
+/* Ejemplo de estilo personalizado que complementa Tailwind */
+/* .custom-text-color {
+    color: #00ff00;
+} */
+
+/* Estilos para la barra de desplazamiento si se quieren personalizar */
+/* ::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #2f3136;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #4f545c;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #72767d;
+} */
+
+/* Ocultar la appContainer inicialmente, se mostrará con JS después de la carga */
+/* #appContainer.hidden {
+    display: none;
+} */
+
+/* Otros estilos globales o específicos de componentes pueden ir aquí */
+body {
+    /* Fuente base ya definida en el body class de index.html, pero se puede sobreescribir */
+    /* font-family: 'Inter', sans-serif;  Ejemplo si se importara Google Fonts */
+}
+
+#sidebar {
+    /* Ejemplo de sombra más pronunciada si se desea */
+    /* box-shadow: 2px 0 10px rgba(0,0,0,0.1); */
+}
+
+#appHeader {
+    /* Ejemplo de borde inferior */
+    /* border-bottom: 1px solid #3a3d42; */
+}
+
+/* Estilos para los enlaces de la barra lateral (ejemplo) */
+#sidebar nav ul li a.active {
+    background-color: #4a5568; /* Un color más oscuro o diferente para el enlace activo */
+    font-weight: bold;
+}
+
+/* Placeholder para pantalla de carga si no se usa JS para ocultarla inicialmente */
+/* #loadingScreen {
+    transition: opacity 0.5s ease-out;
+} */
+
+/* Clases adicionales que podrían ser útiles */
+.content-area {
+    padding: 1.5rem; /* 24px */
+}
+
+/* Estilos para los iconos Lucide si se necesitan ajustes */
+.lucide {
+    width: 1em; /* Ajustar tamaño por defecto si es necesario */
+    height: 1em;
+    vertical-align: middle;
+}
