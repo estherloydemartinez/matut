@@ -1,0 +1,3 @@
+⚫⚫⚫🔴🔴🔴todos los dicho en este archivo y en otros son una combinación de diferentes respuestas lo que significa que hay cosas en afirmatuvo para hacer pero que son corregidas en ese mismo archivo o en otro, asi que analiza todo pero adapta corrige mejora todo, cada idea de un archivo en contraste con elresto de ese archivo y de todos los otros archivos, en resumen analiza todo pero respecto a las partes sobre a un mismo tema toma lo que es más amplio completo abarcador, y lo mejor entre lo general y específico en resumen todo contrasta analiza haz mejor en todos los sentidos, etc.
+
+No busques resumir sino complementar combinr profundizar amplir añadir y avanzar hacer aun mejor suoerar...
