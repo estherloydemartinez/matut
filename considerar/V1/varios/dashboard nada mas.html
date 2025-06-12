@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>App Analítica Avanzada</title>
+  <!-- Tailwind CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <!-- Chart.js para gráficas estadísticas -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- D3.js para visualizaciones avanzadas -->
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <!-- Sortable.js para drag & drop mejorado -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.14.0/Sortable.min.js"></script>
+  <!-- Alpine.js para manejo de estados ligero -->
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+</head>
+<body class="bg-gray-900 text-white min-h-screen font-sans" x-data="appState()">
+  <!-- Navegación Global Mejorada -->
+  <nav class="bg-gray-800 p-4 fixed w-full top-0 shadow-lg z-50">
+    <div class="container mx-auto flex justify-between items-center">
+      <div class="text-2xl font-bold text-blue-400">Mi App Avanzada</div>
+      <ul class="flex space-x-6">
+        <li><button @click="navigate('dashboard')" :class="navClass('dashboard')">Dashboard</button></li>
+        <li><button @click="navigate('teoria')" :class="navClass('teoria')">Teoría</button></li>
+        <li><button @click="navigate('recibx')" :class="navClass('recibx')">Recibx</button></li>
+        <li><button @click="navigate('social')" :class="navClass('social')">Social</button></li>
+        <li><button @click="navigate('analitica')" :class="navClass('analitica')">Analítica</button></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main class="container mx-auto p-6 pt-24">
+    <!-- Dashboard Principal -->
+    <section x-show="section==='dashboard'" class="space-y-6">
+      <h1 class="text-3xl font-bold">Dashboard</h1>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Widget de Estadísticas Clave -->
+        <div class="bg-gray-800 rounded-lg p-6">
+          <h2 class="text-xl font-semibold mb-4">KPIs</h2>
+          <div class="grid grid-cols-2 gap-4 text-center">
+            <div>
+              <div class="text-3xl font-bold text-blue-400">120</div>
+              <div class="text-gray-400">Elementos</div>
+            </div>
+            <div>
+              <div class="text-3xl font-bold text-green-400">45%</div>
+              <div class="text-gray-400">Crec. Mensual</div>
+            </div>
+            <div>
+              <div class="text-3xl font-bold text-yellow-400">8.3</div>
+              <div class="text-gray-400">Avg. Valor</div>
+            </div>
+            <div>
+              <div class="text-3xl font-bold text-red-400">5</div>
+              <div class="text-gray-400">Alertas</div>
+            </div>
+          </div>
+        </div>
+        <!-- Gráfica de Tendencias -->
+        <div class="bg-gray-800 rounded-lg p-6">
+          <h2 class="text-xl font-semibold mb-4">Tendencias</h2>
+          <canvas id="chartTrends"></canvas>
+        </div>
+        <!-- Tabla Dinámica -->
+        <div class="bg-gray-800 rounded-lg p-6 overflow-auto" style="max-height: 300px;">
+          <h2 class="text-xl font-semibold mb-4">Datos Recientes</h2>
+          <table class="min-w-full text-left">
+            <thead>
+              <tr class="border-b border-gray-700">
+                <th class="px-4 py-2">Nombre</th>
+                <th class="px-4 py-2">Valor</th>
+                <th class="px-4 py-2">Fecha</th>
+              </tr>
+            </thead>
+            <tbody>
+              <template x-for="item in recentData" :key="item.id">
+                <tr class="border-b border-gray-700 hover:bg-gray-700">
+                  <td class="px-4 py-2" x-text="item.name"></td>
+                  <td class="px-4 py-2" x-text="item.value"></td>
+                  <td class="px-4 py-2" x-text="item.date"></td>
+                </tr>
+              </template>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- Secciones Existentes Mejoradas (Teoría, Recibx, Social) -->
+    <section x-show="section==='teoria'" class="mt-6">
+      <h1 class="text-3xl font-bold mb-4">Teoría Avanzada</h1>
+      <!-- Sistema de Agua con drag & drop optimizado y estadísticas -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <template x-for="col in ['valor','anadir','no-anadir']" :key="col">
+          <div class="bg-gray-800 rounded-lg p-4">
+            <h2 class="text-xl font-semibold mb-2 capitalize" x-text="col"></h2>
+            <div :id="`col-${col}`" class="min-h-[200px] espacio-vertical" x-ref="`col${col}`"></div>
+            <button @click="addWaterElement(col)" class="mt-3 w-full bg-blue-600 hover:bg-blue-500 rounded-lg p-2">Añadir</button>
+          </div>
+        </template>
+      </div>
+    </section>
+
+    <!-- Nueva Sección Analítica Profunda -->
+    <section x-show="section==='analitica'" class="mt-6">
+      <h1 class="text-3xl font-bold mb-4">Analítica y Estadísticas</h1>
+      <!-- Panel de Parámetros Estadísticos -->
+      <div class="bg-gray-800 rounded-lg p-6 mb-6">
+        <h2 class="text-2xl font-semibold mb-4">Configuración de Análisis</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div>
+            <label class="block text-sm text-gray-300 mb-1">Rango Fecha</label>
+            <input type="date" x-model="stats.start" class="w-full bg-gray-700 rounded px-3 py-2 text-white">
+            <input type="date" x-model="stats.end" class="w-full mt-2 bg-gray-700 rounded px-3 py-2 text-white">
+          </div>
+          <div>
+            <label class="block text-sm text-gray-300 mb-1">Filtro Por Valor > </label>
+            <input type="number" x-model="stats.minValue" class="w-full bg-gray-700 rounded px-3 py-2 text-white" placeholder="mínimo">
+          </div>
+          <div class="flex items-end">
+            <button @click="runAnalysis()" class="w-full bg-green-600 hover:bg-green-500 rounded-lg px-4 py-2">Ejecutar Análisis</button>
+          </div>
+        </div>
+      </div>
+      <!-- Resultados del Análisis -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="bg-gray-800 rounded-lg p-6">
+          <h3 class="text-xl font-semibold mb-4">Distribución de Valores</h3>
+          <canvas id="chartDistribucion"></canvas>
+        </div>
+        <div class="bg-gray-800 rounded-lg p-6">
+          <h3 class="text-xl font-semibold mb-4">Box Plot de Datos</h3>
+          <canvas id="chartBoxPlot"></canvas>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Scripts Principales -->
+  <script>
+    function appState() {
+      return {
+        section: 'dashboard',
+        recentData: [],
+        stats: { start: '', end: '', minValue: 0 },
+
+        navClass(sec) {
+          return this.section === sec ? 'text-blue-400 border-b-2 border-blue-400 pb-1' : 'text-gray-400 hover:text-white';
+        },
+        navigate(sec) {
+          this.section = sec;
+          this.updateBreadcrumb(sec);
+          this.persistState();
+        },
+
+        // Cargar y guardar estado
+        persistState() {
+          localStorage.setItem('appState', JSON.stringify({ section: this.section }));
+        },
+        loadState() {
+          const saved = localStorage.getItem('appState');
+          if (saved) this.section = JSON.parse(saved).section;
+        },
+
+        updateBreadcrumb(sec) {
+          // Implementar breadcrumb si se desea
+        },
+
+        // Dashboard: Generar datos de ejemplo
+        initDashboard() {
+          // Datos recientes aleatorios
+          this.recentData = Array.from({ length: 20 }, (_, i) => ({
+            id: i,
+            name: 'Item ' + (i+1),
+            value: (Math.random() * 100).toFixed(1),
+            date: new Date(Date.now() - i * 86400000).toLocaleDateString('es-ES')
+          }));
+          this.renderTrendChart();
+        },
+        renderTrendChart() {
+          const ctx = document.getElementById('chartTrends').getContext('2d');
+          new Chart(ctx, {
+            type: 'line',
+            data: {
+              labels: this.recentData.map(d => d.date),
+              datasets: [{ label: 'Valor', data: this.recentData.map(d => d.value), tension: 0.4 }]
+            }
+          });
+        },
+
+        // Sección Teoría: Agua
+        initWater() {
+          ['valor','anadir','no-anadir'].forEach(col => {
+            Sortable.create(this.$refs['col'+col], { group: 'agua', animation: 150 });
+          });
+        },
+        addWaterElement(col) {
+          const el = document.createElement('div');
+          el.className = 'bg-gray-700 p-3 rounded-lg mb-2';
+          el.textContent = prompt('Nombre del elemento:');
+          this.$refs['col'+col].appendChild(el);
+        },
+
+        // Sección Analítica: Ejecución de análisis
+        runAnalysis() {
+          const values = this.recentData.map(d => +d.value).filter(v => v >= this.stats.minValue);
+          this.renderDistribution(values);
+          this.renderBoxPlot(values);
+        },
+        renderDistribution(data) {
+          const ctx = document.getElementById('chartDistribucion').getContext('2d');
+          new Chart(ctx, { type: 'bar', data: { labels: data.map((_,i) => i+1), datasets: [{ label: 'Frecuencia', data }] } });
+        },
+        renderBoxPlot(data) {
+          // Simplemente usar Chart.js BoxPlot (requiere plugin) o aproximar con whisker
+          const ctx = document.getElementById('chartBoxPlot').getContext('2d');
+          new Chart(ctx, { type: 'boxplot', data: { labels: ['Datos'], datasets: [{ label: 'Valores', data: [data] }] } });
+        },
+
+        // Inicialización general
+        init() {
+          this.loadState();
+          this.initDashboard();
+          this.initWater();
+        }
+      };
+    }
+    document.addEventListener('DOMContentLoaded', () => { Alpine.start(); document.querySelector('[x-data]').__x.$data.init(); });
+  </script>
