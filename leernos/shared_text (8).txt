@@ -1,0 +1,26 @@
+🔴 Generame un plan lo más extenso posible con todo lo que dicen las fuentes. Considera cada párrafo de cada archivo sobre todo los md y txt como un criterio para lo que vas a hacer para el reporte. Las cosas que se parecen ponlas juntas poniendo por cada función y cada idea dos partes tal cual como están y con tus palabras por ende significa que vas a crear un documento me o txt o doc de Google mucho más extenso que uno de los archivos separados, además que aparte de analizar los md y txt tienes que analizar todos los archivos en Google drive todos los HTML css y javascript y JSON uno por uno para extraer sus funcionalidades, debes si o si ser extensa no es un resumen 
+
+🔴es una recolección y ampliación, comprendes perfectamente, lo que significa que te puede llevar desde decenas de páginas hasta más de cien en el reporte, junta y amplia . 
+
+
+🔴Dime si comprediste a cabalidad, y que hasta que no hayas leído todo palabra por palabra enunciado por enunciado línea por línea párrafo por párrafo idea por idea, archivo por archivo, carpeta por carpeta; y todo tu conocimiento y toda la web, no generes la respuesta. Para los criterios y para las partes o funcionalidades a tener.
+
+🔴tus criterios serán en extraer en todos los md txt etc que hablen de cómo debe de ser ese plan considerando cada párrafo o idea como un criterio sabiendo que hay criterios o parados qué más atrás o más adelante en ese mismo archivo o en otros es ampliado o corregido o mejorado. también  análizar para determinar lo que es un criterio para extraer todos los criterios según todo lo dicho en este texto y el resto y tu conocimiento y la web, me lo generas y después vamos a volver de nuevo después que termine para según esos criterios entonces 
+
+🔴extraer las funcionalidades y ampliarlas, no me vas a generar el reporte o informe o el documento  lo que hiciste lo que sea.
+
+sumergirte por completo no parcialmente ni la mayoría ni la mitad sino todo no de 1 a 99 por ciento sino únicamente al 100 por ciento, en la información proporcionada, extraer cada mínimo detalle, contrastarlo y expandirlo para generar una comprensión unificada y, a partir de ella, construir un plan de desarrollo exhaustivo y de calidad inigualable.
+
+
+
+
+
+
+
+. ¿Qué estrategias se utilizarán para asegurar la exhaustividad y la consistencia de la información al desarrollar la aplicación?
+Para garantizar la exhaustividad y consistencia, se seguirá un enfoque riguroso:
+
+Análisis Completo y Contrastado: Se analizarán "todos y cada uno de los archivos, absolutamente todos" (MD, TXT, HTML, CSS, JavaScript, JSON), así como "todo el chat" de principio a fin. Se buscarán similitudes y diferencias entre las descripciones de funcionalidades, y se fusionarán y ampliarán las ideas, priorizando siempre la información más completa y abarcadora. Si hay contradicciones, se contrastará la información para llegar a la versión más precisa y mejorada, siguiendo la instrucción de "no buscar resumir sino complementar, combinar, profundizar, ampliar, añadir y avanzar, hacer aún mejor, superar".
+Documentación Detallada y Jerárquica: Se creará un documento extenso (decenas o más de cien páginas) que no será un resumen, sino una recolección y ampliación de todas las funcionalidades. Cada funcionalidad tendrá un identificador único (inmutable) y un identificador jerárquico. Las palabras y frases exactas de las instrucciones originales se conservarán, y al lado se añadirán interpretaciones o sugerencias para mejorarlas o complementarlas.
+Integración de Conocimiento Adicional: Se utilizará "todo el saber de la web" y "todo el conocimiento" para identificar funcionalidades faltantes y enriquecer las existentes, asegurando que la aplicación sea de "vanguardia" y "completa". Esto incluye la aplicación de estrategias neurológicas y psicológicas para la gamificación.
+Revisión y Refinamiento Continuo: El proceso de desarrollo será iterativo, con un análisis constante para determinar criterios y luego extraer y ampliar funcionalidades, asegurando que cada corrección o mejora se integre en la visión general. La calidad y la integridad absoluta son prioritarias sobre la velocidad.

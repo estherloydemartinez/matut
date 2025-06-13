@@ -1,0 +1,23 @@
+➕ Sí navega dentro subcarpeta y considerar cda uno de ellos como parte de. La carpeta de leernos esa es la guía mínima, más el resto de todo el repositorio en su totalidad absoluta.
+
+
+Numerar cada funcionalidad única con: ID global inmutable, y número jerárquico. Numerar cada funcionalidad única con: ID global inmutable (ejemplo F-001, F-002, …). Número jerárquico (ejemplo 1.1.2.3.4, etc.).
+
+La tarea requiere analizar exhaustivamente cada archivo, asignar identificadores únicos y jerárquicos a cada funcionalidad, y crear un plan detallado para desarrollar una aplicación basada en esta información.
+
+Asignación de identificadores
+Cada funcionalidad identificada recibiría:
+
+Un identificador único (por ejemplo, 1, 2, 3, etc.) que permanece constante, incluso si la funcionalidad se elimina, para facilitar referencias futuras.
+Un identificador jerárquico (por ejemplo, 1.1, 1.2, 2.1.1) que refleja su posición dentro de la estructura de la aplicación, mostrando relaciones y dependencias.
+Plan de desarrollo
+
+Plan de desarrollo
+Basado en el análisis, crearía un plan detallado para desarrollar la aplicación, incluyendo:
+
+Diseño de arquitectura: Definir componentes como front-end, back-end y base de datos.
+Pila tecnológica: Seleccionar tecnologías adecuadas según las funcionalidades.
+Fases de desarrollo: Organizar el desarrollo en módulos, pruebas y despliegue.
+Documentación: Generar un archivo markdown con todas las funcionalidades, sus identificadores y descripciones.
+
+

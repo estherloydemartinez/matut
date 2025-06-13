@@ -1,0 +1,22 @@
+🔴 Para inciar hazme cada función como un HTML con su css javascript y demás que lleve dentro del HTML si es posible lo demás en cuanto a estructura a arquitectura ... que sea lo mejor posible pero que permita esto, por lo menos en los inicios para poder ver y sugerir cambios pero al menos la funcionalidad en si la capacidad está ahí y de la mejor formas, si algunos archivos no deben esto o incluir dentro de, ok. Un html etc abrible y visible en el navegador offline aparte sin la obligación del index, el index si l⁵⁵⁵y tuo puedo abrir pero también que se pueda abrir y ver solo, lo haremos así ya que iremos desarrollando funcionalidad una por una entonces necesitamos tener cada una lo mejor posible poder tenerla en una carpeta en el celular y verla ofline local según vayamos avanzando una por una. Una vez. Es en bakend los códgos poder verlos en sus archivos y ejcultros en el navegador cada parte funcionalidad o código como parte, aparte de verlos integrados ya en la app final. Esto solo si es mejor así sea en parte o totalmente, tú dime 
+
+🔴
+El orden de prioridad sobre todo la calidad o funcionalidad incluye bakend ux etc lo demás nada mal  etc 
+Segundo la cantidad que este todo que no sea un borron sino funciones reales y robustas funcionales.
+Y tercero la ui, en resumen calidad cantidad y de ultimo estética menos util o funcional u lo que sea. 
+
+en el flujo, hay partes que son opcionales de hacer o de hacer en un orden específico y otras que son obligatorias prerrequisitos de otros en cumplimiento algunas también en orden en secuencia 
+
+ese enlace de Google drive en el documento también es parte de tus fuentes, ⚫fsn
+
+esas dos o tres enumeraciones unicidad, dependencia y cantidad deben de ponersele también a cada archivo que se genere, o no es lo mejor? Implica males?
+
+No es calidad va cantidad sino calidad más cantidad, siendo la cantidad adecuada parte de la calidad,
+
+Hay ocho frutos externos y uno interno que es bondad, bondad en sistema agua en orar, esta relacionada y es el mismo dar accionar vivir, solo que en oración es para orar y en dar... es para vivir aplicar de forma práctica en este sentido. Los internos se terminan reflejando y moldeando delimitando en lo externo, así que estable las mejores relaciones y funcionalidades respecto a esa relación, y flujos ¿tipos de flujos y cuáles peores mejores, entre otras cosas, sabes?
+
+gaminificacion no es solo en memorización y práctica sino en todo, también ayuda es en todo, entre otras ... qué son o es mejor que sean en todo...
+
+Parte de las funcionalidades no están solo en los md o txt en las palabras sino también hay en los códigos aunque con males..., considera ambas y todo.
+
+si hay más de lo que se específica que encuentres en el camino o sepas sea en la web, tus datos o todo esto, añadelas, cantidad y calidad van ante todo, y andan juntas. Sea en el proceso de ahora o después aún después de terminar la app siempre y cuando se hable en relación con la app, aunque no sea para mejora debes ver de paso si hay alguna, si hay algo para mejor en el sentido que sea en general en todo sentido área y formas
