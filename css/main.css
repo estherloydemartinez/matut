@@ -1,0 +1,17 @@
+/* main.css */
+/* This file can be used for custom CSS rules that complement Tailwind CSS. */
+
+/* Example: Define a custom pastel color variable if needed globally,
+   though these are already in index.html's <style> block for now.
+   If you move them here, ensure they are correctly applied. */
+/*
+:root {
+    --custom-pastel-accent: #fdd7e4;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+}
+*/
+
+/* Add any specific component styles here that are not easily achieved with Tailwind utilities */
