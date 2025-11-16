@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="es" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#2f3136">
+    <link rel="manifest" href="manifest.json">
+    <title>BibliaApp Definitiva</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="assets/css/main.css">
+    <!-- Script para iconos Lucide (opcional) -->
+    <script defer src="https://unpkg.com/lucide-icons"></script>
+</head>
+<body class="font-sans bg-gray-900 text-gray-100">
+
+    <!-- Pantalla de Carga -->
+    <div id="loadingScreen" class="fixed inset-0 bg-gray-800 flex items-center justify-center z-50">
+        <p class="text-xl">Cargando...</p>
+    </div>
+
+    <!-- Contenedor Principal de la Aplicación -->
+    <div id="appContainer" class="hidden flex h-screen">
+
+        <!-- Barra Lateral -->
+        <aside id="sidebar" class="w-64 bg-gray-800 p-4 space-y-6">
+            <div>
+                <h1 class="text-2xl font-semibold">BibliaApp</h1>
+                <!-- Logo Placeholder -->
+            </div>
+            <nav>
+                <h2 class="text-xs text-gray-500 uppercase tracking-wider mb-2">Principal</h2>
+                <ul class="space-y-1">
+                    <li><a href="#" class="nav-link block px-3 py-2 rounded hover:bg-gray-700" data-section="inicio">Inicio</a></li>
+                    <li><a href="#" class="nav-link block px-3 py-2 rounded hover:bg-gray-700" data-section="teoria">Teoría</a></li>
+                    <li><a href="#" class="nav-link block px-3 py-2 rounded hover:bg-gray-700" data-section="practica">Práctica</a></li>
+                </ul>
+            </nav>
+            <div class="flex-grow"></div> <!-- Spacer -->
+            <div>
+                <h2 class="text-xs text-gray-500 uppercase tracking-wider mb-2">Configuración</h2>
+                <ul class="space-y-1">
+                    <li><a href="#" class="nav-link block px-3 py-2 rounded hover:bg-gray-700" data-section="ajustes">Ajustes</a></li>
+                </ul>
+            </div>
+        </aside>
+
+        <!-- Área de Contenido Principal -->
+        <main id="mainContentArea" class="flex-grow flex flex-col bg-gray-700">
+            <!-- Header de la Aplicación -->
+            <header id="appHeader" class="bg-gray-800 p-4 shadow-md">
+                <!-- Breadcrumbs y Controles del Header -->
+                <p>Breadcrumbs / Controles</p>
+            </header>
+
+            <!-- Contenido Dinámico de la Página -->
+            <div id="pageContent" class="p-6 overflow-auto">
+                <!-- El contenido de cada sección se cargará aquí -->
+                <h2 class="text-xl">Bienvenido a la BibliaApp Definitiva</h2>
+                <p>Selecciona una sección de la barra lateral para comenzar.</p>
+                <!-- El #bibliaReaderContainer global y sus selectores se eliminan. -->
+                <!-- La lógica de lectura ahora reside dentro de la pestaña 'Lectura' de la sección 'Teoría'. -->
+            </div>
+        </main>
+    </div>
+
+    <!-- Scripts JS -->
+    <!-- Core Primero -->
+    <script src="assets/js/core/StateManager.js"></script>
+    <!-- UIManager es instanciado por AppCore, y AppCore se le pasa a UIManager. -->
+    <!-- AppCore también necesita UIManager, así que UIManager.js debe estar antes que AppCore.js -->
+    <script src="assets/js/core/UIManager.js"></script>
+
+    <!-- Módulos -->
+    <script src="assets/js/modules/DatosBiblicos.js"></script>
+    <script src="assets/js/modules/Teoria.js"></script>
+    <script src="assets/js/modules/Practica.js"></script>
+    <script src="assets/js/modules/Social.js"></script>
+    <script src="assets/js/modules/Inicio.js"></script>
+    <script src="assets/js/modules/Ajustes.js"></script>
+    <script src="assets/js/modules/Lectura.js"></script>
+    <script src="assets/js/modules/Memorizacion.js"></script>
+    <script src="assets/js/modules/SistemaAgua.js"></script>
+    <script src="assets/js/modules/HerramientasAnaliticas.js"></script>
+
+    <!-- AppCore después de que todos los módulos y core (StateManager, UIManager) estén definidos -->
+    <script src="assets/js/core/AppCore.js"></script>
+
+    <!-- Main.js al final para iniciar la app -->
+    <script src="assets/js/main.js"></script>
+</body>
+</html>
